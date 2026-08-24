@@ -14,20 +14,16 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Every runtime token, derived from the current Customizer values.
  *
- * @param array<string, mixed> $overrides Optional per-instance overrides, used
- *                                        by the hero block to preview its own
- *                                        style choice.
+ * The hero block does *not* go through this function — it derives its own
+ * tokens per instance via probo_hero_tokens() so a per-block style override
+ * can win over the Customizer's hero_style. This builds the page-level
+ * :root block only.
+ *
  * @return array<string, string> Property name => value.
  */
-function probo_tokens( array $overrides = array() ) {
-	$get = static function ( $key ) use ( $overrides ) {
-		return array_key_exists( $key, $overrides ) && '' !== $overrides[ $key ]
-			? $overrides[ $key ]
-			: probo_get( $key );
-	};
-
-	$accent = $get( 'accent_color' ) ? $get( 'accent_color' ) : '#1B4DFF';
-	$sec    = $get( 'secondary_color' ) ? $get( 'secondary_color' ) : '#0B0B0C';
+function probo_tokens() {
+	$accent = probo_get_color( 'accent_color' );
+	$sec    = probo_get_color( 'secondary_color' );
 	$lum    = probo_lum( $sec );
 
 	$tokens = array(
@@ -42,33 +38,41 @@ function probo_tokens( array $overrides = array() ) {
 		// rather than washing out on white.
 		'--pp-accent-ink'     => probo_readable_accent( $accent, '#FFFFFF', '#0B0B0C' ),
 		'--pp-secondary'      => $sec,
-		'--pp-secondary-fg'   => $lum > 0.6 ? '#0B0B0C' : '#FFFFFF',
+		'--pp-secondary-fg'   => probo_contrast_fg( $sec ),
 		'--pp-secondary-line' => $lum > 0.85 ? '#C9C9CE' : $sec,
-		'--pp-radius'         => (int) $get( 'radius' ) . 'px',
+		'--pp-radius'         => (int) probo_get( 'radius' ) . 'px',
 		// Quoted so multi-word families such as "Source Serif 4" resolve.
-		'--pp-font-title'     => '"' . $get( 'title_font' ) . '"',
-		'--pp-font-body'      => '"' . $get( 'body_font' ) . '"',
+		'--pp-font-title'     => '"' . probo_get( 'title_font' ) . '"',
+		'--pp-font-body'      => '"' . probo_get( 'body_font' ) . '"',
 	);
 
 	// Kaartstijl: Rand keeps the hairline, Schaduw swaps it for a soft stack,
 	// Vlak drops both but keeps a transparent border so layout does not shift.
-	$card                        = $get( 'card_style' );
+	$card                        = probo_get( 'card_style' );
 	$tokens['--pp-card-border']  = 'Rand' === $card ? '1px solid #E4E4E7' : '1px solid transparent';
 	$tokens['--pp-card-shadow']  = 'Schaduw' === $card
 		? '0 2px 4px rgba(11,11,12,.06), 0 12px 28px rgba(11,11,12,.07)'
 		: 'none';
 
-	$tokens += probo_bar_tokens( $get( 'bar_style' ), $get( 'bar_color' ), $accent, $sec, $lum );
-	$tokens += probo_footer_tokens( $get( 'footer_style' ), $accent, $sec );
-	$tokens += probo_hero_tokens( $get( 'hero_style' ), $get( 'hero_title_color' ), $accent, $sec );
+	$tokens += probo_bar_tokens( probo_get( 'bar_style' ), probo_get( 'bar_color' ), $accent, $sec );
+	$tokens += probo_footer_tokens( probo_get( 'footer_style' ), $accent, $sec );
+	$tokens += probo_hero_tokens( probo_get( 'hero_style' ), probo_get( 'hero_title_color' ), $accent, $sec );
 
 	/**
 	 * Filters the theme's runtime design tokens.
 	 *
 	 * @param array<string, string> $tokens    Property name => value.
-	 * @param array<string, mixed>  $overrides Per-instance overrides.
+	 * @param array<string, mixed>  $overrides Reserved; always an empty array. The
+	 *                                         per-instance override machinery this
+	 *                                         used to carry was dead code (the
+	 *                                         only two callers of probo_tokens()
+	 *                                         are argument-less) and has been
+	 *                                         removed. The parameter itself is
+	 *                                         kept for one release so a
+	 *                                         third-party callback declaring it
+	 *                                         does not fatal.
 	 */
-	return apply_filters( 'probo_tokens', $tokens, $overrides );
+	return apply_filters( 'probo_tokens', $tokens, array() );
 }
 
 /**
@@ -83,19 +87,18 @@ function probo_tokens( array $overrides = array() ) {
  * @param string $custom Optional bar colour override.
  * @param string $accent Accent colour.
  * @param string $sec    Secondary colour.
- * @param float  $lum    Luminance of the secondary colour.
  * @return array<string, string>
  */
-function probo_bar_tokens( $style, $custom, $accent, $sec, $lum ) {
+function probo_bar_tokens( $style, $custom, $accent, $sec ) {
 	if ( $custom ) {
-		$bar_lum = probo_lum( $custom );
+		$bar_dark = probo_is_dark( $custom );
 
 		return array(
 			'--pp-bar-bg'     => $custom,
-			'--pp-bar-fg'     => $bar_lum > 0.6 ? '#0B0B0C' : '#FFFFFF',
-			'--pp-bar-muted'  => $bar_lum > 0.6 ? '#4A4A50' : 'rgba(255,255,255,.75)',
-			'--pp-bar-line'   => $bar_lum > 0.85 ? '#E4E4E7' : 'transparent',
-			'--pp-bar-accent' => probo_readable_accent( $accent, $custom, $bar_lum > 0.6 ? '#0B0B0C' : '#FFFFFF' ),
+			'--pp-bar-fg'     => probo_contrast_fg( $custom ),
+			'--pp-bar-muted'  => $bar_dark ? 'rgba(255,255,255,.75)' : '#4A4A50',
+			'--pp-bar-line'   => probo_lum( $custom ) > 0.85 ? '#E4E4E7' : 'transparent',
+			'--pp-bar-accent' => probo_readable_accent( $accent, $custom, probo_contrast_fg( $custom ) ),
 		);
 	}
 
@@ -110,13 +113,16 @@ function probo_bar_tokens( $style, $custom, $accent, $sec, $lum ) {
 	}
 
 	if ( 'Accent' === $style ) {
-		$fg   = probo_contrast_fg( $accent );
-		$dark = '#0B0B0C' === $fg;
+		// Dark text (and so the darker muted tone) is chosen precisely when
+		// the accent itself is *not* dark — mirrors probo_contrast_fg()'s own
+		// rule instead of string-comparing the hex it just returned.
+		$fg        = probo_contrast_fg( $accent );
+		$text_dark = ! probo_is_dark( $accent );
 
 		return array(
 			'--pp-bar-bg'     => $accent,
 			'--pp-bar-fg'     => $fg,
-			'--pp-bar-muted'  => $dark ? 'rgba(11,11,12,.74)' : 'rgba(255,255,255,.82)',
+			'--pp-bar-muted'  => $text_dark ? 'rgba(11,11,12,.74)' : 'rgba(255,255,255,.82)',
 			'--pp-bar-line'   => 'transparent',
 			'--pp-bar-accent' => $fg,
 		);
@@ -132,14 +138,15 @@ function probo_bar_tokens( $style, $custom, $accent, $sec, $lum ) {
 		);
 	}
 
-	$dark = $lum <= 0.6;
+	$dark = probo_is_dark( $sec );
+	$fg   = probo_contrast_fg( $sec );
 
 	return array(
 		'--pp-bar-bg'     => $sec,
-		'--pp-bar-fg'     => $dark ? '#FFFFFF' : '#0B0B0C',
+		'--pp-bar-fg'     => $fg,
 		'--pp-bar-muted'  => $dark ? 'rgba(255,255,255,.7)' : '#4A4A50',
-		'--pp-bar-line'   => $lum > 0.85 ? '#E4E4E7' : 'transparent',
-		'--pp-bar-accent' => probo_readable_accent( $accent, $sec, $dark ? '#FFFFFF' : '#0B0B0C' ),
+		'--pp-bar-line'   => probo_lum( $sec ) > 0.85 ? '#E4E4E7' : 'transparent',
+		'--pp-bar-accent' => probo_readable_accent( $accent, $sec, $fg ),
 	);
 }
 
@@ -171,15 +178,18 @@ function probo_footer_tokens( $style, $accent, $sec ) {
 		// footer. Everything is derived from the accent's own contrast colour
 		// instead, and the softer tones are that colour at reduced alpha so the
 		// hierarchy holds either way.
-		$fg   = probo_contrast_fg( $accent );
-		$dark = '#0B0B0C' === $fg;
+		// Dark text is chosen precisely when the accent itself is not dark —
+		// mirrors probo_contrast_fg()'s own rule instead of string-comparing
+		// the hex it just returned.
+		$fg        = probo_contrast_fg( $accent );
+		$text_dark = ! probo_is_dark( $accent );
 
 		return array(
 			'--pp-footer-bg'     => $accent,
 			'--pp-footer-fg'     => $fg,
-			'--pp-footer-muted'  => $dark ? 'rgba(11,11,12,.72)' : 'rgba(255,255,255,.8)',
-			'--pp-footer-link'   => $dark ? 'rgba(11,11,12,.86)' : 'rgba(255,255,255,.92)',
-			'--pp-footer-line'   => $dark ? 'rgba(11,11,12,.18)' : 'rgba(255,255,255,.22)',
+			'--pp-footer-muted'  => $text_dark ? 'rgba(11,11,12,.72)' : 'rgba(255,255,255,.8)',
+			'--pp-footer-link'   => $text_dark ? 'rgba(11,11,12,.86)' : 'rgba(255,255,255,.92)',
+			'--pp-footer-line'   => $text_dark ? 'rgba(11,11,12,.18)' : 'rgba(255,255,255,.22)',
 			// Accent on accent is invisible, so headings and hovers borrow the
 			// footer's own foreground here.
 			'--pp-footer-accent' => $fg,
@@ -191,14 +201,15 @@ function probo_footer_tokens( $style, $accent, $sec ) {
 	// secondary — the same trap that was fixed for the top bar and the hero, so
 	// the footer gets the same luminance guard.
 	$dark = probo_is_dark( $sec );
+	$fg   = probo_contrast_fg( $sec );
 
 	return array(
 		'--pp-footer-bg'     => $sec,
-		'--pp-footer-fg'     => $dark ? '#FFFFFF' : '#0B0B0C',
+		'--pp-footer-fg'     => $fg,
 		'--pp-footer-muted'  => $dark ? '#9A9A9E' : '#6B6B70',
 		'--pp-footer-link'   => $dark ? '#C9C9CE' : '#4A4A50',
 		'--pp-footer-line'   => $dark ? '#1E1E22' : '#E4E4E7',
-		'--pp-footer-accent' => probo_readable_accent( $accent, $sec, $dark ? '#FFFFFF' : '#0B0B0C' ),
+		'--pp-footer-accent' => probo_readable_accent( $accent, $sec, $fg ),
 	);
 }
 
@@ -217,25 +228,25 @@ function probo_footer_tokens( $style, $accent, $sec ) {
  */
 function probo_hero_tokens( $style, $title_color, $accent, $sec ) {
 	if ( 'Accent' === $style ) {
+		// Dark text is chosen precisely when the accent itself is not dark —
+		// mirrors probo_contrast_fg()'s own rule instead of string-comparing
+		// the hex it just returned.
 		$bg    = $accent;
 		$fg    = probo_contrast_fg( $accent );
-		$muted = '#0B0B0C' === $fg ? 'rgba(11,11,12,.7)' : 'rgba(255,255,255,.78)';
+		$muted = ! probo_is_dark( $accent ) ? 'rgba(11,11,12,.7)' : 'rgba(255,255,255,.78)';
 	} elseif ( 'Licht' === $style ) {
 		$bg    = '#F7F7F5';
 		$fg    = '#0B0B0C';
 		$muted = '#6B6B70';
 	} else {
-		$hero_lum = probo_lum( $sec );
-		$bg       = $sec;
-		$fg       = $hero_lum > 0.6 ? '#0B0B0C' : '#FFFFFF';
-		$muted    = $hero_lum > 0.6 ? '#6B6B70' : '#A6A6AC';
+		$bg    = $sec;
+		$fg    = probo_contrast_fg( $sec );
+		$muted = probo_is_dark( $sec ) ? '#A6A6AC' : '#6B6B70';
 	}
 
-	$title = $title_color;
-
-	if ( ! $title || abs( probo_lum( $title ) - probo_lum( $bg ) ) < 0.12 ) {
-		$title = $fg;
-	}
+	// Same "is it readable here" decision as the accent chip below, just
+	// with a tighter threshold and the hero's own fg as fallback.
+	$title = probo_readable_accent( $title_color, $bg, $fg, 0.12 );
 
 	// The eyebrow badge is a filled accent chip. On an accent hero it would
 	// disappear into the background, so it flips to the hero's foreground with
