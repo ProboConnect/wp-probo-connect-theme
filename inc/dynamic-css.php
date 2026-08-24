@@ -266,6 +266,14 @@ function probo_hero_tokens( $style, $title_color, $accent, $sec ) {
 /**
  * Render tokens as a CSS declaration list.
  *
+ * Values land inside a `:root{ … }` block, so a value carrying a `}` would
+ * close the rule and let whatever follows through as arbitrary CSS. Nothing
+ * the theme itself produces can do that — every value here is a hex, an
+ * rgb()/rgba(), a pixel length, `transparent` or a quoted font name — but
+ * `probo_tokens` is a documented filter, so a third party's value reaches
+ * this line too. Strip the characters that could break out rather than trust
+ * the producer.
+ *
  * @param array<string, string> $tokens Property name => value.
  * @return string
  */
@@ -273,6 +281,28 @@ function probo_tokens_to_css( array $tokens ) {
 	$out = '';
 
 	foreach ( $tokens as $property => $value ) {
+		// Custom properties only: anything else is not ours to print.
+		if ( ! preg_match( '/^--[A-Za-z0-9_-]+$/', (string) $property ) ) {
+			continue;
+		}
+
+		// Drop comment openers first, then the characters that would end the
+		// declaration or the rule, or open a tag on the way out of a <style>.
+		$value = str_replace( array( '/*', '*/' ), '', (string) $value );
+		$value = trim( str_replace( array( ';', '{', '}', '<', '>', '\\' ), '', $value ) );
+
+		// No token the theme produces is a url(), and a custom property that
+		// carries one becomes a request the moment anything resolves it with
+		// var() — which is the exfiltration half of the problem, not just the
+		// defacement half.
+		if ( false !== stripos( $value, 'url(' ) ) {
+			continue;
+		}
+
+		if ( '' === $value ) {
+			continue;
+		}
+
 		$out .= $property . ':' . $value . ';';
 	}
 
