@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					?>
 					<span class="flex shrink-0 items-center gap-2 <?php echo 0 === $index ? '' : 'hidden text-bar-muted md:flex'; ?>">
 						<span class="text-bar-accent" aria-hidden="true">✓</span>
-						<span data-probo-partial="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $usp ); ?></span>
+						<span data-pp-partial="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $usp ); ?></span>
 					</span>
 				<?php endforeach; ?>
 			</div>
@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 			<button
 				class="rounded-pp border border-line-strong px-3 py-2.5 text-ink lg:hidden"
 				type="button"
-				data-probo-nav-toggle
+				data-pp-nav-toggle
 				aria-expanded="false"
 				aria-controls="pp-primary-nav"
 			>
@@ -87,7 +87,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php // relative: the flyout panels are positioned against this bar, not against their own menu item. ?>
 <nav class="relative border-y border-line" aria-label="<?php esc_attr_e( 'Primary navigation', 'probo-connect' ); ?>">
 		<div class="pp-container">
-			<div id="pp-primary-nav" class="hidden py-4 lg:flex lg:h-[50px] lg:items-center lg:py-0" data-probo-nav>
+			<div id="pp-primary-nav" class="hidden py-4 lg:flex lg:h-[50px] lg:items-center lg:py-0" data-pp-nav>
 				<?php
 				wp_nav_menu(
 					array(

@@ -47,32 +47,32 @@ $probo_description = $probo_term ? term_description( $probo_term ) : '';
 	// The category's own callouts, filled in on the term itself. The same text
 	// follows this category into any Categorietegels block that lists it.
 	//
-	// Each callout picks its own template; the template decides where it lands
-	// — 'band' full-width above the products, 'tile' as a grid item between
-	// them, once, after the product number it names.
-	$probo_callouts      = $probo_term ? probo_category_callouts( $probo_term ) : array();
-	$probo_band_callouts = array_values(
-		array_filter(
-			$probo_callouts,
-			static function ( $callout ) {
-				return 'band' === probo_callout_placement( $callout );
-			}
-		)
-	);
-	$probo_tile_callouts = array_values(
-		array_filter(
-			$probo_callouts,
-			static function ( $callout ) {
-				return 'tile' === probo_callout_placement( $callout );
-			}
-		)
-	);
+	// Each callout picks its own template, and the template's directory decides
+	// where it lands: 'category_top' full-width above the products, 'grid' as a
+	// grid item between them (once, after the product number it names), and
+	// 'category_bottom' full-width below them.
+	$probo_callouts = $probo_term ? probo_category_callouts( $probo_term ) : array();
 
-	if ( $probo_band_callouts ) :
+	$probo_by_placement = static function ( $placement ) use ( $probo_callouts ) {
+		return array_values(
+			array_filter(
+				$probo_callouts,
+				static function ( $callout ) use ( $placement ) {
+					return $placement === probo_callout_placement( $callout );
+				}
+			)
+		);
+	};
+
+	$probo_top_callouts    = $probo_by_placement( 'category_top' );
+	$probo_tile_callouts   = $probo_by_placement( 'grid' );
+	$probo_bottom_callouts = $probo_by_placement( 'category_bottom' );
+
+	if ( $probo_top_callouts ) :
 		?>
 		<div class="pp-container flex flex-col gap-4 pb-9">
-			<?php foreach ( $probo_band_callouts as $probo_band_callout ) : ?>
-				<?php probo_callout_render( $probo_band_callout ); ?>
+			<?php foreach ( $probo_top_callouts as $probo_top_callout ) : ?>
+				<?php probo_callout_render( $probo_top_callout ); ?>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>
@@ -160,6 +160,16 @@ $probo_description = $probo_term ? term_description( $probo_term ) : '';
 			</div>
 		</div>
 	</div>
+
+	<?php if ( $probo_bottom_callouts ) : ?>
+		<div class="border-t border-line">
+			<div class="pp-container flex flex-col gap-4 py-9">
+				<?php foreach ( $probo_bottom_callouts as $probo_bottom_callout ) : ?>
+					<?php probo_callout_render( $probo_bottom_callout ); ?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	<?php endif; ?>
 </main>
 
 <?php

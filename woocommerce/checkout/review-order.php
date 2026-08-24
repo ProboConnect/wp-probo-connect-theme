@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 								<?php
 								$specs[] = sprintf(
 									/* translators: %s: quantity. */
-									_n( '%s st', '%s st', $cart_item['quantity'], 'probo-connect' ),
+									_n( '%s pc', '%s pcs', $cart_item['quantity'], 'probo-connect' ),
 									number_format_i18n( $cart_item['quantity'] )
 								);
 

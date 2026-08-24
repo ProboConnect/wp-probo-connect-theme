@@ -114,30 +114,30 @@ add_action( 'widgets_init', 'probo_widgets_init' );
 function probo_enqueue_assets() {
 	$dir = get_template_directory();
 
-	wp_enqueue_style( 'probo-fonts', probo_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Google Fonts is versioned by its own URL.
+	wp_enqueue_style( 'pp-fonts', probo_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Google Fonts is versioned by its own URL.
 
 	wp_enqueue_style(
-		'probo-theme',
+		'pp-theme',
 		get_template_directory_uri() . '/assets/css/theme.css',
-		array( 'probo-fonts' ),
+		array( 'pp-fonts' ),
 		probo_asset_version( '/assets/css/theme.css' )
 	);
 
 	// The theme's own style.css carries only the theme header, but WordPress
 	// expects it to be registered under the stylesheet handle.
-	wp_enqueue_style( 'probo-style', get_stylesheet_uri(), array( 'probo-theme' ), PROBO_VERSION );
+	wp_enqueue_style( 'pp-style', get_stylesheet_uri(), array( 'pp-theme' ), PROBO_VERSION );
 
 	if ( file_exists( $dir . '/assets/css/print-connect.css' ) && probo_is_configurator_context() ) {
 		wp_enqueue_style(
 			'print-connect',
 			get_template_directory_uri() . '/assets/css/print-connect.css',
-			array( 'probo-theme' ),
+			array( 'pp-theme' ),
 			probo_asset_version( '/assets/css/print-connect.css' )
 		);
 	}
 
 	wp_enqueue_script(
-		'probo-theme',
+		'pp-theme',
 		get_template_directory_uri() . '/assets/js/theme.js',
 		array(),
 		probo_asset_version( '/assets/js/theme.js' ),
@@ -148,7 +148,7 @@ function probo_enqueue_assets() {
 	// the order-received page or anywhere else in the shop.
 	if ( function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_flow() ) {
 		wp_enqueue_script(
-			'probo-checkout-steps',
+			'pp-checkout-steps',
 			get_template_directory_uri() . '/assets/js/checkout-steps.js',
 			array(),
 			probo_asset_version( '/assets/js/checkout-steps.js' ),
@@ -166,11 +166,11 @@ function probo_enqueue_block_assets() {
 		return;
 	}
 
-	wp_enqueue_style( 'probo-fonts', probo_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- see above.
+	wp_enqueue_style( 'pp-fonts', probo_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- see above.
 	wp_enqueue_style(
-		'probo-theme',
+		'pp-theme',
 		get_template_directory_uri() . '/assets/css/theme.css',
-		array( 'probo-fonts' ),
+		array( 'pp-fonts' ),
 		probo_asset_version( '/assets/css/theme.css' )
 	);
 }

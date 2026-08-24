@@ -239,6 +239,18 @@
     border-left-color: var(--color-accent);
   }
 
+  /* The empty-cart message (cart/cart-empty.php). It carries .woocommerce-info,
+     but sits outside .woocommerce-notices-wrapper, so the notice box above never
+     catches it — left alone it drew as the plugin's bare small text. Here it is
+     a clean, centred line, not a boxed notice. */
+  .cart-empty.woocommerce-info {
+    @apply m-0 border-0 bg-transparent p-0 text-2xl font-extrabold tracking-[-0.02em] text-ink;
+  }
+
+  .cart-empty.woocommerce-info::before {
+    content: none;
+  }
+
   .woocommerce .quantity input.qty {
     @apply rounded-pp h-11 w-16 border border-line-strong text-center text-[15px];
   }

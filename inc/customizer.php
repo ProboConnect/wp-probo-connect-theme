@@ -338,7 +338,7 @@ function probo_customize_register( $wp_customize ) {
 			$wp_customize->selective_refresh->add_partial(
 				'probo_' . $key,
 				array(
-					'selector'        => '[data-probo-partial="' . $key . '"]',
+					'selector'        => '[data-pp-partial="' . $key . '"]',
 					'render_callback' => static function () use ( $key ) {
 						return esc_html( probo_get( $key ) );
 					},

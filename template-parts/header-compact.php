@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 				class="rounded-pp flex h-11 flex-none items-center gap-[11px] border px-4.5 text-sm font-bold"
 				style="border-color:color-mix(in srgb, var(--pp-bar-fg) 24%, transparent)"
 				type="button"
-				data-probo-products-toggle
+				data-pp-products-toggle
 				aria-expanded="false"
 				aria-controls="pp-products-menu"
 			>
@@ -85,7 +85,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php // The products megamenu: hidden until the trigger opens it, at every width. ?>
 	<nav class="relative border-b border-line bg-white" aria-label="<?php esc_attr_e( 'Products', 'probo-connect' ); ?>">
 		<div class="pp-container">
-			<div id="pp-products-menu" class="hidden py-5" data-probo-products>
+			<div id="pp-products-menu" class="hidden py-5" data-pp-products>
 				<?php
 				wp_nav_menu(
 					array(

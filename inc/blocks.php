@@ -33,7 +33,7 @@ function probo_block_names() {
  */
 function probo_register_blocks() {
 	wp_register_script(
-		'probo-block-repeater',
+		'pp-block-repeater',
 		get_template_directory_uri() . '/blocks/shared/repeater.js',
 		array( 'wp-element', 'wp-components', 'wp-i18n' ),
 		probo_asset_version( '/blocks/shared/repeater.js' ),

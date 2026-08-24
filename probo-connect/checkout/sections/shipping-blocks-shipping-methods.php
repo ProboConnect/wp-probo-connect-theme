@@ -116,7 +116,7 @@ $probo_group = static function ( $methods, $visible, $label ) use ( $probo_metho
 };
 ?>
 
-<div class="connect-shipping-methods pp-carriers" data-probo-pickup-count="<?php echo esc_attr( (string) count( $probo_pickup ) ); ?>">
+<div class="connect-shipping-methods pp-carriers" data-pp-pickup-count="<?php echo esc_attr( (string) count( $probo_pickup ) ); ?>">
 	<?php if ( $probo_delivery ) : ?>
 		<div class="connect-shipping-methods-group connect-shipping-methods-group--delivery pp-delivery-pane pp-delivery-pane--ship">
 			<div class="pp-carrier-list">

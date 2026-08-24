@@ -7,7 +7,7 @@
 	"icon": "grid-view",
 	"description": "Raster met productcategorieën in afwisselende kleurvlakken.",
 	"textdomain": "probo-connect",
-	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Populaire categorieën" },
 		"linkText": { "type": "string", "default": "Bekijk alle producten →" },

@@ -279,7 +279,7 @@ function probo_tokens_to_css( array $tokens ) {
  * its handle's tag, so the Customizer values win.
  */
 function probo_print_tokens() {
-	wp_add_inline_style( 'probo-theme', ':root{' . probo_tokens_to_css( probo_tokens() ) . '}' );
+	wp_add_inline_style( 'pp-theme', ':root{' . probo_tokens_to_css( probo_tokens() ) . '}' );
 }
 add_action( 'wp_enqueue_scripts', 'probo_print_tokens', 20 );
 
@@ -291,6 +291,6 @@ function probo_editor_tokens() {
 		return;
 	}
 
-	wp_add_inline_style( 'probo-theme', ':root{' . probo_tokens_to_css( probo_tokens() ) . '}' );
+	wp_add_inline_style( 'pp-theme', ':root{' . probo_tokens_to_css( probo_tokens() ) . '}' );
 }
 add_action( 'enqueue_block_assets', 'probo_editor_tokens', 20 );

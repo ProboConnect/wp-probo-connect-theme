@@ -274,9 +274,9 @@
    the same thing.
 
    What goes into those blocks in the stepped variant is the theme's own two
-   overrides in probo-connect/checkout/sections/: the day list rearranged into
-   one decision with three answers, and the carrier list with the cheapest one
-   out front. The layout of a single row lives in theme.css with the rest of the
+   overrides of the plugin's checkout section templates: the day list rearranged
+   into one decision with three answers, and the carrier list with the cheapest
+   one out front. The layout of a single row lives in theme.css with the rest of the
    checkout components (.pp-when-option, .pp-carrier); what is left here is the
    frame around the blocks. */
 .pp-delivery #connect-shipping-wrapper > h3 {

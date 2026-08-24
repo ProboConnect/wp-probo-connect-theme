@@ -7,7 +7,7 @@
 	"icon": "star-filled",
 	"description": "Rij met productkaarten die eindigen op “Configureer nu”.",
 	"textdomain": "probo-connect",
-	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Bestsellers" },
 		"meta": { "type": "string", "default": "DEZE MAAND" },

@@ -2,7 +2,7 @@
  * Theme behaviour.
  *
  * Small and dependency-free on purpose: the configurator, gallery and checkout
- * interactions all belong to WooCommerce or to Probo Connect.
+ * interactions all belong to WooCommerce or to the configurator plugin.
  */
 ( function () {
 	'use strict';
@@ -14,8 +14,8 @@
 	 * the class list mirrors what Tailwind applies at that breakpoint.
 	 */
 	function initNav() {
-		var toggle = document.querySelector( '[data-probo-nav-toggle]' );
-		var nav = document.querySelector( '[data-probo-nav]' );
+		var toggle = document.querySelector( '[data-pp-nav-toggle]' );
+		var nav = document.querySelector( '[data-pp-nav]' );
 
 		if ( ! toggle || ! nav ) {
 			return;
@@ -32,8 +32,8 @@
 	 * Keep the burger state honest when the viewport crosses the breakpoint.
 	 */
 	function initNavReset() {
-		var nav = document.querySelector( '[data-probo-nav]' );
-		var toggle = document.querySelector( '[data-probo-nav-toggle]' );
+		var nav = document.querySelector( '[data-pp-nav]' );
+		var toggle = document.querySelector( '[data-pp-nav-toggle]' );
 
 		if ( ! nav || ! toggle || ! window.matchMedia ) {
 			return;
@@ -147,8 +147,8 @@
 	 * and on a click outside the panel or its trigger.
 	 */
 	function initProductsMenu() {
-		var toggle = document.querySelector( '[data-probo-products-toggle]' );
-		var panel = document.querySelector( '[data-probo-products]' );
+		var toggle = document.querySelector( '[data-pp-products-toggle]' );
+		var panel = document.querySelector( '[data-pp-products]' );
 
 		if ( ! toggle || ! panel ) {
 			return;
@@ -172,8 +172,8 @@
 
 		document.addEventListener( 'click', function ( event ) {
 			if (
-				! event.target.closest( '[data-probo-products]' ) &&
-				! event.target.closest( '[data-probo-products-toggle]' )
+				! event.target.closest( '[data-pp-products]' ) &&
+				! event.target.closest( '[data-pp-products-toggle]' )
 			) {
 				setOpen( false );
 			}

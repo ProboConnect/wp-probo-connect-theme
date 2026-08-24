@@ -62,7 +62,7 @@ $probo_steps   = probo_checkout_steps();
  */
 $probo_step_open = static function ( $number ) use ( $probo_steps ) {
 	?>
-	<section class="pp-step" data-probo-step="<?php echo esc_attr( (string) $number ); ?>">
+	<section class="pp-step" data-pp-step="<?php echo esc_attr( (string) $number ); ?>">
 		<?php probo_checkout_step_summary_row( $number ); ?>
 
 		<div class="pp-step-body">
@@ -91,7 +91,7 @@ $probo_step_close = static function ( $number ) use ( $probo_steps ) {
 	if ( $probo_steps[ $number ]['next'] ) :
 		?>
 			<div class="pp-step-foot">
-				<button type="button" class="pp-btn-secondary pp-step-next" data-probo-step-next="<?php echo esc_attr( (string) $number ); ?>">
+				<button type="button" class="pp-btn-secondary pp-step-next" data-pp-step-next="<?php echo esc_attr( (string) $number ); ?>">
 					<?php echo esc_html( $probo_steps[ $number ]['next'] ); ?>
 				</button>
 			</div>
@@ -158,7 +158,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 <form name="checkout" method="post" class="checkout woocommerce-checkout pp-container grid items-start gap-11 py-9 pb-18 lg:grid-cols-[1fr_400px]" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 	<?php if ( $probo_stepped ) : ?>
 
-		<div class="pp-steps" data-probo-steps data-probo-initial-step="<?php echo esc_attr( (string) probo_checkout_initial_step() ); ?>">
+		<div class="pp-steps" data-pp-steps data-pp-initial-step="<?php echo esc_attr( (string) probo_checkout_initial_step() ); ?>">
 			<?php
 			/**
 			 * Hook: woocommerce_checkout_before_customer_details.

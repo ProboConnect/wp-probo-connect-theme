@@ -93,7 +93,7 @@ Repeating content (the USP lines, the steps, the quotes) is **stored** as one
 line per item in the form `Titel | Toelichting`, which `probo_parse_lines()`
 reads. It is **edited** through `blocks/shared/repeater.js`: per-field inputs
 with add, remove and reorder. One control, shared by all three — point a fourth
-block at it by adding `probo-block-repeater` to its `index.asset.php`
+block at it by adding `pp-block-repeater` to its `index.asset.php`
 dependencies and calling `probo.repeater()` with one `fields` entry per column.
 
 ## Probo Connect

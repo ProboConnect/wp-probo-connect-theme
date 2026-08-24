@@ -33,7 +33,7 @@ $probo_bare = function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_f
 					<?php dynamic_sidebar( 'footer-intro' ); ?>
 				</div>
 			<?php else : ?>
-				<p class="max-w-[280px] text-sm leading-relaxed text-footer-muted" data-probo-partial="footer_description">
+				<p class="max-w-[280px] text-sm leading-relaxed text-footer-muted" data-pp-partial="footer_description">
 					<?php echo esc_html( probo_get( 'footer_description' ) ); ?>
 				</p>
 
@@ -69,7 +69,7 @@ $probo_bare = function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_f
 
 	<div class="<?php echo $probo_bare ? '' : 'border-t'; ?>" style="border-color:var(--pp-footer-line)">
 		<div class="pp-container font-mono flex flex-col gap-3 py-5 text-[11px] leading-none font-medium tracking-[0.04em] text-footer-muted sm:flex-row sm:items-center sm:justify-between">
-			<span data-probo-partial="footer_legal"><?php echo esc_html( probo_get( 'footer_legal' ) ); ?></span>
+			<span data-pp-partial="footer_legal"><?php echo esc_html( probo_get( 'footer_legal' ) ); ?></span>
 
 			<?php
 			if ( has_nav_menu( 'legal' ) ) {

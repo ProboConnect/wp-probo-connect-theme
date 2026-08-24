@@ -7,7 +7,7 @@
 	"icon": "images-alt2",
 	"description": "Rij logo's van klanten of partners.",
 	"textdomain": "probo-connect",
-	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Gedrukt voor" },
 		"logos": { "type": "array", "default": [] },
