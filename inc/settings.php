@@ -22,6 +22,7 @@ function probo_defaults() {
 		'radius'             => 4,
 		'title_font'         => 'Archivo',
 		'body_font'          => 'Archivo',
+		'header_variant'     => 'ruim',
 		'bar_style'          => 'Zwart',
 		'bar_color'          => '',
 		'footer_style'       => 'Zwart',

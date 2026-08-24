@@ -92,8 +92,8 @@ $probo_usps = array_filter(
 			</summary>
 
 			<form class="mt-2.5 flex gap-2" method="post" action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-				<label class="sr-only" for="probo-coupon"><?php esc_html_e( 'Discount code', 'probo-connect' ); ?></label>
-				<input class="pp-field" id="probo-coupon" type="text" name="coupon_code" value="" placeholder="<?php esc_attr_e( 'Code', 'probo-connect' ); ?>" />
+				<label class="sr-only" for="pp-coupon"><?php esc_html_e( 'Discount code', 'probo-connect' ); ?></label>
+				<input class="pp-field" id="pp-coupon" type="text" name="coupon_code" value="" placeholder="<?php esc_attr_e( 'Code', 'probo-connect' ); ?>" />
 				<button class="pp-btn-secondary shrink-0" type="submit" name="apply_coupon" value="<?php esc_attr_e( 'Apply', 'probo-connect' ); ?>">
 					<?php esc_html_e( 'Apply', 'probo-connect' ); ?>
 				</button>

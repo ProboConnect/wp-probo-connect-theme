@@ -711,7 +711,7 @@ function probo_checkout_mode_tabs( $group, $pickup_count = null, $pickup_active 
 		<input type="radio" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>-pickup" class="pp-tab-input pp-tab-input--pickup" <?php checked( $pickup_active ); ?> />
 		<label for="<?php echo esc_attr( $name ); ?>-pickup">
 			<?php esc_html_e( 'Pickup', 'probo-connect' ); ?>
-			<span class="pp-tab-count" data-probo-pickup-label>
+			<span class="pp-tab-count" data-pp-pickup-label>
 				<?php
 				if ( null !== $pickup_count ) {
 					printf(
@@ -1024,7 +1024,7 @@ function probo_checkout_step_summary_row( $step ) {
 			<div class="pp-step-summary-title"><?php echo esc_html( $steps[ $step ]['title'] ); ?></div>
 			<div class="pp-step-summary-text pp-summary-<?php echo esc_attr( (string) $step ); ?>"><?php echo esc_html( probo_checkout_step_summary( $step ) ); ?></div>
 		</div>
-		<button type="button" class="pp-step-edit" data-probo-step-edit="<?php echo esc_attr( (string) $step ); ?>">
+		<button type="button" class="pp-step-edit" data-pp-step-edit="<?php echo esc_attr( (string) $step ); ?>">
 			<?php esc_html_e( 'Change', 'probo-connect' ); ?>
 		</button>
 	</div>
@@ -1096,13 +1096,13 @@ function probo_checkout_place_order() {
 		do_action( 'woocommerce_review_order_before_submit' );
 
 		// The amount is part of the button label: what someone confirms should be
-		// written on the thing they press. data-probo-label keeps the bare text
+		// written on the thing they press. data-pp-label keeps the bare text
 		// around so the script can rebuild the label after an amount change.
 		$probo_label = $order_button_text . probo_checkout_order_total_suffix();
 
 		echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- assembled and escaped here, then filtered as core does.
 			'woocommerce_order_button_html',
-			'<button type="submit" class="button alt" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr( $probo_label ) . '" data-value="' . esc_attr( $probo_label ) . '" data-probo-label="' . esc_attr( $order_button_text ) . '">' . esc_html( $probo_label ) . '</button>'
+			'<button type="submit" class="button alt" name="woocommerce_checkout_place_order" id="place_order" value="' . esc_attr( $probo_label ) . '" data-value="' . esc_attr( $probo_label ) . '" data-pp-label="' . esc_attr( $order_button_text ) . '">' . esc_html( $probo_label ) . '</button>'
 		);
 
 		/**

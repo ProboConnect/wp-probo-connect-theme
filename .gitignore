@@ -1,4 +1,5 @@
 /node_modules/
+/bin/
 .idea
 .claude
 .DS_Store

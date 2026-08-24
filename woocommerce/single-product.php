@@ -97,7 +97,7 @@ while ( have_posts() ) :
 
 				<?php if ( probo_is_configurable_product( $product ) ) : ?>
 					<?php // Jumps to the band below, which is where the configurator lives. ?>
-					<a class="pp-btn-accent mb-6 w-full" href="#probo-configurator">
+					<a class="pp-btn-accent mb-6 w-full" href="#pp-configurator">
 						<?php esc_html_e( 'Configure your product', 'probo-connect' ); ?>
 						<span aria-hidden="true">→</span>
 					</a>
@@ -136,7 +136,7 @@ while ( have_posts() ) :
 		</div>
 
 		<?php if ( probo_is_configurable_product( $product ) ) : ?>
-			<div id="probo-configurator" class="scroll-mt-24 border-t border-line bg-surface">
+			<div id="pp-configurator" class="scroll-mt-24 border-t border-line bg-surface">
 				<div class="pp-container py-11">
 					<div class="mb-6 flex flex-wrap items-end justify-between gap-4">
 						<h2 class="text-2xl font-extrabold tracking-[-0.03em] lg:text-3xl">

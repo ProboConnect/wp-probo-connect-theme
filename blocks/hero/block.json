@@ -8,6 +8,7 @@
 	"description": "Hero met zoekbalk, korte pitch en snelkoppelingen naar populaire producten.",
 	"textdomain": "probo-connect",
 	"supports": {
+		"className": false,
 		"html": false,
 		"multiple": false,
 		"align": ["full"],

@@ -33,7 +33,18 @@ function probo_logo( $variant = 'dark', $size_class = 'text-[23px]' ) {
 	$name = get_bloginfo( 'name' );
 	$dot  = strpos( $name, '.' );
 
-	echo '<a class="flex items-center gap-2.5 no-underline" href="' . esc_url( home_url( '/' ) ) . '" rel="home">';
+	// The light lockup takes its colour from whatever surface it sits on (the
+	// dark bar, the footer) via currentColor. The base `a { color: accent-ink }`
+	// rule would otherwise repaint the anchor and break that inheritance — which
+	// on a light accent means a near-black wordmark on a dark bar — so the
+	// pp-logo--light hook lets the anchor inherit its container's colour instead.
+	$anchor_class = 'pp-logo flex items-center gap-2.5 no-underline';
+
+	if ( 'light' === $variant ) {
+		$anchor_class .= ' pp-logo--light';
+	}
+
+	echo '<a class="' . esc_attr( $anchor_class ) . '" href="' . esc_url( home_url( '/' ) ) . '" rel="home">';
 
 	if ( $src ) {
 		printf(
@@ -116,18 +127,38 @@ function probo_account_link_text() {
 /**
  * The theme's search field: flush input with an accent submit button.
  *
- * @param string $size 'header' or 'hero'.
+ * @param string $size 'header', 'hero', or 'compact' (the borderless 44px field
+ *                     on Variant B's dark bar).
  */
 function probo_search_form( $size = 'header' ) {
-	$is_hero = 'hero' === $size;
-	$height  = $is_hero ? 'h-[60px]' : 'h-[50px]';
-	$border  = $is_hero ? '' : 'border-2 border-secondary-line';
+	$is_hero    = 'hero' === $size;
+	$is_compact = 'compact' === $size;
+
+	if ( $is_compact ) {
+		$height   = 'h-11';
+		$border   = '';
+		$in_pad   = 'px-4';
+		$in_size  = 'text-sm';
+		$btn_pad  = 'px-[22px] text-sm';
+	} elseif ( $is_hero ) {
+		$height   = 'h-[60px]';
+		$border   = '';
+		$in_pad   = 'px-5';
+		$in_size  = 'text-base';
+		$btn_pad  = 'px-8 text-[15px]';
+	} else {
+		$height   = 'h-[50px]';
+		$border   = 'border-2 border-secondary-line';
+		$in_pad   = 'px-5';
+		$in_size  = 'text-[15px]';
+		$btn_pad  = 'px-6.5 text-sm';
+	}
 	?>
 	<form role="search" method="get" class="rounded-pp flex w-full overflow-hidden bg-white <?php echo esc_attr( $height . ' ' . $border ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<label class="sr-only" for="probo-search-<?php echo esc_attr( $size ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
+		<label class="sr-only" for="pp-search-<?php echo esc_attr( $size ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
 		<input
-			id="probo-search-<?php echo esc_attr( $size ); ?>"
-			class="min-w-0 flex-1 border-0 bg-transparent px-5 text-ink outline-none <?php echo $is_hero ? 'text-base' : 'text-[15px]'; ?>"
+			id="pp-search-<?php echo esc_attr( $size ); ?>"
+			class="min-w-0 flex-1 overflow-hidden border-0 bg-transparent text-ink text-ellipsis whitespace-nowrap outline-none <?php echo esc_attr( $in_pad . ' ' . $in_size ); ?>"
 			type="search"
 			name="s"
 			value="<?php echo esc_attr( get_search_query() ); ?>"
@@ -136,7 +167,7 @@ function probo_search_form( $size = 'header' ) {
 		<?php if ( class_exists( 'WooCommerce' ) ) : ?>
 			<input type="hidden" name="post_type" value="product" />
 		<?php endif; ?>
-		<button class="bg-accent font-bold text-accent-fg hover:bg-ink hover:text-white <?php echo $is_hero ? 'px-8 text-[15px]' : 'px-6.5 text-sm'; ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect' ); ?></button>
+		<button class="bg-accent font-bold whitespace-nowrap text-accent-fg hover:bg-ink hover:text-white <?php echo esc_attr( $btn_pad ); ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect' ); ?></button>
 	</form>
 	<?php
 }
@@ -267,91 +298,6 @@ function probo_product_badge( $product = null ) {
  */
 function probo_callout_tone_classes( $tone ) {
 	return 'Secondary' === $tone ? 'bg-secondary text-secondary-fg' : 'bg-accent text-accent-fg';
-}
-
-/**
- * A callout as a tile, sized to sit in a category grid cell.
- *
- * Shared by the Categorietegels block and the per-category callouts, so the two
- * cannot drift apart.
- *
- * @param array $callout Title, text, cta, url and tone.
- */
-function probo_callout_tile( $callout ) {
-	if ( empty( $callout['title'] ) ) {
-		return;
-	}
-
-	$image_url = ! empty( $callout['image'] ) ? wp_get_attachment_image_url( (int) $callout['image'], 'medium' ) : '';
-	?>
-	<div class="rounded-pp flex flex-col overflow-hidden <?php echo esc_attr( probo_callout_tone_classes( $callout['tone'] ?? '' ) ); ?>">
-		<?php if ( $image_url ) : ?>
-			<img class="h-[130px] w-full object-cover" src="<?php echo esc_url( $image_url ); ?>" alt="" />
-		<?php endif; ?>
-
-		<div class="flex flex-1 flex-col justify-between p-6">
-			<div>
-				<div class="text-lg leading-tight font-extrabold tracking-[-0.02em]">
-					<?php echo esc_html( $callout['title'] ); ?>
-				</div>
-
-				<?php if ( ! empty( $callout['text'] ) ) : ?>
-					<p class="mt-2.5 text-[13px] leading-relaxed opacity-85"><?php echo esc_html( $callout['text'] ); ?></p>
-				<?php endif; ?>
-			</div>
-
-			<?php if ( ! empty( $callout['cta'] ) && ! empty( $callout['url'] ) ) : ?>
-				<a
-					class="rounded-pp mt-5 inline-flex w-fit items-center bg-white px-4.5 py-2.5 text-[13px] font-bold text-ink no-underline hover:bg-ink hover:text-white"
-					href="<?php echo esc_url( $callout['url'] ); ?>"
-				>
-					<?php echo esc_html( $callout['cta'] ); ?>
-				</a>
-			<?php endif; ?>
-		</div>
-	</div>
-	<?php
-}
-
-/**
- * The same callout as a wide band, for the top of a category archive.
- *
- * @param array $callout Title, text, cta, url and tone.
- */
-function probo_callout_banner( $callout ) {
-	if ( empty( $callout['title'] ) ) {
-		return;
-	}
-
-	$image_url = ! empty( $callout['image'] ) ? wp_get_attachment_image_url( (int) $callout['image'], 'thumbnail' ) : '';
-	?>
-	<div class="rounded-pp flex flex-col gap-5 p-7 sm:flex-row sm:items-center sm:justify-between lg:px-9 <?php echo esc_attr( probo_callout_tone_classes( $callout['tone'] ?? '' ) ); ?>">
-		<div class="flex flex-col gap-5 sm:flex-row sm:items-center">
-			<?php if ( $image_url ) : ?>
-				<img class="rounded-pp h-16 w-16 flex-none object-cover sm:h-20 sm:w-20" src="<?php echo esc_url( $image_url ); ?>" alt="" />
-			<?php endif; ?>
-
-			<div class="max-w-[620px]">
-				<div class="text-xl leading-tight font-extrabold tracking-[-0.02em]">
-					<?php echo esc_html( $callout['title'] ); ?>
-				</div>
-
-				<?php if ( ! empty( $callout['text'] ) ) : ?>
-					<p class="mt-2 text-[15px] leading-relaxed opacity-85"><?php echo esc_html( $callout['text'] ); ?></p>
-				<?php endif; ?>
-			</div>
-		</div>
-
-		<?php if ( ! empty( $callout['cta'] ) && ! empty( $callout['url'] ) ) : ?>
-			<a
-				class="rounded-pp inline-flex w-fit flex-none items-center bg-white px-5.5 py-3 text-sm font-bold text-ink no-underline hover:bg-ink hover:text-white"
-				href="<?php echo esc_url( $callout['url'] ); ?>"
-			>
-				<?php echo esc_html( $callout['cta'] ); ?>
-			</a>
-		<?php endif; ?>
-	</div>
-	<?php
 }
 
 /**
@@ -644,11 +590,11 @@ function probo_checkout_header() {
 		<div class="pp-container flex flex-wrap items-center gap-x-6 gap-y-4 py-5">
 			<?php probo_logo(); ?>
 
-			<ol class="pp-checkout-progress" data-probo-progress>
+			<ol class="pp-checkout-progress" data-pp-progress>
 				<?php foreach ( $steps as $number => $step ) : ?>
 					<li
 						class="pp-checkout-progress-step"
-						data-probo-progress-step="<?php echo esc_attr( (string) $number ); ?>"
+						data-pp-progress-step="<?php echo esc_attr( (string) $number ); ?>"
 						data-state="<?php echo esc_attr( $number < $current ? 'done' : ( $number === $current ? 'current' : 'todo' ) ); ?>"
 					>
 						<span class="pp-checkout-progress-badge" aria-hidden="true"><?php echo esc_html( (string) $number ); ?></span>
@@ -663,7 +609,7 @@ function probo_checkout_header() {
 					printf(
 						/* translators: %s: phone number. */
 						esc_html__( 'Need help? %s', 'probo-connect' ),
-						'<span data-probo-partial="checkout_phone">' . esc_html( $phone ) . '</span>'
+						'<span data-pp-partial="checkout_phone">' . esc_html( $phone ) . '</span>'
 					);
 					?>
 				</a>

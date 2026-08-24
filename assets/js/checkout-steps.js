@@ -7,23 +7,23 @@
  * long one-page form it always was.
  *
  * What it deliberately does not do: touch a price, a delivery option or a
- * carrier. Those belong to WooCommerce and to Probo Connect, and are read back
- * out of the fragments those two refresh.
+ * carrier. Those belong to WooCommerce and to the configurator plugin, and are
+ * read back out of the fragments those two refresh.
  */
 ( function () {
 	'use strict';
 
-	var steps = document.querySelector( '[data-probo-steps]' );
+	var steps = document.querySelector( '[data-pp-steps]' );
 
 	if ( ! steps ) {
 		return;
 	}
 
-	var STORAGE_KEY = 'probo-checkout-steps';
+	var STORAGE_KEY = 'pp-checkout-steps';
 	var LAST = 3;
 
 	var state = {
-		current: parseInt( steps.getAttribute( 'data-probo-initial-step' ), 10 ) || 1,
+		current: parseInt( steps.getAttribute( 'data-pp-initial-step' ), 10 ) || 1,
 		completed: [],
 	};
 
@@ -67,7 +67,7 @@
 	}
 
 	function stepEl( number ) {
-		return steps.querySelector( '[data-probo-step="' + number + '"]' );
+		return steps.querySelector( '[data-pp-step="' + number + '"]' );
 	}
 
 	function isCompleted( number ) {
@@ -106,7 +106,7 @@
 			el.classList.toggle( 'is-todo', ! open && ! done );
 
 			var progress = document.querySelector(
-				'[data-probo-progress-step="' + number + '"]'
+				'[data-pp-progress-step="' + number + '"]'
 			);
 
 			if ( progress ) {
@@ -289,7 +289,7 @@
 		}
 
 		return (
-			el.querySelector( '[data-probo-step-next]' ) ||
+			el.querySelector( '[data-pp-step-next]' ) ||
 			el.querySelector( '#place_order' )
 		);
 	}
@@ -336,10 +336,10 @@
 	/* --- Wiring ------------------------------------------------------------ */
 
 	steps.addEventListener( 'click', function ( event ) {
-		var next = event.target.closest( '[data-probo-step-next]' );
+		var next = event.target.closest( '[data-pp-step-next]' );
 
 		if ( next ) {
-			var number = parseInt( next.getAttribute( 'data-probo-step-next' ), 10 );
+			var number = parseInt( next.getAttribute( 'data-pp-step-next' ), 10 );
 
 			if ( ! validateStep( number ) ) {
 				return;
@@ -351,13 +351,13 @@
 			return;
 		}
 
-		var edit = event.target.closest( '[data-probo-step-edit]' );
+		var edit = event.target.closest( '[data-pp-step-edit]' );
 
 		if ( edit ) {
 			// Reopening a step leaves the later ones completed: a repeat
 			// customer who corrects a house number should not have to walk
 			// through the delivery and payment choice again.
-			go( parseInt( edit.getAttribute( 'data-probo-step-edit' ), 10 ) );
+			go( parseInt( edit.getAttribute( 'data-pp-step-edit' ), 10 ) );
 		}
 	} );
 
@@ -405,10 +405,10 @@
 			var invalid = document.querySelector(
 				'.woocommerce-invalid input, .woocommerce-invalid select'
 			);
-			var step = invalid ? invalid.closest( '[data-probo-step]' ) : null;
+			var step = invalid ? invalid.closest( '[data-pp-step]' ) : null;
 
 			if ( step ) {
-				go( parseInt( step.getAttribute( 'data-probo-step' ), 10 ) );
+				go( parseInt( step.getAttribute( 'data-pp-step' ), 10 ) );
 			}
 		} );
 	}
@@ -422,7 +422,7 @@
 	 * restores the right string too.
 	 */
 	function syncOrderButton() {
-		var button = document.querySelector( '#place_order[data-probo-label]' );
+		var button = document.querySelector( '#place_order[data-pp-label]' );
 		var total = document.querySelector( '.order-total td' );
 
 		if ( ! button || ! total ) {
@@ -430,7 +430,7 @@
 		}
 
 		var label =
-			button.getAttribute( 'data-probo-label' ) +
+			button.getAttribute( 'data-pp-label' ) +
 			' · ' +
 			total.textContent.trim();
 
@@ -447,14 +447,14 @@
 	 * guessed at render time.
 	 */
 	function syncPickupCount() {
-		var list = document.querySelector( '[data-probo-pickup-count]' );
-		var label = document.querySelector( '[data-probo-pickup-label]' );
+		var list = document.querySelector( '[data-pp-pickup-count]' );
+		var label = document.querySelector( '[data-pp-pickup-label]' );
 
 		if ( ! list || ! label ) {
 			return;
 		}
 
-		var count = parseInt( list.getAttribute( 'data-probo-pickup-count' ), 10 );
+		var count = parseInt( list.getAttribute( 'data-pp-pickup-count' ), 10 );
 
 		label.textContent = count ? '(' + count + ' locaties)' : '';
 	}
@@ -496,12 +496,12 @@
 	document.addEventListener( 'change', function ( event ) {
 		var input = event.target;
 
-		if ( ! input || 'probo_delivery_preset' !== input.name ) {
+		if ( ! input || 'pp_delivery_preset' !== input.name ) {
 			return;
 		}
 
-		var date = input.getAttribute( 'data-probo-date' );
-		var method = input.getAttribute( 'data-probo-method' );
+		var date = input.getAttribute( 'data-pp-date' );
+		var method = input.getAttribute( 'data-pp-method' );
 		var blocks = window.connectShippingBlocks;
 
 		// No pair on it: this is "Kies zelf". Nothing to store — the lists it

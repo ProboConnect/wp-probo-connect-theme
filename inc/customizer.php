@@ -131,6 +131,20 @@ function probo_customize_register( $wp_customize ) {
 
 	// --- Header & footer --------------------------------------------------
 	$add(
+		'header_variant',
+		array(
+			'type'    => 'radio',
+			'label'   => __( 'Header style', 'probo-connect' ),
+			'section' => 'probo_chrome',
+			'choices' => array(
+				'ruim'    => __( 'Spacious — logo, search and USPs on three rows', 'probo-connect' ),
+				'compact' => __( 'Compact — one dark bar with a products megamenu', 'probo-connect' ),
+			),
+		),
+		'probo_sanitize_header_variant'
+	);
+
+	$add(
 		'bar_style',
 		array(
 			'type'    => 'select',
@@ -324,7 +338,7 @@ function probo_customize_register( $wp_customize ) {
 			$wp_customize->selective_refresh->add_partial(
 				'probo_' . $key,
 				array(
-					'selector'        => '[data-probo-partial="' . $key . '"]',
+					'selector'        => '[data-pp-partial="' . $key . '"]',
 					'render_callback' => static function () use ( $key ) {
 						return esc_html( probo_get( $key ) );
 					},
@@ -377,6 +391,19 @@ function probo_sanitize_title_font( $value ) {
  */
 function probo_sanitize_body_font( $value ) {
 	return isset( probo_font_choices( 'body' )[ $value ] ) ? $value : 'Archivo';
+}
+
+/**
+ * Sanitize the header variant.
+ *
+ * Only the two known variants are allowed; anything else falls back to the
+ * spacious default, so the compact markup never loads by accident.
+ *
+ * @param mixed $value Raw value.
+ * @return string
+ */
+function probo_sanitize_header_variant( $value ) {
+	return in_array( $value, array( 'ruim', 'compact' ), true ) ? $value : 'ruim';
 }
 
 /**

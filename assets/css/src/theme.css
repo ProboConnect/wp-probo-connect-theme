@@ -239,6 +239,18 @@
     border-left-color: var(--color-accent);
   }
 
+  /* The empty-cart message (cart/cart-empty.php). It carries .woocommerce-info,
+     but sits outside .woocommerce-notices-wrapper, so the notice box above never
+     catches it — left alone it drew as the plugin's bare small text. Here it is
+     a clean, centred line, not a boxed notice. */
+  .cart-empty.woocommerce-info {
+    @apply m-0 border-0 bg-transparent p-0 text-2xl font-extrabold tracking-[-0.02em] text-ink;
+  }
+
+  .cart-empty.woocommerce-info::before {
+    content: none;
+  }
+
   .woocommerce .quantity input.qty {
     @apply rounded-pp h-11 w-16 border border-line-strong text-center text-[15px];
   }
@@ -757,6 +769,75 @@
 
   .pp-topbar-menu a {
     @apply text-bar-muted no-underline hover:text-bar-fg;
+  }
+
+  /* The light logo lockup inherits its surface colour (dark bar, footer) rather
+     than the accent-ink every other anchor takes, so the wordmark stays legible
+     on dark. A component-layer rule so it outranks the base `a` colour. */
+  .pp-logo--light {
+    color: inherit;
+  }
+
+  /* Variant B (compact header): the muted service links on the dark bar. */
+  .pp-compact-service {
+    @apply m-0 flex list-none items-center gap-6 p-0;
+  }
+
+  .pp-compact-service a {
+    @apply text-bar-muted whitespace-nowrap no-underline hover:text-bar-fg;
+  }
+
+  /* Inside the products dropdown on small screens the same links sit on white,
+     so they take the page ink instead of the dark-bar muted grey. */
+  .pp-compact-service--stacked {
+    @apply flex-col items-start gap-3;
+  }
+
+  .pp-compact-service--stacked a {
+    @apply text-ink hover:text-accent-ink;
+  }
+
+  /* Variant B: the primary menu rendered inside the products megamenu. It is
+     already inside an open panel, so the desktop flyout behaviour — a
+     full-width absolute overlay revealed on hover — has nowhere to go. From lg
+     the sub-menus become the inline, stacked columns they are below lg instead.
+     Scoped to the panel id, not a menu class, so it also catches the fallback
+     menu (which hardcodes its own class). */
+  #pp-products-menu .pp-nav-menu {
+    @apply gap-6;
+  }
+
+  @media (min-width: 1024px) {
+    #pp-products-menu .pp-nav-menu {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    #pp-products-menu .sub-menu {
+      position: static;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: start;
+      gap: 1rem 2.25rem;
+      inset: auto;
+      width: auto;
+      max-width: none;
+      margin: 0;
+      padding: 0.5rem 0 0;
+      opacity: 1;
+      visibility: visible;
+      box-shadow: none;
+      transition: none;
+    }
+
+    #pp-products-menu .sub-menu::before {
+      display: none;
+    }
+
+    #pp-products-menu .pp-nav-menu > li.menu-item-has-children > a::after {
+      display: none;
+    }
   }
 
   /* A callout sitting among the product tiles. The <li> is the grid item; the

@@ -17,7 +17,7 @@ if ( post_password_required() ) {
 			<?php
 			printf(
 				/* translators: %s: comment count. */
-				esc_html( _n( '%s reactie', '%s reacties', get_comments_number(), 'probo-connect' ) ),
+				esc_html( _n( '%s comment', '%s comments', get_comments_number(), 'probo-connect' ) ),
 				esc_html( number_format_i18n( get_comments_number() ) )
 			);
 			?>

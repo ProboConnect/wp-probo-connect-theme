@@ -17,7 +17,7 @@ return array(
 		'wp-components',
 		'wp-i18n',
 		'wp-server-side-render',
-		'probo-block-repeater',
+		'pp-block-repeater',
 	),
 	'version'      => '1.0.0',
 );

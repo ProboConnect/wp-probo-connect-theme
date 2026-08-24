@@ -26,13 +26,12 @@ if ( ! $shop_url && function_exists( 'wc_get_page_permalink' ) ) {
 	$shop_url = wc_get_page_permalink( 'shop' );
 }
 
-// Two kinds of callout can appear in this grid, both drawn by
-// probo_callout_tile() so they cannot drift apart:
+// Two kinds of callout can appear in this grid, both drawn through the 'grid'
+// callout templates so they cannot drift apart:
 //
 // 1. the block's own, filled in on this block instance;
-// 2. a category's own — possibly several — filled in on the term under
-//    Producten → Callouts, which follow that category into every grid that
-//    lists it.
+// 2. a category's own — possibly several — filled in on the product category
+//    itself, which follow that category into every grid that lists it.
 $callout       = ! empty( $attributes['showCallout'] ) && $attributes['calloutTitle']
 	? array(
 		'title' => $attributes['calloutTitle'],
@@ -63,7 +62,7 @@ $term_callouts = ! empty( $attributes['showTermCallouts'] );
 			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				<?php
 				if ( $callout && $callout_first ) {
-					probo_callout_tile( $callout );
+					probo_callout_render( $callout, 'grid' );
 				}
 
 				foreach ( $terms as $index => $term ) :
@@ -91,13 +90,10 @@ $term_callouts = ! empty( $attributes['showTermCallouts'] );
 					if ( $term_callouts ) {
 						foreach ( probo_category_callouts( $term ) as $term_callout ) {
 							// Every callout is a grid tile here, whatever template it uses
-							// on the category archive — a band template has nowhere to go
-							// in this grid, so it falls back to the built-in tile look.
-							if ( 'band' === probo_callout_placement( $term_callout ) ) {
-								probo_callout_tile( $term_callout );
-							} else {
-								probo_callout_render( $term_callout );
-							}
+							// on the category archive — a full-width band has nowhere to go
+							// in this grid, so forcing the placement draws it with a grid
+							// template instead.
+							probo_callout_render( $term_callout, 'grid' );
 						}
 					}
 
@@ -107,14 +103,14 @@ $term_callouts = ! empty( $attributes['showTermCallouts'] );
 					// position is skipped: a callout there is the "Achteraan"
 					// setting, not an interval.
 					if ( $callout && $interval && 0 === ( $index + 1 ) % $interval && $index + 1 < count( $terms ) ) {
-						probo_callout_tile( $callout );
+						probo_callout_render( $callout, 'grid' );
 					}
 					?>
 				<?php endforeach; ?>
 
 				<?php
 				if ( $callout && ! $callout_first && ! $interval ) {
-					probo_callout_tile( $callout );
+					probo_callout_render( $callout, 'grid' );
 				}
 				?>
 			</div>

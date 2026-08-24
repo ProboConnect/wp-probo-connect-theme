@@ -242,10 +242,10 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 						id="<?php echo esc_attr( $id ); ?>"
 						class="pp-preset-input pp-preset-input--auto"
 						type="radio"
-						name="probo_delivery_preset"
+						name="pp_delivery_preset"
 						value="<?php echo esc_attr( $preset['key'] ); ?>"
-						data-probo-date="<?php echo esc_attr( $date['date'] ); ?>"
-						data-probo-method="<?php echo esc_attr( $method['code'] ); ?>"
+						data-pp-date="<?php echo esc_attr( $date['date'] ); ?>"
+						data-pp-method="<?php echo esc_attr( $method['code'] ); ?>"
 						<?php checked( $probo_is_current( $preset['index'] ) ); ?>
 					/>
 					<span class="pp-when-body">
@@ -294,7 +294,7 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 					id="preset-custom"
 					class="pp-preset-input pp-preset-input--custom"
 					type="radio"
-					name="probo_delivery_preset"
+					name="pp_delivery_preset"
 					value="custom"
 					<?php checked( $probo_custom ); ?>
 				/>
