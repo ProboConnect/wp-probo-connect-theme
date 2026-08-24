@@ -24,7 +24,7 @@
 
 	var state = {
 		current: parseInt( steps.getAttribute( 'data-pp-initial-step' ), 10 ) || 1,
-		completed: [],
+		furthest: 0,
 	};
 
 	/**
@@ -53,7 +53,11 @@
 
 			if ( parsed && parsed.current ) {
 				state.current = Math.min( parsed.current, serverStep );
-				state.completed = parsed.completed || [];
+
+				// Old sessionStorage blobs (pre-migration) have no `furthest`
+				// key; fall back to their `current`, which the line above has
+				// already clamped to what the server allows.
+				state.furthest = Math.min( parsed.furthest || parsed.current, state.current );
 			}
 		} catch ( error ) {
 			// A blocked or full sessionStorage is not a reason to fail.
@@ -68,16 +72,6 @@
 
 	function stepEl( number ) {
 		return steps.querySelector( '[data-pp-step="' + number + '"]' );
-	}
-
-	function isCompleted( number ) {
-		return state.completed.indexOf( number ) !== -1;
-	}
-
-	function complete( number ) {
-		if ( ! isCompleted( number ) ) {
-			state.completed.push( number );
-		}
 	}
 
 	/**
@@ -99,7 +93,7 @@
 			// behind that are answered — they need their check mark and their
 			// "Wijzig", not the grey not-yet state.
 			var open = number === state.current;
-			var done = ! open && ( isCompleted( number ) || number < state.current );
+			var done = ! open && ( number <= state.furthest || number < state.current );
 
 			el.classList.toggle( 'is-open', open );
 			el.classList.toggle( 'is-done', done );
@@ -345,7 +339,7 @@
 				return;
 			}
 
-			complete( number );
+			state.furthest = Math.max( state.furthest, number );
 			go( number + 1 );
 
 			return;
@@ -529,9 +523,7 @@
 
 	// Everything before the step the checkout opens on is answered already, so
 	// it stays reopenable after the customer walks back into it.
-	for ( var seed = 1; seed < state.current; seed++ ) {
-		complete( seed );
-	}
+	state.furthest = Math.max( state.furthest, state.current - 1 );
 
 	initStickyBar();
 	render();

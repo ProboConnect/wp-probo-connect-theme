@@ -72,7 +72,23 @@ defined( 'ABSPATH' ) || exit;
 
 	<tfoot>
 		<tr class="cart-subtotal border-t border-line">
-			<th class="pt-4 pb-1.5 text-left font-normal text-ink-3"><?php esc_html_e( 'Subtotal excl. VAT', 'probo-connect' ); ?></th>
+			<th class="pt-4 pb-1.5 text-left font-normal text-ink-3">
+				<?php
+				if ( wc_tax_enabled() ) {
+					printf(
+						/* translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated. */
+						esc_html__( 'Subtotal %s', 'probo-connect' ),
+						esc_html(
+							WC()->cart->display_prices_including_tax()
+								? WC()->countries->inc_tax_or_vat()
+								: WC()->countries->ex_tax_or_vat()
+						)
+					);
+				} else {
+					esc_html_e( 'Subtotal', 'probo-connect' );
+				}
+				?>
+			</th>
 			<td class="pt-4 pb-1.5 text-right font-semibold"><?php wc_cart_totals_subtotal_html(); ?></td>
 		</tr>
 

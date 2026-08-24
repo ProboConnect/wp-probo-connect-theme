@@ -141,7 +141,17 @@ do_action( 'woocommerce_before_cart' );
 						<div class="text-[22px] font-extrabold tracking-[-0.02em]">
 							<?php echo wp_kses_post( apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ) ); ?>
 						</div>
-						<div class="font-mono mt-1 text-xs font-medium text-ink-4"><?php esc_html_e( 'excl. VAT', 'probo-connect' ); ?></div>
+						<?php if ( wc_tax_enabled() ) : ?>
+							<div class="font-mono mt-1 text-xs font-medium text-ink-4">
+								<?php
+								echo esc_html(
+									WC()->cart->display_prices_including_tax()
+										? WC()->countries->inc_tax_or_vat()
+										: WC()->countries->ex_tax_or_vat()
+								);
+								?>
+							</div>
+						<?php endif; ?>
 
 						<?php
 						// Quantity is part of the configuration, so it is shown, not edited.

@@ -770,15 +770,6 @@
     @apply block text-[13px] font-bold text-ink no-underline normal-case hover:text-accent-ink;
   }
 
-  /* The column holding the products that sit directly in the category is headed
-     by that category's own name — the word you just clicked in the menu bar. So
-     the heading goes: below lg it is dropped from the stacked list, and from lg
-     it keeps its box but not its ink, so the column still lines up with the
-     headed columns beside it in the grid. */
-  .pp-flyout-group--self > .pp-flyout-heading {
-    @apply hidden;
-  }
-
   .pp-flyout-links {
     @apply m-0 flex list-none flex-col gap-1 p-0;
   }
@@ -822,11 +813,6 @@
 
     .pp-flyout-heading {
       @apply mb-1.5 text-[15px];
-    }
-
-    .pp-flyout-group--self > .pp-flyout-heading {
-      @apply block;
-      visibility: hidden;
     }
 
     .pp-nav-menu .pp-flyout-links a {
