@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/logo-reel",
+	"title": "Logobalk",
+	"category": "probo",
+	"icon": "images-alt2",
+	"description": "Rij logo's van klanten of partners.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Gedrukt voor" },
+		"logos": { "type": "array", "default": [] },
+		"grayscale": { "type": "boolean", "default": true },
+		"height": { "type": "number", "default": 32 }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

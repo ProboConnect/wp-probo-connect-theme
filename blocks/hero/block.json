@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/hero",
+	"title": "Hero",
+	"category": "probo",
+	"icon": "cover-image",
+	"description": "Hero met zoekbalk, korte pitch en snelkoppelingen naar populaire producten.",
+	"textdomain": "probo-connect",
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"align": ["full"],
+		"anchor": true
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "Eigen productie in Nederland" },
+		"title": { "type": "string", "default": "Groot drukwerk.\nMorgen op locatie." },
+		"subtitle": { "type": "string", "default": "Configureer je spandoek, bord of sticker in een paar stappen. Prijs en levertijd zie je direct — geen offertetraject." },
+		"heroStyle": { "type": "string", "default": "" },
+		"titleColor": { "type": "string", "default": "" },
+		"showSearch": { "type": "boolean", "default": true },
+		"chips": { "type": "string", "default": "Bouwhekspandoek, Vlaggen, Raamstickers, Beachflags" },
+		"imageId": { "type": "number", "default": 0 },
+		"overlay": { "type": "string", "default": "" },
+		"overlayStrength": { "type": "number", "default": 55 }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

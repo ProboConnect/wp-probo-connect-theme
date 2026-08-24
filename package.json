@@ -1,0 +1,16 @@
+{
+  "name": "probo-connect",
+  "version": "1.0.0",
+  "description": "Probo Connect WordPress theme \u2014 Tailwind v4 + block build",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "dev": "tailwindcss -i ./assets/css/src/theme.css -o ./assets/css/theme.css --watch",
+    "build": "tailwindcss -i ./assets/css/src/theme.css -o ./assets/css/theme.css --minify",
+    "check:templates": "php bin/check-templates.php"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  }
+}

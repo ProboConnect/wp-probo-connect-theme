@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/how-it-works",
+	"title": "Zo werkt het",
+	"category": "probo",
+	"icon": "editor-ol",
+	"description": "Drie genummerde stappen die het bestelproces uitleggen.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Zo werkt het" },
+		"steps": {
+			"type": "string",
+			"default": "01 | Stel je product samen | Kies formaat, materiaal en afwerking. De prijs en levertijd passen zich direct aan.\n02 | Upload je ontwerp | Wij controleren je bestand gratis op formaat, resolutie en snijmarges. Geen ontwerp? Wij maken het.\n03 | Kies je leverdag | Haast? Morgen in huis. Geen haast? Kies een latere dag en betaal minder."
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

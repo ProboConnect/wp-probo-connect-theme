@@ -1,0 +1,531 @@
+/* ===========================================================================
+   Print Connect skin
+   ---------------------------------------------------------------------------
+   The configurator, its pricing, delivery dates and file specs all belong to
+   the configurator plugin. This file only restyles what that plugin renders.
+
+   Names here stay white label. The connect-* class names below are the
+   plugin's own markup — those are matched, not chosen, so they cannot be
+   renamed.
+
+   Retargeted against the real plugin output. What was found there:
+
+   * <connect-product-configurator> USES SHADOW DOM. Nothing inside it can be
+     reached with descendant selectors. Two channels do cross the boundary:
+     inherited custom properties (the token block below) and ::part() — and the
+     component exposes exactly one part, `configurator`. The earlier guesses at
+     part names (step, panel, option-card, badge, submit, price) do not exist
+     and have been removed.
+   * Everything else the plugin prints is plain light DOM with `connect-`
+     prefixed classes, listed per section below. Those are styled directly.
+
+   The one rule worth remembering: an earlier guess, [class*="options"], also
+   matched .connect-options-list and turned the summary's four spec rows into
+   four squeezed columns. Match the real class names, never a substring.
+   =========================================================================== */
+
+/* --- The wrapper the theme prints around the plugin output ---------------- */
+.pp-configurator {
+  --pp-connect-accent: var(--pp-accent);
+  --pp-connect-radius: var(--pp-radius);
+
+  font-family: var(--pp-font-body), system-ui, sans-serif;
+  color: var(--color-ink, #0B0B0C);
+}
+
+/* The component's shadow styles were read to see which custom properties it
+   actually consumes. It reads unprefixed names — --color-primary,
+   --color-accent, --color-on-primary, --color-border-default, --color-field-*
+   and friends — and none of the prefixed guesses that used to sit here. Those
+   are gone rather than left as decoration.
+
+   Note that the theme already defines --color-accent and --color-border-* on
+   :root through Tailwind, and custom properties inherit across a shadow
+   boundary, so the component is picking some of those up already. Mapping the
+   full set deliberately is a separate job. */
+.pp-configurator connect-product-configurator {
+  display: block;
+  margin-bottom: 28px;
+}
+
+/* The single part the component exposes. */
+.pp-configurator connect-product-configurator::part(configurator) {
+  font-family: var(--pp-font-body), system-ui, sans-serif;
+}
+
+/* --- Summary panel -------------------------------------------------------- */
+.connect-configurator-summary {
+  border: 1px solid #E4E4E7;
+  border-radius: var(--pp-radius);
+  background: #fff;
+  padding: 28px;
+}
+
+/* No rule for .notready here on purpose: the plugin adds that class while the
+   configuration is incomplete and hides the panel outright (display:none). Its
+   own stylesheet owns that behaviour; a dimming rule here would only be dead
+   code, or worse, fight it. */
+
+.connect-configurator-columns {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .connect-configurator-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.connect-configurator-column > h2 {
+  margin: 0 0 14px;
+  font-family: var(--pp-font-title), system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.connect-configurator-card {
+  border: 1px solid #E4E4E7;
+  border-radius: var(--pp-radius);
+  padding: 18px;
+}
+
+.connect-configurator-card > strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* --- Selected options ----------------------------------------------------- */
+/* A definition list of spec rows: label left, value right, one per line. The
+   plugin already makes each row a flex pair; this only has to stop the list
+   itself from becoming a multi-column grid, and set the type. */
+.connect-options-list {
+  display: block;
+  margin: 0;
+}
+
+.connect-options-list > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px solid #F0F0EE;
+}
+
+.connect-options-list > div:last-child {
+  border-bottom: 0;
+}
+
+.connect-options-list dt {
+  flex: 0 1 auto;
+  font-size: 13px;
+  color: #6B6B70;
+}
+
+.connect-options-list dd {
+  margin: 0;
+  flex: 0 1 auto;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  color: #0B0B0C;
+}
+
+/* --- Cart line: reference field and spec list ------------------------------
+   The plugin prints these inside the cart line, wrapped in <small>, with a <dl>
+   that carries no class of its own — hence the scoping on .cart_item. Left
+   alone it renders as a bare input plus a tall stack of bold label/value pairs,
+   one per line. */
+.cart_item .connect-line-reference-wrapper label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink-2, #4A4A50);
+}
+
+.cart_item input.connect-line-reference {
+  flex: 1 1 auto;
+  max-width: 280px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-line-strong, #C9C9CE);
+  border-radius: var(--pp-radius);
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-ink, #0B0B0C);
+}
+
+.cart_item input.connect-line-reference:focus {
+  border-color: var(--color-ink, #0B0B0C);
+  outline: 2px solid var(--pp-accent);
+  outline-offset: 1px;
+}
+
+.cart_item .connect-line-reference-message {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-ink-3, #6B6B70);
+}
+
+/* The spec list: one row per pair, label left and value right, in the same
+   quiet register as the rest of the card. The dt/dd pairs fall into the two
+   columns by themselves, so no per-element placement is needed. */
+.cart_item small {
+  font-size: inherit;
+}
+
+.cart_item small > dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 3px 14px;
+  margin: 10px 0 0;
+  max-width: 460px;
+}
+
+.cart_item small > dl dt {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-ink-3, #6B6B70);
+}
+
+.cart_item small > dl dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #0B0B0C);
+}
+
+/* The plugin separates the reference block from the list with a bare <br>. */
+.cart_item .connect-line-reference-wrapper + br,
+.cart_item small > br {
+  display: none;
+}
+
+/* --- Delivery moments ----------------------------------------------------- */
+.connect-delivery-moments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.connect-delivery-moment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  border: 1px solid #E4E4E7;
+  border-radius: var(--pp-radius);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.connect-delivery-moment:hover {
+  border-color: var(--pp-secondary-line);
+}
+
+.connect-delivery-date {
+  font-size: 15px;
+}
+
+.connect-delivery-price {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B6B70;
+}
+
+.connect-delivery-moment.has-surcharge .connect-delivery-price {
+  color: var(--pp-accent-ink, var(--pp-accent));
+}
+
+/* --- Checkout: the plugin's delivery selector ------------------------------
+   Rendered by connect-shipping.php as three empty blocks that its script fills
+   over AJAX: a notice, the dates, then the carriers for the chosen date. The
+   theme prints the step heading itself, so the plugin's own <h3> is folded into
+   a quieter sub-label. */
+.pp-checkout-delivery #connect-shipping-wrapper > h3 {
+  margin: 0 0 10px;
+  font-family: var(--pp-font-body), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-ink, #0B0B0C);
+}
+
+/* --- Checkout: the stepped variant only -----------------------------------
+   Everything below is scoped to .pp-delivery, which form-checkout.php only adds
+   when the Customizer's Checkout-stijl is "Stappen". The classic checkout keeps
+   the plugin's list exactly as the plugin draws it — its own "Bezorgen" and
+   "Ophalen" group headings included, because there are no tabs above it saying
+   the same thing.
+
+   What goes into those blocks in the stepped variant is the theme's own two
+   overrides in probo-connect/checkout/sections/: the day list rearranged into
+   one decision with three answers, and the carrier list with the cheapest one
+   out front. The layout of a single row lives in theme.css with the rest of the
+   checkout components (.pp-when-option, .pp-carrier); what is left here is the
+   frame around the blocks. */
+.pp-delivery #connect-shipping-wrapper > h3 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The two blocks read as one list: dates, then the carriers for that date. */
+.pp-delivery .connect-shipping-block-dates:not(:empty) + .connect-shipping-block-methods {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-line, #E4E4E7);
+}
+
+/* The group headings are what the tabs above the list already say. */
+.pp-delivery .connect-shipping-methods-group-title {
+  display: none;
+}
+
+.pp-delivery .connect-method-icon {
+  width: 34px;
+  height: 24px;
+  flex: none;
+  object-fit: contain;
+}
+
+.pp-delivery .connect-method-description {
+  flex: 1;
+  min-width: 0;
+}
+
+.pp-delivery .connect-method-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pp-delivery .connect-method-price {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.connect-shipping-block {
+  margin-bottom: 16px;
+}
+
+.connect-shipping-block:last-child {
+  margin-bottom: 0;
+}
+
+.connect-shipping-block-notice:empty {
+  display: none;
+}
+
+/* The "first pick a delivery date" placeholder, and any notice above it. */
+.connect-shipping-block-methods,
+.connect-shipping-block-notice {
+  font-size: 14px;
+  color: var(--color-ink-3, #6B6B70);
+}
+
+.connect-shipping-blocked-notice {
+  border-radius: var(--pp-radius);
+  border: 1px solid var(--color-line, #E4E4E7);
+  border-left: 4px solid var(--pp-accent);
+  background: var(--color-surface, #F7F7F5);
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--color-ink-2, #4A4A50);
+}
+
+/* --- Price ---------------------------------------------------------------- */
+.connect-price-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.connect-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.connect-price-label {
+  font-size: 13px;
+  color: #6B6B70;
+}
+
+.connect-price-amount {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* The one number that carries the decision gets the display treatment. */
+.connect-price-total-incl-vat .connect-price-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0B0B0C;
+}
+
+.connect-price-total-incl-vat .connect-price-amount {
+  font-family: var(--pp-font-title), system-ui, sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.connect-price-total-discount .connect-price-amount {
+  color: var(--pp-accent-ink, var(--pp-accent));
+}
+
+/* --- Footer: price on the left, add to cart on the right ------------------ */
+.connect-configurator-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid #E4E4E7;
+}
+
+.connect-configurator-footer > div {
+  flex: 1 1 260px;
+}
+
+#section-add-to-cart {
+  flex: 0 0 auto;
+}
+
+#connect-addtocart {
+  appearance: none;
+  border: 0;
+  border-radius: var(--pp-radius);
+  background: var(--pp-accent);
+  color: var(--pp-accent-fg, #fff);
+  padding: 16px 30px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+#connect-addtocart:hover:not(:disabled) {
+  background: #0B0B0C;
+  color: #fff;
+}
+
+#connect-addtocart:disabled {
+  cursor: not-allowed;
+}
+
+/* --- File specs ----------------------------------------------------------- */
+.connect-filespecs-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.connect-filespecs-link {
+  border: 1px solid #C9C9CE;
+  border-radius: var(--pp-radius);
+  background: #fff;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0B0B0C;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.connect-filespecs-link:hover {
+  border-color: #0B0B0C;
+}
+
+.connect-filespecs-popover {
+  border: 1px solid #E4E4E7;
+  border-radius: var(--pp-radius);
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(11, 11, 12, 0.06), 0 12px 28px rgba(11, 11, 12, 0.07);
+  padding: 18px;
+}
+
+.connect-filespecs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.connect-filespecs-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.connect-filespecs-label {
+  font-size: 13px;
+  color: #6B6B70;
+}
+
+.connect-filespecs-value {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.connect-filespecs-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* --- Loading states ------------------------------------------------------- */
+.connect-block_is-loading {
+  opacity: 0.5;
+}
+
+.connect-loader {
+  display: block;
+  margin: 24px auto;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #E4E4E7;
+  border-top-color: var(--pp-accent);
+  border-radius: 50%;
+  animation: pp-connect-spin 0.7s linear infinite;
+}
+
+@keyframes pp-connect-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connect-loader {
+    animation-duration: 3s;
+  }
+}

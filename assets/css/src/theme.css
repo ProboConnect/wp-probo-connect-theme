@@ -1,0 +1,1180 @@
+/* Layer order, declared before anything else so it is the first thing the
+   browser registers: plugin CSS goes into `plugins`, which sits below every
+   layer Tailwind emits. Later layers win over earlier ones regardless of
+   specificity, so a theme rule always beats a plugin rule from here on.
+   inc/woocommerce.php is what actually loads those sheets into the layer. */
+@layer plugins;
+
+@import "tailwindcss";
+
+/* Tailwind scans the theme's own PHP and block sources for class names.
+   Every class in a render.php must be a literal string — never built by
+   concatenation — or it will not survive the build. */
+@source "../../../**/*.php";
+@source "../../../blocks/**/*.js";
+
+/* ---------------------------------------------------------------------------
+   Runtime tokens.
+
+   These are the static defaults. inc/dynamic-css.php re-declares the same
+   custom properties on :root from the Customizer values, so anything below is
+   what the theme looks like before a single setting has been saved. The
+   contrast-aware ones (--pp-bar-*, --pp-footer-*, --pp-hero-*) are derived in
+   PHP exactly the way the design prototype derived them in JS.
+--------------------------------------------------------------------------- */
+:root {
+  --pp-accent: #1B4DFF;
+  --pp-accent-soft: #EEF1FF;
+  --pp-accent-fg: #FFFFFF;
+  --pp-accent-ink: var(--pp-accent);
+  --pp-secondary: #0B0B0C;
+  --pp-secondary-fg: #FFFFFF;
+  --pp-secondary-line: #0B0B0C;
+
+  --pp-radius: 4px;
+  --pp-card-border: 1px solid #E4E4E7;
+  --pp-card-shadow: none;
+
+  --pp-bar-bg: var(--pp-secondary);
+  --pp-bar-fg: #FFFFFF;
+  --pp-bar-muted: rgba(255, 255, 255, 0.7);
+  --pp-bar-line: transparent;
+  --pp-bar-accent: var(--pp-accent);
+
+  --pp-footer-bg: var(--pp-secondary);
+  --pp-footer-fg: #FFFFFF;
+  --pp-footer-muted: #9A9A9E;
+  --pp-footer-link: #C9C9CE;
+  --pp-footer-line: #1E1E22;
+  --pp-footer-accent: var(--pp-accent);
+
+  --pp-hero-bg: var(--pp-secondary);
+  --pp-hero-fg: #FFFFFF;
+  --pp-hero-muted: #A6A6AC;
+  --pp-hero-title: #FFFFFF;
+  --pp-hero-accent: var(--pp-accent);
+  --pp-hero-accent-fg: #FFFFFF;
+
+  --pp-font-title: "Archivo";
+  --pp-font-body: "Archivo";
+}
+
+/* ---------------------------------------------------------------------------
+   Theme mapping. `inline` keeps the var() reference in the generated utility,
+   so bg-accent follows the Customizer live instead of baking in a hex.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-accent: var(--pp-accent);
+  --color-accent-soft: var(--pp-accent-soft);
+  --color-accent-fg: var(--pp-accent-fg);
+  --color-accent-ink: var(--pp-accent-ink);
+  --color-secondary: var(--pp-secondary);
+  --color-secondary-fg: var(--pp-secondary-fg);
+  --color-secondary-line: var(--pp-secondary-line);
+
+  --color-ink: #0B0B0C;
+  --color-ink-2: #4A4A50;
+  --color-ink-3: #6B6B70;
+  --color-ink-4: #8A8A8F;
+  --color-ink-5: #9A9A9E;
+
+  --color-line: #E4E4E7;
+  --color-line-strong: #C9C9CE;
+  --color-surface: #F7F7F5;
+  --color-surface-2: #F0F0EE;
+  --color-canvas: #EDEDEA;
+
+  --color-bar-bg: var(--pp-bar-bg);
+  --color-bar-fg: var(--pp-bar-fg);
+  --color-bar-muted: var(--pp-bar-muted);
+  --color-bar-line: var(--pp-bar-line);
+  --color-bar-accent: var(--pp-bar-accent);
+
+  --color-footer-bg: var(--pp-footer-bg);
+  --color-footer-fg: var(--pp-footer-fg);
+  --color-footer-muted: var(--pp-footer-muted);
+  --color-footer-link: var(--pp-footer-link);
+  --color-footer-line: var(--pp-footer-line);
+  --color-footer-accent: var(--pp-footer-accent);
+
+  --color-hero-bg: var(--pp-hero-bg);
+  --color-hero-fg: var(--pp-hero-fg);
+  --color-hero-muted: var(--pp-hero-muted);
+  --color-hero-title: var(--pp-hero-title);
+  --color-hero-accent: var(--pp-hero-accent);
+  --color-hero-accent-fg: var(--pp-hero-accent-fg);
+
+  --font-title: var(--pp-font-title), system-ui, sans-serif;
+  --font-body: var(--pp-font-body), system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius-pp: var(--pp-radius);
+}
+
+@layer base {
+  /* .editor-styles-wrapper is the block editor's canvas body. It carries WP's
+     own reset at the same specificity, which beat a bare `body` rule and left
+     the canvas in the default serif while the front end was on the chosen body
+     font. Naming it here keeps the editor honest about what the page looks like. */
+  body,
+  .editor-styles-wrapper {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-title);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-accent-ink);
+  }
+
+  a:hover {
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* 1280px content column with the 40px gutters the design uses throughout. */
+  .pp-container {
+    @apply mx-auto w-full max-w-[1280px] px-6 lg:px-10;
+  }
+
+  /* Mono micro-label: section kickers, spec lines, price meta. */
+  .pp-eyebrow {
+    @apply font-mono text-[11px] leading-none font-medium tracking-[0.12em] uppercase;
+  }
+
+  /* Card chrome driven by the Customizer's "Kaartstijl" (Rand/Schaduw/Vlak). */
+  .pp-card {
+    border: var(--pp-card-border);
+    box-shadow: var(--pp-card-shadow);
+    @apply rounded-pp overflow-hidden bg-white;
+  }
+
+  .pp-btn,
+  .pp-btn-accent,
+  .pp-btn-secondary,
+  .pp-btn-ghost {
+    @apply rounded-pp inline-flex cursor-pointer items-center justify-center gap-2 px-5 py-3 text-sm font-bold no-underline transition-colors;
+  }
+
+  .pp-btn-accent {
+    @apply border-0 bg-accent text-accent-fg hover:bg-ink hover:text-white;
+  }
+
+  .pp-btn-secondary {
+    @apply border-0 bg-secondary text-secondary-fg hover:bg-accent hover:text-accent-fg;
+  }
+
+  .pp-btn-ghost {
+    @apply border border-line-strong bg-white text-ink hover:border-ink;
+  }
+
+  /* Text inputs, selects and textareas — theme-owned and WooCommerce-owned alike. */
+  .pp-field,
+  .woocommerce form .form-row input.input-text,
+  .woocommerce form .form-row textarea,
+  .woocommerce form .form-row select,
+  .woocommerce-page form .form-row input.input-text,
+  .woocommerce-page form .form-row select {
+    @apply rounded-pp h-12 w-full border border-line-strong bg-white px-3.5 text-[15px] text-ink;
+  }
+
+  .woocommerce form .form-row textarea {
+    @apply h-28 py-3;
+  }
+
+  .woocommerce form .form-row label {
+    @apply mb-1.5 block text-[13px] font-semibold text-ink;
+  }
+
+  .woocommerce form .form-row .optional {
+    @apply text-ink-5 font-medium;
+  }
+
+  /* Placeholder blocks stand in for photography that has not been shot yet. */
+  .pp-placeholder {
+    background: repeating-linear-gradient(45deg, var(--color-surface-2) 0 10px, var(--color-surface) 10px 20px);
+    @apply text-ink-5 font-mono flex items-center justify-center text-center text-[10px] tracking-[0.1em] uppercase;
+  }
+
+  .pp-placeholder-dark {
+    background: repeating-linear-gradient(45deg, #1A1A1E 0 10px, #141418 10px 20px);
+    @apply font-mono flex items-center justify-center text-center text-[11px] leading-relaxed tracking-[0.1em] text-ink-3 uppercase;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   WooCommerce chrome that the plugin renders for us — notices, quantity
+   inputs, payment methods, the gallery. Utilities cannot be added to this
+   markup from a template, so it is styled by selector here.
+--------------------------------------------------------------------------- */
+@layer components {
+  .woocommerce-notices-wrapper .woocommerce-message,
+  .woocommerce-notices-wrapper .woocommerce-info,
+  .woocommerce-notices-wrapper .woocommerce-error {
+    @apply rounded-pp mb-4 list-none border border-line bg-surface px-5 py-4 text-sm text-ink-2;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-error {
+    @apply border-l-4 border-l-red-600;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-message {
+    @apply border-l-4;
+    border-left-color: var(--color-accent);
+  }
+
+  .woocommerce .quantity input.qty {
+    @apply rounded-pp h-11 w-16 border border-line-strong text-center text-[15px];
+  }
+
+  /* Payment methods: WooCommerce renders a <ul> of radios on checkout. */
+  .wc_payment_methods {
+    @apply m-0 flex list-none flex-col gap-2.5 p-0;
+  }
+
+  .wc_payment_methods li {
+    @apply rounded-pp border border-line-strong px-4.5 py-4;
+  }
+
+  .wc_payment_methods li label {
+    @apply flex items-center gap-3.5 text-[15px] font-semibold text-ink;
+  }
+
+  .wc_payment_methods li.wc_payment_method input:checked + label {
+    @apply font-bold;
+  }
+
+  .wc_payment_methods li:has(input:checked) {
+    border-width: 2px;
+    border-color: var(--color-accent);
+  }
+
+  .wc_payment_methods .payment_box {
+    @apply mt-3 text-[13px] leading-relaxed text-ink-3;
+  }
+
+  /* Shipping methods double as the "Vervoerder" option cards. */
+  .pp-shipping-methods {
+    @apply m-0 flex list-none flex-col gap-2.5 p-0;
+  }
+
+  .pp-shipping-methods li {
+    @apply rounded-pp flex items-center gap-3.5 border border-line-strong px-4.5 py-4 text-[15px];
+  }
+
+  .pp-shipping-methods li:has(input:checked) {
+    border-width: 2px;
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .pp-shipping-methods label {
+    @apply flex-1 font-bold text-ink;
+  }
+
+  .pp-shipping-methods .amount {
+    @apply font-mono text-sm font-medium;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   The accordion checkout.
+
+   Three states per step: open (a black frame), afgerond (one line with a check
+   and "Wijzig") and nog niet aan de beurt (the same line, greyed, inert).
+
+   Collapsing is progressive enhancement, and the direction matters: the open
+   state is what the markup renders, and .is-enhanced — added by
+   assets/js/checkout-steps.js — is what allows a step to close. A checkout whose
+   script never arrives is the long form it always was, not a page of headings
+   that will not open.
+--------------------------------------------------------------------------- */
+@layer components {
+  .pp-steps {
+    @apply flex flex-col gap-2.5;
+  }
+
+  .pp-step {
+    @apply rounded-pp border-2 px-6.5 py-6;
+    border-color: var(--color-secondary-line);
+  }
+
+  .pp-step-head {
+    @apply mb-1.5 flex items-center gap-3;
+  }
+
+  .pp-step-title {
+    @apply text-[22px] font-extrabold tracking-[-0.02em];
+  }
+
+  .pp-step-intro {
+    @apply mb-4.5 ml-9 text-sm text-ink-3;
+  }
+
+  /* The number badge, in accent while the step is the one being answered. */
+  .pp-step-badge {
+    @apply font-mono flex h-6 w-6 flex-none items-center justify-center rounded-full bg-accent text-xs font-medium text-accent-fg;
+  }
+
+  .pp-step-foot {
+    @apply mt-4.5 flex items-center justify-end gap-4 border-t border-line pt-4.5;
+  }
+
+  .pp-step-next {
+    @apply px-6.5 py-3.5 text-[15px];
+  }
+
+  /* Collapsed states only exist once the script is driving. */
+  .pp-step-summary {
+    @apply hidden items-center gap-3.5;
+  }
+
+  .pp-steps.is-enhanced .pp-step:not(.is-open) {
+    @apply rounded-pp border px-4 py-3.5;
+    border-color: var(--color-line);
+  }
+
+  .pp-steps.is-enhanced .pp-step:not(.is-open) > .pp-step-body {
+    @apply hidden;
+  }
+
+  .pp-steps.is-enhanced .pp-step:not(.is-open) .pp-step-summary {
+    @apply flex;
+  }
+
+  /* Afgerond: a black check, the chosen values under the title, "Wijzig" right. */
+  .pp-steps.is-enhanced .pp-step.is-done {
+    @apply bg-surface;
+  }
+
+  .pp-step.is-done .pp-step-summary .pp-step-badge {
+    @apply bg-secondary text-secondary-fg text-[0px];
+  }
+
+  .pp-step.is-done .pp-step-summary .pp-step-badge::before {
+    content: "✓";
+    @apply text-xs;
+  }
+
+  .pp-step-summary-body {
+    @apply min-w-0 flex-1;
+  }
+
+  .pp-step-summary-title {
+    @apply text-sm font-bold;
+  }
+
+  .pp-step-summary-text {
+    @apply mt-0.5 text-[13px] text-ink-2;
+  }
+
+  .pp-step-summary-text:empty {
+    @apply hidden;
+  }
+
+  .pp-step-edit {
+    @apply cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold text-accent-ink underline-offset-2 hover:underline;
+  }
+
+  /* Nog niet aan de beurt: same size, no invitation to click. */
+  .pp-step.is-todo .pp-step-summary .pp-step-badge {
+    @apply border border-line-strong bg-transparent text-ink-4;
+  }
+
+  .pp-step.is-todo .pp-step-summary-title,
+  .pp-step.is-todo .pp-step-summary-text {
+    @apply text-ink-4;
+  }
+
+  .pp-step.is-todo .pp-step-edit {
+    @apply hidden;
+  }
+
+  /* --- Step 2: Bezorgen / Ophalen ---------------------------------------- */
+  .pp-step-tabs {
+    @apply mb-4.5 flex items-center border-b border-line;
+  }
+
+  .pp-step-tabs .pp-tab-input {
+    @apply sr-only;
+  }
+
+  .pp-step-tabs label {
+    @apply mr-5.5 cursor-pointer px-0.5 py-2.5 text-sm font-semibold text-ink-3;
+  }
+
+  .pp-step-tabs .pp-tab-input:checked + label {
+    @apply font-bold text-ink;
+    box-shadow: inset 0 -2px 0 0 currentColor;
+  }
+
+  .pp-step-tabs .pp-tab-input:focus-visible + label {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* Which pane the tabs show. Two radios and this rule, so it also works before
+     — or entirely without — the script. */
+  .pp-delivery:has(.pp-tab-input--ship:checked) .pp-delivery-pane--pickup,
+  .pp-delivery:has(.pp-tab-input--pickup:checked) .pp-delivery-pane--ship {
+    @apply hidden;
+  }
+
+  /* Nothing to switch between: no tabs. With Probo Connect the pickup pane only
+     arrives once a day is chosen, so this also covers the moment before that. */
+  .pp-delivery:not(:has(.pp-delivery-pane--pickup)) .pp-step-tabs {
+    @apply hidden;
+  }
+
+  /* --- Step 2: one question, three answers ------------------------------- */
+  .pp-when-list,
+  .pp-carrier-list {
+    @apply flex flex-col gap-2.5;
+  }
+
+  .pp-when-option,
+  .pp-carrier {
+    @apply rounded-pp flex cursor-pointer items-center gap-4 border border-line-strong px-4.5 py-4;
+  }
+
+  .pp-when-option:has(input:checked),
+  .pp-carrier:has(input:checked) {
+    border-width: 2px;
+    border-color: var(--color-secondary-line);
+    background: var(--color-accent-soft);
+    @apply px-[17px] py-[15px];
+  }
+
+  .pp-when-body {
+    @apply min-w-0 flex-1;
+  }
+
+  .pp-when-day {
+    @apply flex items-center gap-2.5 text-[15px] font-bold;
+  }
+
+  .pp-when-meta,
+  .pp-delivery .connect-method-short {
+    @apply mt-0.5 block text-[13px] text-ink-3;
+  }
+
+  .pp-when-price {
+    @apply text-right;
+  }
+
+  .pp-when-amount {
+    @apply font-mono block text-[15px] font-medium;
+  }
+
+  .pp-when-price-meta {
+    @apply block text-xs text-ink-3;
+  }
+
+  /* "Voordeligst" and the other mono chips. */
+  .pp-chip {
+    @apply rounded-pp font-mono bg-accent px-1.5 py-0.5 text-[10px] font-medium tracking-[0.06em] text-accent-fg uppercase;
+  }
+
+  /* The three presets. "Kies zelf" is the only one that answers nothing, so it
+     is the only one drawn quietly. */
+  .pp-presets {
+    @apply flex flex-col gap-2.5;
+  }
+
+  .pp-preset--custom {
+    @apply border-dashed;
+  }
+
+  /* Which of the two questions is on screen. A preset answers both, so both
+     pickers step aside; "Kies zelf" brings them back. Pickup has no preset —
+     there is nothing to be fast or cheap about — so that tab always asks. */
+  .pp-delivery:has(.pp-tab-input--pickup:checked) .pp-presets {
+    @apply hidden;
+  }
+
+  .pp-delivery:has(.pp-preset-input--auto:checked):has(.pp-tab-input--ship:checked) .pp-when-list,
+  .pp-delivery:has(.pp-preset-input--auto:checked):has(.pp-tab-input--ship:checked) .pp-delivery-pane--ship {
+    @apply hidden;
+  }
+
+  /* Names the question a list answers, once the lists are the thing you came
+     for. Quiet: the rows carry the weight. */
+  .pp-picker-label {
+    @apply font-mono mt-1 block text-[11px] leading-none font-medium tracking-[0.12em] text-ink-4 uppercase;
+  }
+
+  /* The folds: the rest of the pickup points. */
+  .pp-carriers-more {
+    @apply m-0;
+  }
+
+  .pp-carriers-more > summary {
+    @apply cursor-pointer list-none pt-3 text-sm font-semibold text-ink-3 hover:text-ink;
+  }
+
+  .pp-carriers-more > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* --- The progress line in the checkout header --------------------------- */
+  .pp-checkout-progress {
+    @apply m-0 flex list-none items-center gap-3.5 p-0 text-[13px] font-semibold lg:ml-6;
+  }
+
+  .pp-checkout-progress-step {
+    @apply flex items-center gap-2 text-ink;
+  }
+
+  /* The connecting rule: black up to and including the current step. */
+  .pp-checkout-progress-step + .pp-checkout-progress-step::before {
+    content: "";
+    @apply mr-2 hidden h-px w-9 bg-line sm:block;
+  }
+
+  .pp-checkout-progress-badge {
+    @apply font-mono flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-medium;
+  }
+
+  .pp-checkout-progress-step[data-state="done"] .pp-checkout-progress-badge {
+    @apply bg-secondary text-secondary-fg text-[0px];
+  }
+
+  .pp-checkout-progress-step[data-state="done"] .pp-checkout-progress-badge::before {
+    content: "✓";
+    @apply text-[10px];
+  }
+
+  .pp-checkout-progress-step[data-state="done"] + .pp-checkout-progress-step::before,
+  .pp-checkout-progress-step[data-state="current"] + .pp-checkout-progress-step::before {
+    @apply bg-ink;
+  }
+
+  .pp-checkout-progress-step[data-state="current"] .pp-checkout-progress-badge {
+    @apply bg-accent text-accent-fg;
+  }
+
+  .pp-checkout-progress-step[data-state="todo"] {
+    @apply text-ink-4;
+  }
+
+  .pp-checkout-progress-step[data-state="todo"] .pp-checkout-progress-badge {
+    @apply border border-line-strong text-ink-4;
+  }
+
+  /* --- Field-level validation --------------------------------------------- */
+  .woocommerce form .form-row.pp-field-invalid input.input-text,
+  .woocommerce form .form-row.pp-field-invalid select,
+  .woocommerce form .form-row.woocommerce-invalid input.input-text,
+  .woocommerce form .form-row.woocommerce-invalid select {
+    border-width: 2px;
+    border-color: var(--color-red-600);
+  }
+
+  .pp-field-error {
+    @apply mt-1.5 flex items-start gap-2 text-[13px] font-semibold;
+    color: var(--color-red-600);
+  }
+
+  /* --- Below lg ------------------------------------------------------------
+     The summary comes first as a collapsed bar — someone on a phone wants to
+     know what they are paying before they start typing — and the primary action
+     of the open step is repeated in a bar at the bottom of the screen, so it is
+     reachable without scrolling past the fields. */
+  @media (max-width: 1023px) {
+    .woocommerce-checkout .pp-checkout-summary {
+      order: -1;
+    }
+
+    .pp-steps {
+      padding-bottom: 76px;
+    }
+
+    .pp-step {
+      @apply px-4.5 py-5;
+    }
+
+    .pp-step-foot {
+      @apply hidden;
+    }
+  }
+
+  .pp-sticky-bar {
+    @apply fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-between gap-4 border-t border-line bg-white px-5 lg:hidden;
+  }
+
+  .pp-sticky-bar[hidden] {
+    display: none;
+  }
+
+  .pp-sticky-total {
+    @apply text-[15px] font-bold;
+  }
+
+  .pp-sticky-bar button {
+    @apply min-h-11 px-5 py-3 text-sm;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Nav and widget markup: generated by wp_nav_menu() and the widget API, so it
+   is styled by selector with @apply rather than by classes in a template.
+--------------------------------------------------------------------------- */
+@layer components {
+  .pp-nav-menu {
+    @apply m-0 flex list-none flex-col gap-4 p-0 lg:flex-row lg:items-center lg:gap-7;
+  }
+
+  .pp-nav-menu > li {
+    @apply relative;
+  }
+
+  .pp-nav-menu > li > a {
+    @apply text-[13px] font-bold tracking-[0.06em] text-ink uppercase no-underline hover:text-accent-ink;
+  }
+
+  .pp-nav-menu > li.current-menu-item > a,
+  .pp-nav-menu > li.current-menu-parent > a,
+  .pp-nav-menu > li.current-product-ancestor > a {
+    @apply text-accent-ink;
+  }
+
+  /* Below lg the submenu is an indented list inside the burger panel. From lg
+     it becomes a flyout: a panel as wide as the header, so a category with a
+     dozen children reads as columns instead of a long scrolling dropdown. It
+     anchors to <nav>, which is why the menu item stops being the positioning
+     context at that size. */
+  .pp-nav-menu .sub-menu {
+    @apply m-0 flex list-none flex-col gap-2 py-2 pl-4;
+  }
+
+  .pp-nav-menu .sub-menu a {
+    @apply text-[13px] font-semibold text-ink-2 no-underline normal-case hover:text-accent-ink;
+  }
+
+  /* A group is one subcategory: its name as the heading, its products under it.
+     Below lg this is an indented list inside the burger panel; from lg each
+     group becomes a column of the flyout. */
+  .pp-flyout-heading {
+    @apply block text-[13px] font-bold text-ink no-underline normal-case hover:text-accent-ink;
+  }
+
+  /* The column holding the products that sit directly in the category is headed
+     by that category's own name — the word you just clicked in the menu bar. So
+     the heading goes: below lg it is dropped from the stacked list, and from lg
+     it keeps its box but not its ink, so the column still lines up with the
+     headed columns beside it in the grid. */
+  .pp-flyout-group--self > .pp-flyout-heading {
+    @apply hidden;
+  }
+
+  .pp-flyout-links {
+    @apply m-0 flex list-none flex-col gap-1 p-0;
+  }
+
+  .pp-nav-menu .pp-flyout-links a {
+    @apply text-[13px] font-normal text-ink-3;
+  }
+
+  @media (min-width: 1024px) {
+    .pp-nav-menu > li {
+      position: static;
+    }
+
+    /* The columns are capped and centered at the same 1280px the rest of the
+       page uses, so they line up with the logo and content above and below
+       instead of hugging the browser's true left edge. The backdrop behind
+       them — background, top border, shadow — stays edge to edge: it lives on
+       ::before, broken out to 100vw, rather than on .sub-menu's own box. */
+    .pp-nav-menu .sub-menu {
+      @apply invisible absolute top-full right-0 left-0 z-50 mx-auto grid max-w-[1280px] grid-cols-4 items-start gap-x-9 gap-y-8 px-10 py-8 opacity-0;
+      transition: opacity 0.12s ease, visibility 0.12s ease;
+    }
+
+    .pp-nav-menu .sub-menu::before {
+      @apply absolute inset-0 left-1/2 -z-10 w-screen -translate-x-1/2 border-t border-line bg-white shadow-lg;
+      content: '';
+    }
+
+    /* Hover and focus stand on their own, so the menu still works if the script
+       never runs. The class is what pointer and keyboard driving in
+       assets/js/theme.js toggles on top of that. */
+    .pp-nav-menu > li:hover > .sub-menu,
+    .pp-nav-menu > li:focus-within > .sub-menu,
+    .pp-nav-menu > li.pp-flyout-open > .sub-menu {
+      @apply visible opacity-100;
+    }
+
+    .pp-nav-menu .sub-menu a {
+      @apply block py-1 text-sm;
+    }
+
+    .pp-flyout-heading {
+      @apply mb-1.5 text-[15px];
+    }
+
+    .pp-flyout-group--self > .pp-flyout-heading {
+      @apply block;
+      visibility: hidden;
+    }
+
+    .pp-nav-menu .pp-flyout-links a {
+      @apply py-0.5 text-[13px];
+    }
+
+    /* A caret on anything that opens a panel. */
+    .pp-nav-menu > li.menu-item-has-children > a::after {
+      content: "";
+      display: inline-block;
+      width: 0.4em;
+      height: 0.4em;
+      margin-left: 0.5em;
+      vertical-align: 0.15em;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+    }
+  }
+
+  .pp-topbar-menu {
+    @apply m-0 flex list-none items-center gap-6 p-0;
+  }
+
+  .pp-topbar-menu a {
+    @apply text-bar-muted no-underline hover:text-bar-fg;
+  }
+
+  /* A callout sitting among the product tiles. The <li> is the grid item; the
+     callout inside it stretches to fill the cell so it lines up with the cards
+     beside it. */
+  .pp-callout-tile {
+    @apply flex;
+  }
+
+  .pp-callout-tile > div {
+    @apply flex-1;
+  }
+
+  .pp-footer-widgets ul {
+    @apply m-0 flex list-none flex-col gap-2.5 p-0;
+  }
+
+  /* Footer links and headings ride on the panel's contrast colour rather than
+     on the accent: --pp-footer-fg is derived from the footer background, so it
+     is readable on a dark, light or accent-coloured footer alike. The resting
+     state is dimmed from that same colour, so the hierarchy survives the
+     switch. */
+  .pp-footer-widgets a {
+    @apply text-sm text-footer-fg no-underline opacity-80 hover:opacity-100;
+  }
+}
+
+@layer components {
+  .pp-legal-menu {
+    @apply m-0 flex list-none items-center gap-5.5 p-0;
+  }
+
+  .pp-legal-menu a {
+    @apply text-footer-fg no-underline opacity-70 hover:opacity-100;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Corrections to WooCommerce's own defaults.
+
+   These sit in a normal layer: inc/woocommerce.php loads the plugin's sheets
+   into `layer(plugins)`, which is declared below every layer of the theme, so
+   an ordinary rule here already outranks anything the plugin ships.
+--------------------------------------------------------------------------- */
+@layer components {
+  .woocommerce ul.products li.product a img,
+  .woocommerce-page ul.products li.product a img {
+    height: 190px;
+    margin: 0;
+    object-fit: cover;
+    box-shadow: none;
+  }
+
+  /* A plain product's price, which WooCommerce paints in its own green. The
+     selector deliberately avoids WooCommerce's own `div.product`: the theme's
+     product wrapper is a <main>. */
+  .woocommerce .summary p.price,
+  .woocommerce .summary span.price {
+    color: var(--color-ink);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+  }
+
+  .woocommerce .summary p.price del {
+    color: var(--color-ink-4);
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  /* The sale flash, redrawn as the design's own badge. WooCommerce places it
+     absolutely and its stock look is a pink circle. */
+  .woocommerce span.onsale {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: auto;
+    z-index: 2;
+    margin: 0;
+    padding: 6px 10px;
+    min-height: 0;
+    min-width: 0;
+    line-height: 1;
+    border-radius: var(--pp-radius);
+    background: var(--pp-accent);
+    color: var(--pp-accent-fg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* The coupon toggle at the top of the checkout.
+
+     WooCommerce prints it on woocommerce_before_checkout_form — above the
+     theme's own <h1> and outside .pp-container, so it ran edge to edge in the
+     plugin's grey. The theme only styled notices inside
+     .woocommerce-notices-wrapper, which this one is not in. The little blue
+     square in front of the text is its ::before icon, a glyph from the
+     WooCommerce icon font that not every system renders. */
+  .woocommerce-form-coupon-toggle,
+  form.checkout_coupon {
+    @apply mx-auto w-full max-w-[1280px] px-6 lg:px-10;
+  }
+
+  .woocommerce-form-coupon-toggle {
+    @apply pt-8;
+  }
+
+  .woocommerce-form-coupon-toggle .woocommerce-info {
+    @apply rounded-pp border border-line bg-surface px-5 py-3.5 text-sm text-ink-2;
+  }
+
+  .woocommerce-form-coupon-toggle .woocommerce-info::before {
+    content: none;
+  }
+
+  .woocommerce-form-coupon-toggle .woocommerce-info a {
+    @apply font-bold text-ink underline;
+  }
+
+  form.checkout_coupon {
+    @apply mt-3 flex flex-wrap items-center gap-3;
+  }
+
+  form.checkout_coupon p {
+    @apply m-0;
+  }
+
+  form.checkout_coupon .button {
+    @apply flex-none;
+  }
+
+  /* WooCommerce's zoom button. Its own rule is scoped to `div.product div.images`,
+     and this theme's product wrapper is a <main class="product">, so none of it
+     lands — leaving the bare 🔍 sitting above the gallery. Drawn here instead,
+     as a small button in the corner of the image. */
+  .woocommerce-product-gallery {
+    position: relative;
+  }
+
+  .woocommerce-product-gallery__trigger {
+    @apply rounded-pp absolute top-3 right-3 z-2 flex h-9 w-9 items-center justify-center border border-line bg-white text-[15px] leading-none no-underline;
+  }
+
+  .woocommerce-product-gallery__trigger:hover {
+    @apply border-ink;
+  }
+
+  /* The plugin's float clearfix. In a grid container those two pseudo-elements
+     are not invisible helpers but real grid items, so they claimed the first and
+     last cell and pushed the opening row out of alignment. */
+  .woocommerce ul.products::before,
+  .woocommerce ul.products::after,
+  .woocommerce-page ul.products::before,
+  .woocommerce-page ul.products::after {
+    content: none;
+  }
+
+}
+
+/* ---------------------------------------------------------------------------
+   My account.
+
+   WooCommerce lays this page out in woocommerce-layout.css — it floats the
+   navigation at 30% and the content at 68% — and this theme drops that sheet
+   wholesale, so without the rules below the page falls back to a bare list of
+   links above a paragraph. page.php supplies the container and the heading; the
+   two columns and the link styling are here.
+--------------------------------------------------------------------------- */
+@layer components {
+  .woocommerce-account .woocommerce:has(.woocommerce-MyAccount-navigation) {
+    @apply grid items-start gap-10 lg:grid-cols-[230px_1fr];
+  }
+
+  /* The plugin's float clearfix. In a grid container those two pseudo-elements
+     are not invisible helpers but real grid items: they took cells 1 and 4, so
+     the navigation landed in the content column and the content dropped to a
+     second row. Same fix as ul.products further up. */
+  .woocommerce-account .woocommerce::before,
+  .woocommerce-account .woocommerce::after {
+    content: none;
+  }
+
+  .woocommerce-MyAccount-navigation ul {
+    @apply m-0 flex list-none flex-col gap-0.5 p-0;
+  }
+
+  .woocommerce-MyAccount-navigation li a {
+    @apply rounded-pp block px-3.5 py-2.5 text-sm font-semibold text-ink-2 no-underline;
+  }
+
+  .woocommerce-MyAccount-navigation li a:hover {
+    @apply bg-surface text-ink;
+  }
+
+  .woocommerce-MyAccount-navigation li.is-active a {
+    @apply bg-secondary text-secondary-fg;
+  }
+
+  .woocommerce-MyAccount-content {
+    @apply text-[15px] leading-relaxed text-ink-2;
+  }
+
+  .woocommerce-MyAccount-content > p {
+    @apply mt-0 mb-4;
+  }
+
+  .woocommerce-MyAccount-content h2,
+  .woocommerce-MyAccount-content h3 {
+    @apply mt-8 mb-3 text-xl font-bold tracking-[-0.02em] text-ink;
+  }
+
+  .woocommerce-MyAccount-content h2:first-child,
+  .woocommerce-MyAccount-content h3:first-child {
+    @apply mt-0;
+  }
+
+  /* The address book and the order history, both plain tables/blocks that
+     WooCommerce prints. */
+  .woocommerce-Addresses {
+    @apply grid gap-6 sm:grid-cols-2;
+  }
+
+  .woocommerce-Address {
+    @apply rounded-pp border border-line p-5;
+  }
+
+  .woocommerce-Address-title {
+    @apply mb-2.5 flex items-baseline justify-between gap-4;
+  }
+
+  .woocommerce-Address-title h2,
+  .woocommerce-Address-title h3 {
+    @apply m-0 text-base;
+  }
+
+  .woocommerce-orders-table,
+  .woocommerce-table--order-details {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .woocommerce-orders-table th,
+  .woocommerce-table--order-details th {
+    @apply border-b border-line py-2.5 text-left text-[13px] font-bold text-ink;
+  }
+
+  .woocommerce-orders-table td,
+  .woocommerce-table--order-details td {
+    @apply border-b border-line py-3 align-top;
+  }
+
+  /* Logged out, the same page is the login (and registration) form. */
+  .woocommerce-account .woocommerce-form-login,
+  .woocommerce-account .woocommerce-form-register {
+    @apply rounded-pp max-w-[460px] border border-line p-6;
+  }
+
+  .woocommerce-form-login .woocommerce-form-login__rememberme,
+  .woocommerce-form-register label.checkbox {
+    @apply flex items-center gap-2.5 text-sm font-normal text-ink-2;
+  }
+
+  .woocommerce-account .woocommerce-form-login__submit,
+  .woocommerce-account .woocommerce-form-register__submit {
+    @apply mt-3;
+  }
+
+  .woocommerce-account .woocommerce-LostPassword {
+    @apply mt-4 mb-0 text-sm;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Shop filter widgets. WooCommerce renders these lists, so they are styled by
+   selector to match the checkbox column in the design.
+--------------------------------------------------------------------------- */
+@layer components {
+  .pp-shop-filters ul {
+    @apply m-0 flex list-none flex-col gap-2.5 p-0 text-sm text-ink-2;
+  }
+
+  .pp-shop-filters li {
+    @apply flex items-center gap-2.5;
+  }
+
+  .pp-shop-filters li a {
+    @apply flex flex-1 items-center gap-2.5 text-ink-2 no-underline hover:text-accent-ink;
+  }
+
+  .pp-shop-filters .count {
+    @apply font-mono ml-auto text-xs text-ink-5;
+  }
+
+  .pp-shop-filters .chosen a,
+  .pp-shop-filters .current-cat a {
+    @apply font-semibold text-accent-ink;
+  }
+
+  .pp-shop-filters .price_slider_wrapper .ui-slider {
+    @apply relative my-4 h-1 rounded-full bg-line;
+  }
+
+  .pp-shop-filters .price_slider_wrapper .ui-slider-range {
+    @apply absolute h-1 rounded-full bg-accent;
+  }
+
+  .pp-shop-filters .price_slider_wrapper .ui-slider-handle {
+    @apply absolute -top-1.5 block h-3.5 w-3.5 rounded-full bg-ink;
+  }
+
+  .pp-shop-filters .price_slider_amount {
+    @apply font-mono flex items-center justify-between gap-2 text-xs text-ink-3;
+  }
+
+  .pp-shop-filters .price_slider_amount .button {
+    @apply rounded-pp border border-line-strong px-3 py-1.5 text-xs font-semibold;
+  }
+
+  /* Catalog ordering select on the archive toolbar. */
+  .woocommerce-ordering select {
+    @apply rounded-pp border border-line-strong px-3.5 py-2.5 text-[13px] font-semibold text-ink;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   WooCommerce buttons and the product gallery. These elements are printed by
+   WooCommerce itself, so they are styled by selector.
+--------------------------------------------------------------------------- */
+@layer components {
+  .wc-proceed-to-checkout .checkout-button,
+  #place_order,
+  /* The place-order block, moved under the summary total by
+     probo_checkout_place_order(). */
+  .pp-place-order {
+    @apply mt-5 border-t border-line pt-5;
+  }
+
+  .pp-place-order #place_order {
+    @apply w-full;
+  }
+
+  /* woocommerce.css floats every .button. Every layout in this theme is grid or
+     flex, so that float has nothing to clear against and simply escapes its own
+     row — which is what slid "Je wachtwoord vergeten?" underneath the login
+     button. */
+  .woocommerce .button,
+  .woocommerce a.button,
+  .woocommerce button.button,
+  .woocommerce input.button {
+    float: none;
+  }
+
+  .woocommerce .button.alt,
+  .woocommerce a.button.alt {
+    @apply rounded-pp block w-full cursor-pointer border-0 bg-accent px-5 py-4 text-center text-base font-bold text-accent-fg no-underline hover:bg-ink hover:text-white;
+  }
+
+  .woocommerce .button:not(.alt):not(.checkout-button) {
+    @apply rounded-pp cursor-pointer border border-line-strong bg-white px-5 py-3 text-sm font-bold text-ink hover:border-ink;
+  }
+
+  /* The terms checkbox and the "you are ordering" note under place order. */
+  .woocommerce-terms-and-conditions-wrapper {
+    @apply mt-4 text-[13px] leading-relaxed text-ink-3;
+  }
+
+  .woocommerce-privacy-policy-text p {
+    @apply text-center text-xs leading-relaxed text-ink-3;
+  }
+
+  /* Product gallery: main image plus a four-up thumbnail strip. */
+  .woocommerce-product-gallery__wrapper img {
+    @apply rounded-pp w-full object-cover;
+  }
+
+  .flex-control-thumbs {
+    @apply mt-2.5 grid list-none grid-cols-4 gap-2.5 p-0;
+  }
+
+  .flex-control-thumbs li {
+    @apply m-0;
+  }
+
+  .flex-control-thumbs img {
+    @apply rounded-pp h-[82px] w-full cursor-pointer object-cover opacity-70;
+  }
+
+  .flex-control-thumbs img.flex-active,
+  .flex-control-thumbs img:hover {
+    @apply opacity-100;
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  /* Product tabs and related products below the configurator band. */
+  .woocommerce-tabs .tabs {
+    @apply m-0 flex list-none flex-wrap gap-6 border-b border-line p-0;
+  }
+
+  .woocommerce-tabs .tabs a {
+    @apply block py-3 text-sm font-bold text-ink-3 no-underline;
+  }
+
+  .woocommerce-tabs .tabs .active a {
+    @apply text-ink;
+    box-shadow: inset 0 -2px 0 0 var(--color-accent);
+  }
+
+  .woocommerce-tabs .panel {
+    @apply py-6 text-[15px] leading-relaxed text-ink-2;
+  }
+
+  .related > h2,
+  .upsells > h2,
+  .cross-sells > h2 {
+    @apply mb-7 text-3xl font-extrabold tracking-[-0.03em];
+  }
+}

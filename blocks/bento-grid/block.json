@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/bento-grid",
+	"title": "Bento-grid",
+	"category": "probo",
+	"icon": "layout",
+	"description": "Beeldraster met tegels van verschillende grootte, voor sfeer- en productfoto's.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full", "wide"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Werk uit eigen productie" },
+		"intro": { "type": "string", "default": "" },
+		"tiles": { "type": "array", "default": [] },
+		"height": { "type": "number", "default": 240 }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/category-grid",
+	"title": "Categorietegels",
+	"category": "probo",
+	"icon": "grid-view",
+	"description": "Raster met productcategorieën in afwisselende kleurvlakken.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Populaire categorieën" },
+		"linkText": { "type": "string", "default": "Bekijk alle producten →" },
+		"linkUrl": { "type": "string", "default": "" },
+		"slugs": { "type": "string", "default": "" },
+		"count": { "type": "number", "default": 8 },
+		"showCallout": { "type": "boolean", "default": false },
+		"calloutTitle": { "type": "string", "default": "Niet gevonden wat je zoekt?" },
+		"calloutText": { "type": "string", "default": "Wij drukken vrijwel elk formaat en materiaal. Vertel wat je nodig hebt en je hoort binnen een werkdag wat het kost." },
+		"calloutCta": { "type": "string", "default": "Vraag het ons" },
+		"calloutUrl": { "type": "string", "default": "" },
+		"calloutTone": { "type": "string", "default": "Accent" },
+		"calloutPosition": { "type": "string", "default": "Eind" },
+		"calloutInterval": { "type": "number", "default": 4 },
+		"showTermCallouts": { "type": "boolean", "default": true }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

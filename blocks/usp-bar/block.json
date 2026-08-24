@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/usp-bar",
+	"title": "USP-balk",
+	"category": "probo",
+	"icon": "yes-alt",
+	"description": "Rij met vertrouwenssignalen onder de hero.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"items": {
+			"type": "string",
+			"default": "Gratis bestandscontrole | Wij checken je bestand vóór druk\nLevering vanaf 1 werkdag | Kies zelf je leverdatum\n9,1 / 10 klantcijfer | 12.480 beoordelingen\nAchteraf betalen | Voor zakelijke klanten"
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

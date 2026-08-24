@@ -1,0 +1,71 @@
+name: Release theme zip
+
+# Cuts a GitHub release with a theme zip attached whenever a "v*" tag is
+# pushed. The Probo Connect plugin's theme installer/updater
+# (Probo_Theme_Installer in the plugin repo) reads this release through
+# the GitHub API — it expects exactly one asset, a zip whose single root
+# folder is named "probo-connect" (the theme's stylesheet slug), and
+# expects the tag to match the "Version" header in style.css.
+#
+# Release flow: bump Version in style.css, run `npm run build` and commit
+# the compiled assets/css/theme.css, then:
+#   git tag vX.Y.Z && git push origin vX.Y.Z
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build compiled CSS
+        run: npm run build
+
+      - name: Verify style.css version matches the tag
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          style_version=$(grep -m1 '^Version:' style.css | sed 's/Version:[[:space:]]*//')
+          if [ "$tag_version" != "$style_version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the Version header in style.css ($style_version)."
+            exit 1
+          fi
+
+      - name: Assemble theme folder
+        run: |
+          mkdir -p build/probo-connect
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.idea' \
+            --exclude='.claude' \
+            --exclude='.DS_Store' \
+            --exclude='build' \
+            ./ build/probo-connect/
+
+      - name: Zip theme folder
+        working-directory: build
+        run: zip -r ../probo-connect.zip probo-connect
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: probo-connect.zip
+          generate_release_notes: true

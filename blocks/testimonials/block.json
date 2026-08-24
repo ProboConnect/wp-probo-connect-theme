@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/testimonials",
+	"title": "Klantquotes",
+	"category": "probo",
+	"icon": "format-quote",
+	"description": "Quotes van klanten, met naam, bedrijf en optioneel een cijfer.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full", "wide"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Wat klanten zeggen" },
+		"items": {
+			"type": "string",
+			"default": "Bestand ’s ochtends aangeleverd, de volgende dag stonden de borden op de bouwplaats. | Marieke de Vries | Bouwbedrijf Terpstra | 5\nDe bestandscontrole ving een fout af die wij zelf over het hoofd hadden gezien. | Joost Bakker | Evenementenbureau Noord | 5\nPrijs en levertijd zie je direct. Geen offertetraject meer voor standaard werk. | Sanne Willems | Retailketen Bloom | 4"
+		},
+		"tone": { "type": "string", "default": "Licht" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

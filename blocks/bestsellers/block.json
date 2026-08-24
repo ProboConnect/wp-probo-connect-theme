@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/bestsellers",
+	"title": "Bestsellers",
+	"category": "probo",
+	"icon": "star-filled",
+	"description": "Rij met productkaarten die eindigen op “Configureer nu”.",
+	"textdomain": "probo-connect",
+	"supports": { "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Bestsellers" },
+		"meta": { "type": "string", "default": "DEZE MAAND" },
+		"source": { "type": "string", "default": "best_selling" },
+		"count": { "type": "number", "default": 4 }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
