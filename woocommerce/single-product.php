@@ -56,8 +56,15 @@ while ( have_posts() ) :
 				<h1 class="mb-3 text-3xl leading-[1.02] font-extrabold tracking-[-0.035em] lg:text-[44px]"><?php the_title(); ?></h1>
 
 				<?php if ( wc_review_ratings_enabled() && $product->get_review_count() ) : ?>
+					<?php
+					// Mirrors blocks/testimonials/render.php:46-49 — filled/empty stars from
+					// the rounded average, kept aria-hidden because the numeric text beside
+					// it already carries the meaning for screen readers.
+					$pp_avg_rating = (float) $product->get_average_rating();
+					$pp_filled     = max( 0, min( 5, (int) round( $pp_avg_rating ) ) );
+					?>
 					<div class="mb-6 flex items-center gap-3.5">
-						<span class="font-mono text-[13px] font-medium text-accent-ink" aria-hidden="true"><?php echo esc_html( str_repeat( '★', 5 ) ); ?></span>
+						<span class="font-mono text-[13px] font-medium text-accent-ink" aria-hidden="true"><?php echo esc_html( str_repeat( '★', $pp_filled ) . str_repeat( '☆', 5 - $pp_filled ) ); ?></span>
 						<span class="text-[13px] text-ink-3">
 							<?php
 							printf(

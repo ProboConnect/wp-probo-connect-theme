@@ -33,25 +33,25 @@ $height = max( 16, min( 96, (int) $attributes['height'] ) );
 					continue;
 				}
 
-				$alt   = isset( $logo['name'] ) ? (string) $logo['name'] : (string) get_post_meta( $logo_id, '_wp_attachment_image_alt', true );
-				$link  = isset( $logo['url'] ) ? (string) $logo['url'] : '';
-				$image = sprintf(
-					'<img class="w-auto object-contain%s" src="%s" alt="%s" style="height:%dpx" loading="lazy" />',
-					// Grayscale is the house look; lifting it on hover keeps the row
-					// from feeling dead without shouting for attention.
-					$attributes['grayscale'] ? ' opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0' : '',
-					esc_url( $logo_url ),
-					esc_attr( $alt ),
-					$height
-				);
+				$alt  = ! empty( $logo['name'] ) ? (string) $logo['name'] : (string) get_post_meta( $logo_id, '_wp_attachment_image_alt', true );
+				$link = isset( $logo['url'] ) ? (string) $logo['url'] : '';
 				?>
 				<li>
 					<?php if ( $link ) : ?>
-						<a href="<?php echo esc_url( $link ); ?>" rel="noopener">
-							<?php echo wp_kses_post( $image ); ?>
+						<a href="<?php echo esc_url( $link ); ?>">
+					<?php endif; ?>
+
+					<?php // Grayscale is the house look; lifting it on hover keeps the row from feeling dead without shouting for attention. ?>
+					<img
+						class="<?php echo $attributes['grayscale'] ? 'w-auto object-contain opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0' : 'w-auto object-contain'; ?>"
+						src="<?php echo esc_url( $logo_url ); ?>"
+						alt="<?php echo esc_attr( $alt ); ?>"
+						style="height:<?php echo (int) $height; ?>px"
+						loading="lazy"
+					/>
+
+					<?php if ( $link ) : ?>
 						</a>
-					<?php else : ?>
-						<?php echo wp_kses_post( $image ); ?>
 					<?php endif; ?>
 				</li>
 			<?php endforeach; ?>

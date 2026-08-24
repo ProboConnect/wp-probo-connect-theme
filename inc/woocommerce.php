@@ -596,7 +596,7 @@ function probo_checkout_shipping_html() {
 							printf(
 								/* translators: %s: number of carriers. */
 								esc_html__( 'Choose a carrier yourself (%s)', 'probo-connect' ),
-								esc_html( number_format_i18n( count( $ship ) ) )
+								esc_html( number_format_i18n( count( $rest ) ) )
 							);
 							?>
 						</summary>

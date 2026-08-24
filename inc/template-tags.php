@@ -153,11 +153,14 @@ function probo_search_form( $size = 'header' ) {
 		$in_size  = 'text-[15px]';
 		$btn_pad  = 'px-6.5 text-sm';
 	}
+
+	static $instance = 0;
+	$uid = 'pp-search-' . $size . '-' . ++$instance;
 	?>
 	<form role="search" method="get" class="rounded-pp flex w-full overflow-hidden bg-white <?php echo esc_attr( $height . ' ' . $border ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<label class="sr-only" for="pp-search-<?php echo esc_attr( $size ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
+		<label class="sr-only" for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
 		<input
-			id="pp-search-<?php echo esc_attr( $size ); ?>"
+			id="<?php echo esc_attr( $uid ); ?>"
 			class="min-w-0 flex-1 overflow-hidden border-0 bg-transparent text-ink text-ellipsis whitespace-nowrap outline-none <?php echo esc_attr( $in_pad . ' ' . $in_size ); ?>"
 			type="search"
 			name="s"
@@ -239,7 +242,9 @@ function probo_product_spec_line( $product = null ) {
 			continue;
 		}
 
-		$values = wc_get_product_terms( $product->get_id(), $attribute->get_name(), array( 'fields' => 'names' ) );
+		$values = $attribute->is_taxonomy()
+			? wc_get_product_terms( $product->get_id(), $attribute->get_name(), array( 'fields' => 'names' ) )
+			: $attribute->get_options();
 
 		if ( $values ) {
 			$parts[] = $values[0];
