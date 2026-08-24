@@ -33,7 +33,18 @@ function probo_logo( $variant = 'dark', $size_class = 'text-[23px]' ) {
 	$name = get_bloginfo( 'name' );
 	$dot  = strpos( $name, '.' );
 
-	echo '<a class="flex items-center gap-2.5 no-underline" href="' . esc_url( home_url( '/' ) ) . '" rel="home">';
+	// The light lockup takes its colour from whatever surface it sits on (the
+	// dark bar, the footer) via currentColor. The base `a { color: accent-ink }`
+	// rule would otherwise repaint the anchor and break that inheritance — which
+	// on a light accent means a near-black wordmark on a dark bar — so the
+	// pp-logo--light hook lets the anchor inherit its container's colour instead.
+	$anchor_class = 'pp-logo flex items-center gap-2.5 no-underline';
+
+	if ( 'light' === $variant ) {
+		$anchor_class .= ' pp-logo--light';
+	}
+
+	echo '<a class="' . esc_attr( $anchor_class ) . '" href="' . esc_url( home_url( '/' ) ) . '" rel="home">';
 
 	if ( $src ) {
 		printf(
@@ -116,18 +127,38 @@ function probo_account_link_text() {
 /**
  * The theme's search field: flush input with an accent submit button.
  *
- * @param string $size 'header' or 'hero'.
+ * @param string $size 'header', 'hero', or 'compact' (the borderless 44px field
+ *                     on Variant B's dark bar).
  */
 function probo_search_form( $size = 'header' ) {
-	$is_hero = 'hero' === $size;
-	$height  = $is_hero ? 'h-[60px]' : 'h-[50px]';
-	$border  = $is_hero ? '' : 'border-2 border-secondary-line';
+	$is_hero    = 'hero' === $size;
+	$is_compact = 'compact' === $size;
+
+	if ( $is_compact ) {
+		$height   = 'h-11';
+		$border   = '';
+		$in_pad   = 'px-4';
+		$in_size  = 'text-sm';
+		$btn_pad  = 'px-[22px] text-sm';
+	} elseif ( $is_hero ) {
+		$height   = 'h-[60px]';
+		$border   = '';
+		$in_pad   = 'px-5';
+		$in_size  = 'text-base';
+		$btn_pad  = 'px-8 text-[15px]';
+	} else {
+		$height   = 'h-[50px]';
+		$border   = 'border-2 border-secondary-line';
+		$in_pad   = 'px-5';
+		$in_size  = 'text-[15px]';
+		$btn_pad  = 'px-6.5 text-sm';
+	}
 	?>
 	<form role="search" method="get" class="rounded-pp flex w-full overflow-hidden bg-white <?php echo esc_attr( $height . ' ' . $border ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 		<label class="sr-only" for="probo-search-<?php echo esc_attr( $size ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
 		<input
 			id="probo-search-<?php echo esc_attr( $size ); ?>"
-			class="min-w-0 flex-1 border-0 bg-transparent px-5 text-ink outline-none <?php echo $is_hero ? 'text-base' : 'text-[15px]'; ?>"
+			class="min-w-0 flex-1 overflow-hidden border-0 bg-transparent text-ink text-ellipsis whitespace-nowrap outline-none <?php echo esc_attr( $in_pad . ' ' . $in_size ); ?>"
 			type="search"
 			name="s"
 			value="<?php echo esc_attr( get_search_query() ); ?>"
@@ -136,7 +167,7 @@ function probo_search_form( $size = 'header' ) {
 		<?php if ( class_exists( 'WooCommerce' ) ) : ?>
 			<input type="hidden" name="post_type" value="product" />
 		<?php endif; ?>
-		<button class="bg-accent font-bold text-accent-fg hover:bg-ink hover:text-white <?php echo $is_hero ? 'px-8 text-[15px]' : 'px-6.5 text-sm'; ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect' ); ?></button>
+		<button class="bg-accent font-bold whitespace-nowrap text-accent-fg hover:bg-ink hover:text-white <?php echo esc_attr( $btn_pad ); ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect' ); ?></button>
 	</form>
 	<?php
 }

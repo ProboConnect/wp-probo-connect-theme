@@ -138,10 +138,53 @@
 		} );
 	}
 
+	/**
+	 * The products megamenu on the compact header (Variant B).
+	 *
+	 * Unlike the burger — which only hides the nav below lg and hands it back on
+	 * desktop — this panel stays behind its "Producten" trigger at every width,
+	 * so it has its own toggle rather than sharing initNav()'s. Closes on Escape
+	 * and on a click outside the panel or its trigger.
+	 */
+	function initProductsMenu() {
+		var toggle = document.querySelector( '[data-probo-products-toggle]' );
+		var panel = document.querySelector( '[data-probo-products]' );
+
+		if ( ! toggle || ! panel ) {
+			return;
+		}
+
+		function setOpen( open ) {
+			panel.classList.toggle( 'hidden', ! open );
+			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+		}
+
+		toggle.addEventListener( 'click', function ( event ) {
+			event.preventDefault();
+			setOpen( panel.classList.contains( 'hidden' ) );
+		} );
+
+		document.addEventListener( 'keydown', function ( event ) {
+			if ( event.key === 'Escape' ) {
+				setOpen( false );
+			}
+		} );
+
+		document.addEventListener( 'click', function ( event ) {
+			if (
+				! event.target.closest( '[data-probo-products]' ) &&
+				! event.target.closest( '[data-probo-products-toggle]' )
+			) {
+				setOpen( false );
+			}
+		} );
+	}
+
 	function start() {
 		initNav();
 		initNavReset();
 		initFlyouts();
+		initProductsMenu();
 	}
 
 	if ( document.readyState !== 'loading' ) {
