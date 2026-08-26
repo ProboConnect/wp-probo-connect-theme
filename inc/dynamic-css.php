@@ -60,7 +60,6 @@ function probo_tokens( array $overrides = array() ) {
 
 	$tokens += probo_bar_tokens( $get( 'bar_style' ), $get( 'bar_color' ), $accent, $sec, $lum );
 	$tokens += probo_footer_tokens( $get( 'footer_style' ), $accent, $sec );
-	$tokens += probo_hero_tokens( $get( 'hero_style' ), $get( 'hero_title_color' ), $accent, $sec );
 
 	/**
 	 * Filters the theme's runtime design tokens.

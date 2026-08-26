@@ -7,8 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$probo_payments = array_filter( array_map( 'trim', explode( ',', (string) probo_get( 'footer_payments' ) ) ) );
-$probo_columns  = array(
+$probo_columns = array(
 	'footer-1' => __( 'Products', 'probo-connect' ),
 	'footer-2' => __( 'Service', 'probo-connect' ),
 	'footer-3' => __( 'Business', 'probo-connect' ),
@@ -36,16 +35,6 @@ $probo_bare = function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_f
 				<p class="max-w-[280px] text-sm leading-relaxed text-footer-muted" data-pp-partial="footer_description">
 					<?php echo esc_html( probo_get( 'footer_description' ) ); ?>
 				</p>
-
-				<?php if ( $probo_payments ) : ?>
-					<div class="mt-5.5 flex flex-wrap gap-2">
-						<?php foreach ( $probo_payments as $probo_payment ) : ?>
-							<span class="rounded-pp font-mono flex h-8.5 items-center border px-3.5 text-[11px] leading-none font-medium text-footer-muted" style="border-color:var(--pp-footer-line)">
-								<?php echo esc_html( $probo_payment ); ?>
-							</span>
-						<?php endforeach; ?>
-					</div>
-				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 

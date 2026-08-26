@@ -180,11 +180,80 @@
 		} );
 	}
 
+	/**
+	 * Hero H's campaign countdown.
+	 *
+	 * The three tiles are already rendered with the right numbers by PHP; this
+	 * only keeps them moving on a page that stays open, and corrects a page
+	 * that came out of a cache. It ticks once a minute, because the smallest
+	 * unit on screen is a minute.
+	 */
+	function initCountdown() {
+		var root = document.querySelector( '[data-pp-countdown]' );
+
+		if ( ! root ) {
+			return;
+		}
+
+		var target = Date.parse( root.getAttribute( 'data-pp-countdown' ) );
+
+		if ( isNaN( target ) ) {
+			return;
+		}
+
+		function tick() {
+			var left = Math.max( 0, target - Date.now() );
+			var minutes = Math.floor( left / 60000 );
+			var parts = [ Math.floor( minutes / 1440 ), Math.floor( ( minutes % 1440 ) / 60 ), minutes % 60 ];
+
+			parts.forEach( function ( value, index ) {
+				var cell = root.querySelector( '[data-pp-countdown-value="' + index + '"]' );
+
+				if ( cell ) {
+					cell.textContent = value < 10 ? '0' + value : String( value );
+				}
+			} );
+		}
+
+		tick();
+		window.setInterval( tick, 60000 );
+	}
+
+	/**
+	 * The FAQ accordion: one answer open at a time.
+	 *
+	 * The rows are <details>, so they already open and close on their own. This
+	 * only closes the sibling that was open, which is the one thing the element
+	 * has no way to do — and if this never runs, the block is still a working
+	 * accordion, just a more talkative one.
+	 */
+	function initFaq() {
+		document.querySelectorAll( '[data-pp-faq]' ).forEach( function ( group ) {
+			var rows = group.querySelectorAll( 'details' );
+
+			rows.forEach( function ( row ) {
+				row.addEventListener( 'toggle', function () {
+					if ( ! row.open ) {
+						return;
+					}
+
+					rows.forEach( function ( other ) {
+						if ( other !== row ) {
+							other.open = false;
+						}
+					} );
+				} );
+			} );
+		} );
+	}
+
 	function start() {
 		initNav();
 		initNavReset();
 		initFlyouts();
 		initProductsMenu();
+		initCountdown();
+		initFaq();
 	}
 
 	if ( document.readyState !== 'loading' ) {

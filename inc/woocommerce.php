@@ -803,6 +803,36 @@ function probo_checkout_steps() {
 }
 
 /**
+ * The step bar above section 1 of the one-page checkout.
+ *
+ * The accordion has its own progress line in the checkout header, where the
+ * step that is open is the page. The one-page layout shows everything at once,
+ * so this is orientation rather than navigation: it names the three things that
+ * are about to be asked, and marks the first one that is not answered yet —
+ * which for a returning customer with an address on file is already "Bezorging".
+ *
+ * The steps come from probo_checkout_steps(), so the two layouts cannot drift
+ * apart in what they call them.
+ */
+function probo_checkout_step_bar() {
+	$steps   = probo_checkout_steps();
+	$current = probo_checkout_initial_step();
+	?>
+	<ol class="pp-checkout-steps">
+		<?php foreach ( $steps as $number => $step ) : ?>
+			<li
+				class="pp-checkout-steps-step"
+				data-state="<?php echo esc_attr( $number === $current ? 'current' : 'todo' ); ?>"
+			>
+				<span class="pp-checkout-steps-badge" aria-hidden="true"><?php echo esc_html( (string) $number ); ?></span>
+				<span><?php echo esc_html( $step['short'] ); ?></span>
+			</li>
+		<?php endforeach; ?>
+	</ol>
+	<?php
+}
+
+/**
  * Whether the address step has everything it needs.
  *
  * Checks the fields WooCommerce itself marks required, so a shop that adds or

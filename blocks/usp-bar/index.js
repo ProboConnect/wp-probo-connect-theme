@@ -20,11 +20,23 @@
 					el(
 						components.PanelBody,
 						{ title: __( 'USPs', 'probo-connect' ) },
+						el( components.SelectControl, {
+							label: __( 'Style', 'probo-connect' ),
+							value: props.attributes.style,
+							options: [
+								{ label: __( 'Bar under the hero', 'probo-connect' ), value: 'Balk' },
+								{ label: __( 'Cards', 'probo-connect' ), value: 'Kaarten' },
+							],
+							onChange: function ( value ) {
+								props.setAttributes( { style: value } );
+							},
+						} ),
 						window.probo.repeater( {
 							value: props.attributes.items,
 							fields: [
 								{ label: __( 'Title', 'probo-connect' ) },
 								{ label: __( 'Description', 'probo-connect' ) },
+								{ label: __( 'Icon', 'probo-connect' ) },
 							],
 							addLabel: __( 'Add USP', 'probo-connect' ),
 							onChange: function ( value ) {

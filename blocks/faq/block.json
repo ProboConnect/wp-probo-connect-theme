@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/faq",
+	"title": "FAQ",
+	"category": "probo",
+	"icon": "editor-help",
+	"description": "Veelgestelde vragen in twee kolommen, met uitklapbare antwoorden.",
+	"textdomain": "probo-connect",
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Veelgestelde vragen" },
+		"intro": { "type": "string", "default": "Staat je vraag er niet bij? Ons team helpt je graag verder." },
+		"linkLabel": { "type": "string", "default": "Naar de helpdesk →" },
+		"linkUrl": { "type": "string", "default": "" },
+		"items": {
+			"type": "string",
+			"default": "Welke bestanden kan ik aanleveren? | PDF heeft de voorkeur, maar ook AI, EPS, JPG en PNG op ware grootte worden geaccepteerd.\nWat is de levertijd? | Vanaf één werkdag na goedkeuring van je bestand, afhankelijk van het product en de gekozen bezorgdag.\nControleren jullie mijn bestand? | Ja. Elk bestand gaat langs onze opmaakspecialisten; bij problemen nemen we contact op vóór we drukken.\nKan ik zakelijk op factuur betalen? | Met een zakelijk account betaal je achteraf op factuur, met een betaaltermijn van 30 dagen.\nLeveren jullie ook in België? | Ja, in heel de Benelux. De verzendkosten zie je in de checkout bij je bezorgdag."
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

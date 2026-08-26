@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/contact",
+	"title": "Contact",
+	"category": "probo",
+	"icon": "email",
+	"description": "Contactblok: directe contactgegevens naast een formulier.",
+	"textdomain": "probo-connect",
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Vragen over je bestand of order?" },
+		"intro": { "type": "string", "default": "Stuur ons een bericht — onze opmaakspecialisten reageren binnen één werkdag. Liever bellen? We staan op werkdagen voor je klaar." },
+		"rows": {
+			"type": "string",
+			"default": "✆ | +31 (0)26 123 45 67 | ma–vr · 08:30–17:30\n✉ | support@probo.nl | reactie binnen 1 werkdag\n⚑ | Nijverheidsweg 12, Arnhem | afhalen op afspraak"
+		},
+		"submitLabel": { "type": "string", "default": "Verstuur bericht" },
+		"shortcode": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

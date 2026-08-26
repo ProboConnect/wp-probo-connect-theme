@@ -21,8 +21,12 @@ Everything the design session iterated on is a Customizer control, under
 | Merk | Accent colour, secondary colour, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
 | Header & footer | Top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
-| Hero | Hero style and title colour (defaults for the hero block) |
 | Componenten | Card style: Rand / Schaduw / Vlak, and the checkout style — see [Checkout](#checkout) |
+
+The hero's own band — dark, accent or light, and its title colour — is **not**
+here: a front page has one hero, and what it looks like is a decision about that
+block on that page, so it lives in the block's sidebar. The Customizer only
+supplies the brand colours the band is derived from.
 
 Two behaviours are deliberate and worth knowing about:
 
@@ -30,7 +34,8 @@ Two behaviours are deliberate and worth knowing about:
   price bars, summary frames. Text and rules flip to whatever contrasts, so a
   pale secondary does not produce white-on-white.
 * **A hero title colour too close to the hero background is ignored.** The title
-  falls back to the contrasting colour rather than disappearing.
+  falls back to the contrasting colour rather than disappearing. (Set on the
+  hero block, not in the Customizer.)
 
 ### Logo
 
@@ -60,13 +65,36 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works` — all in the **Probo Connect** inserter category.
+`probo/how-it-works`, `probo/contact`, `probo/faq` — all in the **Probo
+Connect** inserter category.
 
 A few of them carry options worth knowing about:
 
-* **Hero** takes an optional gradient over its image — from the bottom, from the
-  left, or as a vignette — mixed from the hero's own background colour, so it
-  follows the Customizer instead of baking in a black scrim.
+* **Hero** has ten variants, A–J, named after the design handoff's own gallery:
+  a search hero (A, dark; I, light with tags), an editorial split with the image
+  left, right or off (B), a full-bleed photo (C), category tiles (D), a minimal
+  centred band (E), a B2B rail of figures (F), a split with a review card (G), a
+  promotion band with a countdown (H) and a showreel with a play button (J).
+  They share one attribute set — the copy survives a switch — and each variant
+  reads the part of it that its layout has a place for, which is also all the
+  sidebar shows. One variant per file in `blocks/hero/variants/`.
+  Only variant A picks its own band — dark, accent or light, with a matching
+  title colour, both in the block's sidebar; the other nine are bands the design
+  fixes. A takes an optional gradient over its image — from the bottom, from the left, or as a vignette — mixed from the
+  hero's own background colour, so it follows the Customizer instead of baking
+  in a black scrim.
+* **USP-balk** draws as the hairline bar under the hero or as four cards
+  (**Stijl → Kaarten**) for use further down a page. Each line takes an optional
+  third field: the glyph in its icon tile.
+* **Contact** puts the contact details beside a real form. Left empty, the form
+  posts to the theme's own handler (`inc/contact.php`): nonce, honeypot,
+  server-side validation and one `wp_mail()` to the site administrator — filter
+  `probo_contact_recipient` to send it somewhere else. A shop that already runs
+  Contact Form 7 or WPForms puts that shortcode in the block's *Form shortcode*
+  field instead, and the theme's handler is never reached.
+* **FAQ** is a real accordion: `<details>` rows that work before any script
+  loads, with `assets/js/theme.js` adding the one thing the element cannot do
+  itself — closing the row that was open.
 * **Categorietegels** shows two kinds of callout. A category's own — filled in
   under **Producten → Categorieën → bewerken**, section *Callout* — follows that
   category into every grid that lists it, as a tile right behind it, and also
@@ -139,6 +167,26 @@ it had.
 | --- | --- |
 | **Eén pagina** (default) | The classic layout: five numbered sections under each other, order button under "Te betalen" in the summary column. |
 | **Stappen** | The accordion: 1 Gegevens & adres, 2 Bezorging, 3 Betalen. One step open, the rest collapsed to a summary line with "Wijzig". |
+
+**Eén pagina** got its own pass from the checkout design handoff, on the four
+things that were wrong with the live page:
+
+* **Labels no longer sit against the field above them.** The billing, shipping
+  and order-note wrappers are a two-column grid with a rhythm of their own
+  (`gap:14px 12px`), full width for country, street and email, postcode and city
+  side by side. Those rules are not scoped to a layout — the accordion asks for
+  the same addresses.
+* **Eleven delivery days became a chip grid** of four columns (two below 760px),
+  and the carriers one bordered block with hairline dividers and an accent bar
+  in the gutter of the selected row, instead of fifteen loose cards. Both are
+  scoped to `.pp-checkout-delivery:not(.pp-delivery)`: the accordion answers the
+  same question with its presets, and hides the lists behind them.
+* **A step bar above section 1** — Gegevens · Bezorging · Betalen — names what is
+  about to be asked and marks the first thing not answered yet. It reads the
+  same `probo_checkout_steps()` as the accordion's progress line, so the two
+  cannot drift apart in what they call the steps.
+* **The coupon notice stays inside the container.** It ran outside it and lost
+  its left half.
 
 Everything below describes the **Stappen** layout. Switching back to **Eén
 pagina** restores the previous behaviour everywhere — the template, the header

@@ -5,7 +5,7 @@
 	"title": "Hero",
 	"category": "probo",
 	"icon": "cover-image",
-	"description": "Hero met zoekbalk, korte pitch en snelkoppelingen naar populaire producten.",
+	"description": "Hero-banner voor de voorpagina — tien varianten, van zoekbalk tot showreel.",
 	"textdomain": "probo-connect",
 	"supports": {
 		"className": false,
@@ -15,16 +15,31 @@
 		"anchor": true
 	},
 	"attributes": {
+		"variant": { "type": "string", "default": "A" },
 		"eyebrow": { "type": "string", "default": "Eigen productie in Nederland" },
 		"title": { "type": "string", "default": "Groot drukwerk.\nMorgen op locatie." },
 		"subtitle": { "type": "string", "default": "Configureer je spandoek, bord of sticker in een paar stappen. Prijs en levertijd zie je direct — geen offertetraject." },
-		"heroStyle": { "type": "string", "default": "" },
+		"heroStyle": { "type": "string", "default": "Zwart" },
 		"titleColor": { "type": "string", "default": "" },
 		"showSearch": { "type": "boolean", "default": true },
 		"chips": { "type": "string", "default": "Bouwhekspandoek, Vlaggen, Raamstickers, Beachflags" },
 		"imageId": { "type": "number", "default": 0 },
 		"overlay": { "type": "string", "default": "" },
-		"overlayStrength": { "type": "number", "default": 55 }
+		"overlayStrength": { "type": "number", "default": 55 },
+		"primaryLabel": { "type": "string", "default": "Bekijk producten" },
+		"primaryUrl": { "type": "string", "default": "" },
+		"secondaryLabel": { "type": "string", "default": "Vraag een proefdruk aan" },
+		"secondaryUrl": { "type": "string", "default": "" },
+		"linkLabel": { "type": "string", "default": "Alle producten →" },
+		"linkUrl": { "type": "string", "default": "" },
+		"usps": { "type": "string", "default": "Gratis bestandscontrole\n9,1/10 · 12.480 reviews" },
+		"heroMedia": { "type": "string", "default": "Rechts" },
+		"tiles": { "type": "string", "default": "Spandoeken | | vanaf € 14,95\nVlaggen | | vanaf € 29,00\nStickers | | vanaf € 4,50\nBorden | | vanaf € 9,95" },
+		"stats": { "type": "string", "default": "12.480 | bedrijven bestellen bij ons\n9,1/10 | gemiddeld klantcijfer\n1 werkdag | snelste levering, heel NL" },
+		"reviewQuote": { "type": "string", "default": "Bestand ’s ochtends geüpload, de volgende dag hingen de spandoeken om het bouwhek." },
+		"reviewAuthor": { "type": "string", "default": "Mark de Vries — Van Wijnen" },
+		"countdownUntil": { "type": "string", "default": "" },
+		"videoUrl": { "type": "string", "default": "" }
 	},
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"
