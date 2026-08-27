@@ -159,7 +159,7 @@
 					icon: 'arrow-up-alt2',
 					size: 'small',
 					disabled: index === 0,
-					label: __( 'Up', 'probo-connect' ),
+					label: __( 'Up', 'probo-connect-theme' ),
 					onClick: function () {
 						move( index, -1 );
 					},
@@ -168,7 +168,7 @@
 					icon: 'arrow-down-alt2',
 					size: 'small',
 					disabled: index === rows.length - 1,
-					label: __( 'Down', 'probo-connect' ),
+					label: __( 'Down', 'probo-connect-theme' ),
 					onClick: function () {
 						move( index, 1 );
 					},
@@ -177,7 +177,7 @@
 					icon: 'trash',
 					size: 'small',
 					isDestructive: true,
-					label: __( 'Remove', 'probo-connect' ),
+					label: __( 'Remove', 'probo-connect-theme' ),
 					onClick: function () {
 						commit(
 							rows.filter( function ( _, i ) {
@@ -222,7 +222,7 @@
 						);
 					},
 				},
-				config.addLabel || __( 'Add item', 'probo-connect' )
+				config.addLabel || __( 'Add item', 'probo-connect-theme' )
 			)
 		);
 	}

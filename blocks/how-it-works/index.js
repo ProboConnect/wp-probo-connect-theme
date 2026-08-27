@@ -21,23 +21,23 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
+						{ title: __( 'Content', 'probo-connect-theme' ) },
 						el( components.TextControl, {
-							label: __( 'Title', 'probo-connect' ),
+							label: __( 'Title', 'probo-connect-theme' ),
 							value: a.heading,
 							onChange: function ( value ) {
 								props.setAttributes( { heading: value } );
 							},
 						} ),
-						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Steps', 'probo-connect' ) ),
+						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Steps', 'probo-connect-theme' ) ),
 						window.probo.repeater( {
 							value: a.steps,
 							fields: [
-								{ label: __( 'Number', 'probo-connect' ) },
-								{ label: __( 'Title', 'probo-connect' ) },
-								{ label: __( 'Description', 'probo-connect' ) },
+								{ label: __( 'Number', 'probo-connect-theme' ) },
+								{ label: __( 'Title', 'probo-connect-theme' ) },
+								{ label: __( 'Description', 'probo-connect-theme' ) },
 							],
-							addLabel: __( 'Add step', 'probo-connect' ),
+							addLabel: __( 'Add step', 'probo-connect-theme' ),
 							onChange: function ( value ) {
 								props.setAttributes( { steps: value } );
 							},

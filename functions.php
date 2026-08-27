@@ -23,7 +23,7 @@ require_once get_template_directory() . '/inc/woocommerce.php';
  * Theme supports, menus and image sizes.
  */
 function probo_setup() {
-	load_theme_textdomain( 'probo-connect', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'probo-connect-theme', get_template_directory() . '/languages' );
 
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
@@ -49,9 +49,9 @@ function probo_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'Primary navigation', 'probo-connect' ),
-			'topbar'  => __( 'Top bar (right)', 'probo-connect' ),
-			'legal'   => __( 'Footer — legal', 'probo-connect' ),
+			'primary' => __( 'Primary navigation', 'probo-connect-theme' ),
+			'topbar'  => __( 'Top bar (right)', 'probo-connect-theme' ),
+			'legal'   => __( 'Footer — legal', 'probo-connect-theme' ),
 		)
 	);
 
@@ -72,17 +72,17 @@ function probo_widgets_init() {
 		// The brand column under the logo. Left empty it falls back to the
 		// Customizer's intro text, so an existing site keeps what it had until
 		// someone drops a widget in here.
-		'footer-intro' => __( 'Footer brand column (below the logo)', 'probo-connect' ),
-		'footer-1'     => __( 'Footer column 1 (Products)', 'probo-connect' ),
-		'footer-2'     => __( 'Footer column 2 (Service)', 'probo-connect' ),
-		'footer-3'     => __( 'Footer column 3 (Business)', 'probo-connect' ),
+		'footer-intro' => __( 'Footer brand column (below the logo)', 'probo-connect-theme' ),
+		'footer-1'     => __( 'Footer column 1 (Products)', 'probo-connect-theme' ),
+		'footer-2'     => __( 'Footer column 2 (Service)', 'probo-connect-theme' ),
+		'footer-3'     => __( 'Footer column 3 (Business)', 'probo-connect-theme' ),
 		// The category page's filter column and its "twijfel je over de maat?"
 		// tip card, both editable as widgets.
-		'shop-filters' => __( 'Shop filters', 'probo-connect' ),
-		'shop-tip'     => __( 'Shop tip block', 'probo-connect' ),
+		'shop-filters' => __( 'Shop filters', 'probo-connect-theme' ),
+		'shop-tip'     => __( 'Shop tip block', 'probo-connect-theme' ),
 		// The "Zakelijk account →" link at the end of the primary nav bar. Left
 		// empty it falls back to that link, so an existing site keeps what it had.
-		'nav-account'  => __( 'Primary navigation: account link', 'probo-connect' ),
+		'nav-account'  => __( 'Primary navigation: account link', 'probo-connect-theme' ),
 	) as $id => $name ) {
 		$is_shop   = str_starts_with( $id, 'shop-' );
 		$is_nav    = str_starts_with( $id, 'nav-' );

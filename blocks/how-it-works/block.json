@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "editor-ol",
 	"description": "Drie genummerde stappen die het bestelproces uitleggen.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Zo werkt het" },

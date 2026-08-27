@@ -17,7 +17,7 @@ if ( post_password_required() ) {
 			<?php
 			printf(
 				/* translators: %s: comment count. */
-				esc_html( _n( '%s comment', '%s comments', get_comments_number(), 'probo-connect' ) ),
+				esc_html( _n( '%s comment', '%s comments', get_comments_number(), 'probo-connect-theme' ) ),
 				esc_html( number_format_i18n( get_comments_number() ) )
 			);
 			?>
@@ -42,7 +42,7 @@ if ( post_password_required() ) {
 	comment_form(
 		array(
 			'class_submit' => 'pp-btn-accent',
-			'title_reply'  => __( 'Leave a comment', 'probo-connect' ),
+			'title_reply'  => __( 'Leave a comment', 'probo-connect-theme' ),
 		)
 	);
 	?>

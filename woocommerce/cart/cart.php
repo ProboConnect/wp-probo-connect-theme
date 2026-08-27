@@ -22,7 +22,7 @@ do_action( 'woocommerce_before_cart' );
 ?>
 
 <main class="pp-container py-10 pb-18">
-	<h1 class="mb-7 text-4xl font-extrabold tracking-[-0.035em] lg:text-[44px]"><?php esc_html_e( 'Cart', 'probo-connect' ); ?></h1>
+	<h1 class="mb-7 text-4xl font-extrabold tracking-[-0.035em] lg:text-[44px]"><?php esc_html_e( 'Cart', 'probo-connect-theme' ); ?></h1>
 
 	<div class="grid items-start gap-8 lg:grid-cols-[1fr_380px]">
 		<form class="woocommerce-cart-form flex flex-col gap-3.5" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
@@ -89,7 +89,7 @@ do_action( 'woocommerce_before_cart' );
 								echo wp_kses_post(
 									apply_filters(
 										'woocommerce_cart_item_backorder_notification',
-										'<p class="backorder_notification mt-2 text-[13px] font-medium text-ink-3">' . esc_html__( 'Available on backorder', 'probo-connect' ) . '</p>',
+										'<p class="backorder_notification mt-2 text-[13px] font-medium text-ink-3">' . esc_html__( 'Available on backorder', 'probo-connect-theme' ) . '</p>',
 										$product_id
 									)
 								);
@@ -126,10 +126,10 @@ do_action( 'woocommerce_before_cart' );
 								sprintf(
 									'<a href="%s" class="pp-cart-remove text-ink-3 no-underline hover:text-ink hover:underline" aria-label="%s" data-product_id="%s" data-product_sku="%s">%s</a>',
 									esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-									esc_attr( sprintf( __( 'Remove %s from cart', 'probo-connect' ), $_product->get_name() ) ),
+									esc_attr( sprintf( __( 'Remove %s from cart', 'probo-connect-theme' ), $_product->get_name() ) ),
 									esc_attr( $product_id ),
 									esc_attr( $_product->get_sku() ),
-									esc_html__( 'Remove', 'probo-connect' )
+									esc_html__( 'Remove', 'probo-connect-theme' )
 								),
 								$cart_item_key
 							);

@@ -65,7 +65,7 @@ $row_height = max( 120, min( 480, (int) $attributes['height'] ) );
 							loading="lazy"
 						/>
 					<?php else : ?>
-						<div class="pp-placeholder h-full w-full"><?php esc_html_e( 'image', 'probo-connect' ); ?></div>
+						<div class="pp-placeholder h-full w-full"><?php esc_html_e( 'image', 'probo-connect-theme' ); ?></div>
 					<?php endif; ?>
 
 					<?php if ( $caption ) : ?>

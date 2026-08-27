@@ -36,22 +36,22 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
-						field( components.TextControl, 'heading', __( 'Title', 'probo-connect' ) ),
-						field( components.TextareaControl, 'intro', __( 'Intro text', 'probo-connect' ) ),
-						field( components.TextControl, 'linkLabel', __( 'Link', 'probo-connect' ) ),
-						field( components.TextControl, 'linkUrl', __( 'Link URL', 'probo-connect' ) )
+						{ title: __( 'Content', 'probo-connect-theme' ) },
+						field( components.TextControl, 'heading', __( 'Title', 'probo-connect-theme' ) ),
+						field( components.TextareaControl, 'intro', __( 'Intro text', 'probo-connect-theme' ) ),
+						field( components.TextControl, 'linkLabel', __( 'Link', 'probo-connect-theme' ) ),
+						field( components.TextControl, 'linkUrl', __( 'Link URL', 'probo-connect-theme' ) )
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Questions', 'probo-connect' ) },
+						{ title: __( 'Questions', 'probo-connect-theme' ) },
 						window.probo.repeater( {
 							value: a.items,
 							fields: [
-								{ label: __( 'Question', 'probo-connect' ) },
-								{ label: __( 'Answer', 'probo-connect' ) },
+								{ label: __( 'Question', 'probo-connect-theme' ) },
+								{ label: __( 'Answer', 'probo-connect-theme' ) },
 							],
-							addLabel: __( 'Add question', 'probo-connect' ),
+							addLabel: __( 'Add question', 'probo-connect-theme' ),
 							onChange: function ( value ) {
 								props.setAttributes( { items: value } );
 							},

@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 $probo_dates = array_values( (array) ( $data['delivery_dates'] ?? array() ) );
 
 if ( ! $probo_dates ) {
-	echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'There are currently no delivery slots available.', 'probo-connect' ) . '</p>';
+	echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'There are currently no delivery slots available.', 'probo-connect-theme' ) . '</p>';
 	return;
 }
 
@@ -138,8 +138,8 @@ if ( null !== $probo_fastest ) {
 		'key'   => 'fastest',
 		'index' => $probo_fastest,
 		'title' => $probo_both
-			? __( 'Fastest and cheapest', 'probo-connect' )
-			: __( 'Fastest', 'probo-connect' ),
+			? __( 'Fastest and cheapest', 'probo-connect-theme' )
+			: __( 'Fastest', 'probo-connect-theme' ),
 		'chip'  => '',
 	);
 }
@@ -150,14 +150,14 @@ if ( ! $probo_both && null !== $probo_cheapest ) {
 	$probo_presets[] = array(
 		'key'   => 'cheapest',
 		'index' => $probo_cheapest,
-		'title' => __( 'Cheapest', 'probo-connect' ),
+		'title' => __( 'Cheapest', 'probo-connect-theme' ),
 		// The chip is escaped as text further down, so the amount is decoded here
 		// — wc_price() hands back &euro;&nbsp;, which would otherwise be read out
 		// as those characters.
 		'chip'  => $probo_saving > 0
 			? sprintf(
 				/* translators: %s: amount saved against the fastest option. */
-				__( '%s cheaper', 'probo-connect' ),
+				__( '%s cheaper', 'probo-connect-theme' ),
 				html_entity_decode( wp_strip_all_tags( wc_price( $probo_saving ) ), ENT_QUOTES, get_bloginfo( 'charset' ) )
 			)
 			: '',
@@ -212,11 +212,11 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 					if ( (float) ( $date['rush_surcharge'] ?? 0 ) > 0 ) {
 						printf(
 							/* translators: %s: rush surcharge amount. */
-							esc_html__( 'incl. %s rush fee', 'probo-connect' ),
+							esc_html__( 'incl. %s rush fee', 'probo-connect-theme' ),
 							wp_kses_post( wc_price( (float) $date['rush_surcharge'] ) )
 						);
 					} else {
-						esc_html_e( 'from', 'probo-connect' );
+						esc_html_e( 'from', 'probo-connect-theme' );
 					}
 					?>
 				</span>
@@ -279,7 +279,7 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 								<?php
 								printf(
 									/* translators: %s: rush surcharge amount. */
-									esc_html__( 'incl. %s rush fee', 'probo-connect' ),
+									esc_html__( 'incl. %s rush fee', 'probo-connect-theme' ),
 									wp_kses_post( wc_price( (float) $date['rush_surcharge'] ) )
 								);
 								?>
@@ -299,7 +299,7 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 					<?php checked( $probo_custom ); ?>
 				/>
 				<span class="pp-when-body">
-					<span class="pp-when-day"><?php esc_html_e( 'Choose yourself', 'probo-connect' ); ?></span>
+					<span class="pp-when-day"><?php esc_html_e( 'Choose yourself', 'probo-connect-theme' ); ?></span>
 					<span class="pp-when-meta">
 						<?php
 						// Naming both counts is the point of this row: a preset shows
@@ -317,7 +317,7 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 
 						printf(
 							/* translators: 1: number of delivery days, 2: number of carriers. */
-							esc_html__( 'Choose yourself from %1$s days and %2$s carriers', 'probo-connect' ),
+							esc_html__( 'Choose yourself from %1$s days and %2$s carriers', 'probo-connect-theme' ),
 							esc_html( number_format_i18n( count( $probo_dates ) ) ),
 							esc_html( number_format_i18n( $probo_carriers ) )
 						);
@@ -330,7 +330,7 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 
 	<div class="connect-shipping-dates-list pp-when-list">
 		<?php if ( $probo_presets ) : ?>
-			<span class="pp-picker-label"><?php esc_html_e( 'Delivery day', 'probo-connect' ); ?></span>
+			<span class="pp-picker-label"><?php esc_html_e( 'Delivery day', 'probo-connect-theme' ); ?></span>
 		<?php endif; ?>
 
 		<?php
@@ -338,9 +338,9 @@ $probo_row = static function ( $date, $kicker, $chip, $best ) {
 			$best = $probo_best( $date );
 
 			if ( $index === $probo_fastest ) {
-				$chip = $probo_both ? __( 'Fastest and cheapest', 'probo-connect' ) : __( 'Fastest', 'probo-connect' );
+				$chip = $probo_both ? __( 'Fastest and cheapest', 'probo-connect-theme' ) : __( 'Fastest', 'probo-connect-theme' );
 			} elseif ( $index === $probo_cheapest ) {
-				$chip = __( 'Cheapest', 'probo-connect' );
+				$chip = __( 'Cheapest', 'probo-connect-theme' );
 			} else {
 				$chip = '';
 			}

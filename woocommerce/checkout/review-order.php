@@ -49,7 +49,7 @@ defined( 'ABSPATH' ) || exit;
 								<?php
 								$specs[] = sprintf(
 									/* translators: %s: quantity. */
-									_n( '%s pc', '%s pcs', $cart_item['quantity'], 'probo-connect' ),
+									_n( '%s pc', '%s pcs', $cart_item['quantity'], 'probo-connect-theme' ),
 									number_format_i18n( $cart_item['quantity'] )
 								);
 
@@ -77,7 +77,7 @@ defined( 'ABSPATH' ) || exit;
 				if ( wc_tax_enabled() ) {
 					printf(
 						/* translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated. */
-						esc_html__( 'Subtotal %s', 'probo-connect' ),
+						esc_html__( 'Subtotal %s', 'probo-connect-theme' ),
 						esc_html(
 							WC()->cart->display_prices_including_tax()
 								? WC()->countries->inc_tax_or_vat()
@@ -85,7 +85,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 				} else {
-					esc_html_e( 'Subtotal', 'probo-connect' );
+					esc_html_e( 'Subtotal', 'probo-connect-theme' );
 				}
 				?>
 			</th>
@@ -108,7 +108,7 @@ defined( 'ABSPATH' ) || exit;
 			do_action( 'woocommerce_review_order_before_shipping' );
 			?>
 			<tr class="shipping">
-				<th class="py-1.5 text-left font-normal text-ink-3"><?php esc_html_e( 'Shipping', 'probo-connect' ); ?></th>
+				<th class="py-1.5 text-left font-normal text-ink-3"><?php esc_html_e( 'Shipping', 'probo-connect-theme' ); ?></th>
 				<?php
 				// The amount, not wc_cart_totals_shipping_html(): that prints a
 				// rate picker of its own, and a second set of
@@ -141,7 +141,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php do_action( 'woocommerce_review_order_before_order_total' ); ?>
 
 		<tr class="order-total border-t border-line">
-			<th class="pt-4.5 text-left text-base font-bold"><?php esc_html_e( 'To pay', 'probo-connect' ); ?></th>
+			<th class="pt-4.5 text-left text-base font-bold"><?php esc_html_e( 'To pay', 'probo-connect-theme' ); ?></th>
 			<td class="pt-4.5 text-right text-3xl font-extrabold tracking-[-0.025em]"><?php wc_cart_totals_order_total_html(); ?></td>
 		</tr>
 

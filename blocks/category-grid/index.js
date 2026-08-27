@@ -34,19 +34,19 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
-						text( 'heading', __( 'Title', 'probo-connect' ) ),
-						text( 'linkText', __( 'Link top right', 'probo-connect' ) ),
-						text( 'linkUrl', __( 'Link URL', 'probo-connect' ), __( 'Leave empty = the WooCommerce shop page.', 'probo-connect' ) )
+						{ title: __( 'Content', 'probo-connect-theme' ) },
+						text( 'heading', __( 'Title', 'probo-connect-theme' ) ),
+						text( 'linkText', __( 'Link top right', 'probo-connect-theme' ) ),
+						text( 'linkUrl', __( 'Link URL', 'probo-connect-theme' ), __( 'Leave empty = the WooCommerce shop page.', 'probo-connect-theme' ) )
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Callout', 'probo-connect' ), initialOpen: false },
+						{ title: __( 'Callout', 'probo-connect-theme' ), initialOpen: false },
 						el( components.ToggleControl, {
-							label: __( 'Show category callouts', 'probo-connect' ),
+							label: __( 'Show category callouts', 'probo-connect-theme' ),
 							help: __(
 								'Een categorie met een eigen callout (Producten → Categorieën) krijgt die als tegel achter zich.',
-								'probo-connect'
+								'probo-connect-theme'
 							),
 							checked: a.showTermCallouts,
 							onChange: function ( value ) {
@@ -55,8 +55,8 @@
 						} ),
 						el( 'hr', { style: { margin: '16px 0' } } ),
 						el( components.ToggleControl, {
-							label: __( 'Show own callout', 'probo-connect' ),
-							help: __( 'A standalone tile for this block, not linked to a category.', 'probo-connect' ),
+							label: __( 'Show own callout', 'probo-connect-theme' ),
+							help: __( 'A standalone tile for this block, not linked to a category.', 'probo-connect-theme' ),
 							checked: a.showCallout,
 							onChange: function ( value ) {
 								props.setAttributes( { showCallout: value } );
@@ -66,35 +66,35 @@
 							? el(
 									wp.element.Fragment,
 									null,
-									text( 'calloutTitle', __( 'Title', 'probo-connect' ) ),
+									text( 'calloutTitle', __( 'Title', 'probo-connect-theme' ) ),
 									el( components.TextareaControl, {
-										label: __( 'Text', 'probo-connect' ),
+										label: __( 'Text', 'probo-connect-theme' ),
 										rows: 4,
 										value: a.calloutText,
 										onChange: function ( value ) {
 											props.setAttributes( { calloutText: value } );
 										},
 									} ),
-									text( 'calloutCta', __( 'Button text', 'probo-connect' ) ),
-									text( 'calloutUrl', __( 'Button URL', 'probo-connect' ), __( 'Leave empty = same link as top right.', 'probo-connect' ) ),
+									text( 'calloutCta', __( 'Button text', 'probo-connect-theme' ) ),
+									text( 'calloutUrl', __( 'Button URL', 'probo-connect-theme' ), __( 'Leave empty = same link as top right.', 'probo-connect-theme' ) ),
 									el( components.SelectControl, {
-										label: __( 'Color', 'probo-connect' ),
+										label: __( 'Color', 'probo-connect-theme' ),
 										value: a.calloutTone,
 										options: [
-											{ label: __( 'Accent', 'probo-connect' ), value: 'Accent' },
-											{ label: __( 'Secondary', 'probo-connect' ), value: 'Secondary' },
+											{ label: __( 'Accent', 'probo-connect-theme' ), value: 'Accent' },
+											{ label: __( 'Secondary', 'probo-connect-theme' ), value: 'Secondary' },
 										],
 										onChange: function ( value ) {
 											props.setAttributes( { calloutTone: value } );
 										},
 									} ),
 									el( components.SelectControl, {
-										label: __( 'Position', 'probo-connect' ),
+										label: __( 'Position', 'probo-connect-theme' ),
 										value: a.calloutPosition,
 										options: [
-											{ label: __( 'At the end', 'probo-connect' ), value: 'Eind' },
-											{ label: __( 'At the start', 'probo-connect' ), value: 'Begin' },
-											{ label: __( 'Between the tiles', 'probo-connect' ), value: 'Interval' },
+											{ label: __( 'At the end', 'probo-connect-theme' ), value: 'Eind' },
+											{ label: __( 'At the start', 'probo-connect-theme' ), value: 'Begin' },
+											{ label: __( 'Between the tiles', 'probo-connect-theme' ), value: 'Interval' },
 										],
 										onChange: function ( value ) {
 											props.setAttributes( { calloutPosition: value } );
@@ -102,10 +102,10 @@
 									} ),
 									a.calloutPosition === 'Interval'
 										? el( components.RangeControl, {
-												label: __( 'After every … tiles', 'probo-connect' ),
+												label: __( 'After every … tiles', 'probo-connect-theme' ),
 												help: __(
 													'De callout wordt herhaald. Zet dit gelijk aan het aantal kolommen voor één callout per rij.',
-													'probo-connect'
+													'probo-connect-theme'
 												),
 												value: a.calloutInterval,
 												min: 1,
@@ -122,10 +122,10 @@
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Selection', 'probo-connect' ) },
-						text( 'slugs', __( 'Category slugs', 'probo-connect' ), __( 'Comma-separated. Leave empty = top-level categories, most populated first.', 'probo-connect' ) ),
+						{ title: __( 'Selection', 'probo-connect-theme' ) },
+						text( 'slugs', __( 'Category slugs', 'probo-connect-theme' ), __( 'Comma-separated. Leave empty = top-level categories, most populated first.', 'probo-connect-theme' ) ),
 						el( components.RangeControl, {
-							label: __( 'Number of tiles', 'probo-connect' ),
+							label: __( 'Number of tiles', 'probo-connect-theme' ),
 							min: 2,
 							max: 12,
 							value: a.count,

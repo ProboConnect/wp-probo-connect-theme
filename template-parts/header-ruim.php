@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 			</a>
 
 			<a class="rounded-pp flex items-center gap-2.5 bg-secondary px-5 py-3.5 font-bold text-secondary-fg no-underline hover:opacity-90" href="<?php echo esc_url( probo_cart_url() ); ?>">
-				<span class="hidden sm:inline"><?php esc_html_e( 'Cart', 'probo-connect' ); ?></span>
+				<span class="hidden sm:inline"><?php esc_html_e( 'Cart', 'probo-connect-theme' ); ?></span>
 				<span class="sm:hidden" aria-hidden="true">🛒</span>
 				<span class="font-mono inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] leading-none font-medium text-accent-fg">
 					<?php echo esc_html( (string) probo_cart_count() ); ?>
@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
 				aria-expanded="false"
 				aria-controls="pp-primary-nav"
 			>
-				<span class="sr-only"><?php esc_html_e( 'Menu', 'probo-connect' ); ?></span>
+				<span class="sr-only"><?php esc_html_e( 'Menu', 'probo-connect-theme' ); ?></span>
 				<span aria-hidden="true">☰</span>
 			</button>
 		</div>
@@ -95,7 +95,7 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<?php // relative: the flyout panels are positioned against this bar, not against their own menu item. ?>
-<nav class="relative border-y border-line" aria-label="<?php esc_attr_e( 'Primary navigation', 'probo-connect' ); ?>">
+<nav class="relative border-y border-line" aria-label="<?php esc_attr_e( 'Primary navigation', 'probo-connect-theme' ); ?>">
 		<div class="pp-container">
 			<div id="pp-primary-nav" class="hidden py-4 lg:flex lg:h-[50px] lg:items-center lg:py-0" data-pp-nav>
 				<?php
@@ -114,7 +114,7 @@ defined( 'ABSPATH' ) || exit;
 					<?php dynamic_sidebar( 'nav-account' ); ?>
 				<?php else : ?>
 					<a class="text-[13px] font-semibold text-ink-3 no-underline lg:ml-auto" href="<?php echo esc_url( probo_account_url() ); ?>">
-						<?php esc_html_e( 'Business account →', 'probo-connect' ); ?>
+						<?php esc_html_e( 'Business account →', 'probo-connect-theme' ); ?>
 					</a>
 				<?php endif; ?>
 			</div>

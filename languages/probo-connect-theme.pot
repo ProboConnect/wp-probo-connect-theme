@@ -1,0 +1,1622 @@
+# Copyright (C) 2026 Probo Connect
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Probo Connect 4.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/probo-connect-theme\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-27T20:08:11+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: probo-connect-theme\n"
+
+#. Theme Name of the theme
+#. Author of the theme
+#: style.css
+#: inc/blocks.php:64
+msgid "Probo Connect"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://www.probo.nl/"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Bold-commerce print-on-demand theme for WooCommerce and the Probo Connect plugin. Colours, radius, typography, header, hero and footer styling are all Customizer-driven; the configurator markup rendered by Probo Connect is styled, not replaced."
+msgstr ""
+
+#: 404.php:16
+msgid "This page does not exist (anymore)"
+msgstr ""
+
+#: 404.php:19
+msgid "Search below, or go back to the range."
+msgstr ""
+
+#: blocks/bento-grid/render.php:68
+msgid "image"
+msgstr ""
+
+#: blocks/bestsellers/render.php:42
+msgid "No products found yet. As soon as there are products, they will appear here automatically."
+msgstr ""
+
+#: blocks/category-grid/render.php:81
+msgid "tile visual"
+msgstr ""
+
+#: blocks/category-grid/render.php:123
+msgid "No product categories found yet. Add categories in WooCommerce, or enter slugs above yourself."
+msgstr ""
+
+#: blocks/contact/render.php:66
+msgid "Thanks — your message has been sent. We will get back to you within one working day."
+msgstr ""
+
+#: blocks/contact/render.php:71
+msgid "Your message could not be sent. Please check your name, email address and message."
+msgstr ""
+
+#: blocks/contact/render.php:82
+#: blocks/hero/index.js:236
+#: blocks/logo-reel/index.js:80
+#: blocks/testimonials/index.js:40
+msgid "Name"
+msgstr ""
+
+#: blocks/contact/render.php:83
+msgid "First and last name"
+msgstr ""
+
+#: blocks/contact/render.php:86
+msgid "Email"
+msgstr ""
+
+#: blocks/contact/render.php:93
+msgid "Order number"
+msgstr ""
+
+#: blocks/contact/render.php:94
+msgid "(optional)"
+msgstr ""
+
+#: blocks/contact/render.php:96
+msgid "e.g. PB-102934"
+msgstr ""
+
+#: blocks/contact/render.php:100
+msgid "Message"
+msgstr ""
+
+#: blocks/contact/render.php:101
+msgid "How can we help?"
+msgstr ""
+
+#: blocks/contact/render.php:110
+msgid "Leave this field empty"
+msgstr ""
+
+#: blocks/hero/variants/a.php:87
+#: blocks/hero/variants/b.php:72
+#: blocks/hero/variants/c.php:16
+#: blocks/hero/variants/g.php:41
+msgid "hero photo"
+msgstr ""
+
+#: blocks/hero/variants/b.php:82
+msgid "category"
+msgstr ""
+
+#: blocks/hero/variants/h.php:24
+msgid "days"
+msgstr ""
+
+#: blocks/hero/variants/h.php:25
+msgid "hours"
+msgstr ""
+
+#: blocks/hero/variants/h.php:26
+msgid "min"
+msgstr ""
+
+#: blocks/hero/variants/j.php:20
+msgid "showreel still"
+msgstr ""
+
+#: blocks/hero/variants/j.php:26
+msgid "Play the film"
+msgstr ""
+
+#. translators: %d: score out of five.
+#: blocks/testimonials/render.php:47
+#, php-format
+msgid "%d out of 5 stars"
+msgstr ""
+
+#. translators: %s: comment count.
+#: comments.php:20
+#, php-format
+msgid "%s comment"
+msgid_plural "%s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:45
+msgid "Leave a comment"
+msgstr ""
+
+#: footer.php:11
+#: template-parts/header-compact.php:43
+#: template-parts/header-compact.php:86
+msgid "Products"
+msgstr ""
+
+#: footer.php:12
+msgid "Service"
+msgstr ""
+
+#: footer.php:13
+msgid "Business"
+msgstr ""
+
+#: footer.php:51
+msgid "Add a menu or text widget here."
+msgstr ""
+
+#: functions.php:52
+#: template-parts/header-ruim.php:98
+msgid "Primary navigation"
+msgstr ""
+
+#: functions.php:53
+msgid "Top bar (right)"
+msgstr ""
+
+#: functions.php:54
+msgid "Footer — legal"
+msgstr ""
+
+#: functions.php:75
+msgid "Footer brand column (below the logo)"
+msgstr ""
+
+#: functions.php:76
+msgid "Footer column 1 (Products)"
+msgstr ""
+
+#: functions.php:77
+msgid "Footer column 2 (Service)"
+msgstr ""
+
+#: functions.php:78
+msgid "Footer column 3 (Business)"
+msgstr ""
+
+#: functions.php:81
+msgid "Shop filters"
+msgstr ""
+
+#: functions.php:82
+msgid "Shop tip block"
+msgstr ""
+
+#: functions.php:85
+msgid "Primary navigation: account link"
+msgstr ""
+
+#: header.php:22
+msgid "Skip to content"
+msgstr ""
+
+#: inc/blocks.php:100
+msgid "Probo Connect homepage"
+msgstr ""
+
+#: inc/blocks.php:101
+msgid "Hero, USP bar, categories, bestsellers, and “How it works”."
+msgstr ""
+
+#: inc/blocks.php:119
+msgctxt "Theme starter content"
+msgid "Home"
+msgstr ""
+
+#: inc/blocks.php:262
+#: blocks/hero/index.js:25
+msgid "A — Search hero, dark"
+msgstr ""
+
+#: inc/blocks.php:263
+#: blocks/hero/index.js:26
+msgid "B — Editorial, large image"
+msgstr ""
+
+#: inc/blocks.php:264
+#: blocks/hero/index.js:27
+msgid "C — Full-bleed image, centred"
+msgstr ""
+
+#: inc/blocks.php:265
+#: blocks/hero/index.js:28
+msgid "D — Showroom, category tiles"
+msgstr ""
+
+#: inc/blocks.php:266
+#: blocks/hero/index.js:29
+msgid "E — Minimal, centred, light"
+msgstr ""
+
+#: inc/blocks.php:267
+#: blocks/hero/index.js:30
+msgid "F — USP rail, dark, B2B"
+msgstr ""
+
+#: inc/blocks.php:268
+#: blocks/hero/index.js:31
+msgid "G — Split with review card"
+msgstr ""
+
+#: inc/blocks.php:269
+#: blocks/hero/index.js:32
+msgid "H — Promotion, accent"
+msgstr ""
+
+#: inc/blocks.php:270
+#: blocks/hero/index.js:33
+msgid "I — Search hero, light with tags"
+msgstr ""
+
+#: inc/blocks.php:271
+#: blocks/hero/index.js:34
+msgid "J — Showreel, image with play"
+msgstr ""
+
+#: inc/category-callout.php:116
+msgid "Category page — above the products"
+msgstr ""
+
+#: inc/category-callout.php:117
+msgid "Between the products / in a tile grid"
+msgstr ""
+
+#: inc/category-callout.php:118
+msgid "Category page — below the products"
+msgstr ""
+
+#: inc/category-callout.php:398
+msgid "Show callout"
+msgstr ""
+
+#: inc/category-callout.php:400
+msgid "Turning it off keeps the text, but does not show this callout anywhere."
+msgstr ""
+
+#: inc/category-callout.php:403
+#: blocks/bento-grid/index.js:151
+#: blocks/bestsellers/index.js:26
+#: blocks/category-grid/index.js:38
+#: blocks/category-grid/index.js:69
+#: blocks/contact/index.js:46
+#: blocks/faq/index.js:40
+#: blocks/hero/index.js:183
+#: blocks/how-it-works/index.js:26
+#: blocks/how-it-works/index.js:37
+#: blocks/testimonials/index.js:29
+#: blocks/usp-bar/index.js:37
+msgid "Title"
+msgstr ""
+
+#: inc/category-callout.php:405
+msgid "Leave empty = this block will not be used."
+msgstr ""
+
+#: inc/category-callout.php:408
+#: blocks/category-grid/index.js:71
+msgid "Text"
+msgstr ""
+
+#: inc/category-callout.php:412
+#: blocks/hero/index.js:100
+msgid "Image"
+msgstr ""
+
+#: inc/category-callout.php:414
+#: blocks/logo-reel/index.js:93
+msgid "Optional."
+msgstr ""
+
+#: inc/category-callout.php:417
+#: blocks/category-grid/index.js:78
+#: blocks/contact/index.js:65
+msgid "Button text"
+msgstr ""
+
+#: inc/category-callout.php:421
+#: blocks/category-grid/index.js:79
+msgid "Button URL"
+msgstr ""
+
+#: inc/category-callout.php:423
+msgid "Leave empty = the category page itself."
+msgstr ""
+
+#: inc/category-callout.php:426
+#: blocks/category-grid/index.js:81
+msgid "Color"
+msgstr ""
+
+#: inc/category-callout.php:429
+#: inc/customizer.php:155
+#: inc/customizer.php:183
+#: blocks/category-grid/index.js:84
+#: blocks/hero/index.js:296
+msgid "Accent"
+msgstr ""
+
+#: inc/category-callout.php:430
+#: inc/customizer.php:89
+#: blocks/category-grid/index.js:85
+msgid "Secondary"
+msgstr ""
+
+#: inc/category-callout.php:434
+msgid "Template"
+msgstr ""
+
+#: inc/category-callout.php:437
+msgid "The template decides where the callout lands. Want the same pitch in two places? Create two callouts, one per template. In the Category Tiles block every callout is drawn with a tile template, whatever it uses on the category page."
+msgstr ""
+
+#: inc/category-callout.php:440
+msgid "Tile after product number"
+msgstr ""
+
+#: inc/category-callout.php:442
+msgid "Only for the tile view. Appears once, right after this product number — not repeated. Leave empty = after product 4."
+msgstr ""
+
+#: inc/category-callout.php:607
+msgid "On"
+msgstr ""
+
+#: inc/category-callout.php:634
+#: blocks/bento-grid/index.js:110
+#: blocks/hero/index.js:137
+#: blocks/hero/index.js:349
+msgid "Choose image"
+msgstr ""
+
+#: inc/category-callout.php:635
+#: woocommerce/cart/cart.php:132
+#: blocks/bento-grid/index.js:85
+#: blocks/logo-reel/index.js:69
+#: blocks/shared/repeater.js:180
+msgid "Remove"
+msgstr ""
+
+#: inc/category-callout.php:780
+msgid "Callouts"
+msgstr ""
+
+#. translators: %d: number of slots.
+#: inc/category-callout.php:787
+#, php-format
+msgid "A callout is a small block with a button next to this category — on the category page and as a tile in the Category Tiles block. Up to %d per category; leave the title empty to skip a block."
+msgstr ""
+
+#. translators: %d: callout number.
+#: inc/category-callout.php:803
+#, php-format
+msgid "Callout %d"
+msgstr ""
+
+#: inc/category-callout.php:809
+msgid "empty"
+msgstr ""
+
+#: inc/category-callout.php:941
+msgid "Choose an image"
+msgstr ""
+
+#. translators: %s: sender name.
+#: inc/contact.php:93
+#, php-format
+msgid "Name: %s"
+msgstr ""
+
+#. translators: %s: sender email.
+#: inc/contact.php:94
+#, php-format
+msgid "Email: %s"
+msgstr ""
+
+#. translators: %s: order number.
+#: inc/contact.php:98
+#, php-format
+msgid "Order number: %s"
+msgstr ""
+
+#. translators: 1: site name, 2: sender name.
+#: inc/contact.php:108
+#, php-format
+msgid "[%1$s] Contact form — %2$s"
+msgstr ""
+
+#: inc/customizer.php:24
+msgid "Theme settings"
+msgstr ""
+
+#: inc/customizer.php:25
+msgid "Colors, typography, and the structure of header and footer."
+msgstr ""
+
+#: inc/customizer.php:31
+msgid "Brand"
+msgstr ""
+
+#: inc/customizer.php:32
+msgid "Typography"
+msgstr ""
+
+#: inc/customizer.php:33
+msgid "Header & footer"
+msgstr ""
+
+#: inc/customizer.php:34
+msgid "Components"
+msgstr ""
+
+#: inc/customizer.php:79
+msgid "Accent color"
+msgstr ""
+
+#: inc/customizer.php:90
+msgid "Controls all dark surfaces: hero, top bar, footer, cart button, price bars, and summary boxes."
+msgstr ""
+
+#: inc/customizer.php:100
+msgid "Radius"
+msgstr ""
+
+#: inc/customizer.php:112
+msgid "Heading font"
+msgstr ""
+
+#: inc/customizer.php:123
+msgid "Body font"
+msgstr ""
+
+#: inc/customizer.php:124
+msgid "Specifications and prices always stay IBM Plex Mono."
+msgstr ""
+
+#: inc/customizer.php:136
+msgid "Header style"
+msgstr ""
+
+#: inc/customizer.php:139
+msgid "Spacious — logo, search and USPs on three rows"
+msgstr ""
+
+#: inc/customizer.php:140
+msgid "Compact — one dark bar with a products megamenu"
+msgstr ""
+
+#: inc/customizer.php:150
+msgid "Top bar"
+msgstr ""
+
+#: inc/customizer.php:153
+#: inc/customizer.php:180
+#: blocks/hero/index.js:295
+msgid "Follow secondary"
+msgstr ""
+
+#: inc/customizer.php:154
+#: inc/customizer.php:181
+#: blocks/hero/index.js:297
+#: blocks/testimonials/index.js:57
+msgid "Light"
+msgstr ""
+
+#: inc/customizer.php:156
+msgid "No color block"
+msgstr ""
+
+#: inc/customizer.php:166
+msgid "Top bar color"
+msgstr ""
+
+#: inc/customizer.php:167
+msgid "Optional custom color. Leave empty = follow the choice above."
+msgstr ""
+
+#: inc/customizer.php:177
+msgid "Footer"
+msgstr ""
+
+#: inc/customizer.php:182
+msgid "White"
+msgstr ""
+
+#: inc/customizer.php:196
+msgid "Logo (light)"
+msgstr ""
+
+#: inc/customizer.php:197
+msgid "For dark surfaces like the footer. Leave empty = the regular logo will be used."
+msgstr ""
+
+#. translators: %d: position of the USP in the top bar.
+#: inc/customizer.php:209
+#, php-format
+msgid "Top bar USP %d"
+msgstr ""
+
+#: inc/customizer.php:221
+msgid "Search field placeholder"
+msgstr ""
+
+#: inc/customizer.php:232
+msgid "Phone number on checkout"
+msgstr ""
+
+#: inc/customizer.php:233
+msgid "Shown on the right in the plain checkout header. Leave empty to hide it."
+msgstr ""
+
+#: inc/customizer.php:244
+msgid "Footer intro text"
+msgstr ""
+
+#: inc/customizer.php:255
+msgid "Footer legal line"
+msgstr ""
+
+#: inc/customizer.php:267
+msgid "Card style"
+msgstr ""
+
+#: inc/customizer.php:270
+msgid "Border"
+msgstr ""
+
+#: inc/customizer.php:271
+msgid "Shadow"
+msgstr ""
+
+#: inc/customizer.php:272
+msgid "Flat"
+msgstr ""
+
+#: inc/customizer.php:282
+msgid "Checkout style"
+msgstr ""
+
+#: inc/customizer.php:283
+msgid "The step version collapses the checkout to one open step, turns the delivery choice into a single decision, and puts the order button in step 3. The classic version is the long page with all sections stacked."
+msgstr ""
+
+#: inc/customizer.php:286
+msgid "One page (classic)"
+msgstr ""
+
+#: inc/customizer.php:287
+msgid "Steps (accordion)"
+msgstr ""
+
+#: inc/template-tags.php:123
+msgid "Dashboard"
+msgstr ""
+
+#: inc/template-tags.php:124
+msgid "Log in"
+msgstr ""
+
+#: inc/template-tags.php:161
+#: inc/template-tags.php:173
+msgid "Search"
+msgstr ""
+
+#: inc/template-tags.php:185
+msgid "Breadcrumb"
+msgstr ""
+
+#: inc/template-tags.php:201
+msgid "Home"
+msgstr ""
+
+#: inc/template-tags.php:216
+msgid "Configure now →"
+msgstr ""
+
+#: inc/template-tags.php:280
+msgid "Most popular"
+msgstr ""
+
+#: inc/template-tags.php:282
+msgid "On sale"
+msgstr ""
+
+#: inc/template-tags.php:516
+msgid "All products"
+msgstr ""
+
+#: inc/template-tags.php:618
+msgid "product photo"
+msgstr ""
+
+#. translators: %s: phone number.
+#: inc/template-tags.php:679
+#, php-format
+msgid "Need help? %s"
+msgstr ""
+
+#: inc/woocommerce.php:494
+#: inc/woocommerce.php:996
+msgid "free"
+msgstr ""
+
+#: inc/woocommerce.php:537
+msgid "No carriers are available for this address."
+msgstr ""
+
+#. translators: %s: number of carriers.
+#: inc/woocommerce.php:598
+#, php-format
+msgid "Choose a carrier yourself (%s)"
+msgstr ""
+
+#. translators: %s: number of pickup points.
+#: inc/woocommerce.php:635
+#: probo-connect/checkout/sections/shipping-blocks-shipping-methods.php:143
+#, php-format
+msgid "All %s pickup points"
+msgstr ""
+
+#: inc/woocommerce.php:709
+#: inc/woocommerce.php:791
+#: inc/woocommerce.php:792
+#: woocommerce/checkout/form-checkout.php:278
+msgid "Delivery"
+msgstr ""
+
+#: inc/woocommerce.php:713
+msgid "Pickup"
+msgstr ""
+
+#. translators: %s: number of pickup locations.
+#: inc/woocommerce.php:719
+#, php-format
+msgid "(%s locations)"
+msgstr ""
+
+#: inc/woocommerce.php:785
+msgid "Details & address"
+msgstr ""
+
+#: inc/woocommerce.php:786
+msgid "Details"
+msgstr ""
+
+#: inc/woocommerce.php:787
+msgid "Enter your business details once; next time they will already be filled in."
+msgstr ""
+
+#: inc/woocommerce.php:788
+msgid "Continue to delivery"
+msgstr ""
+
+#: inc/woocommerce.php:793
+msgid "Fast or affordable — we will pick the day and carrier for you. Prefer to choose yourself? That works too."
+msgstr ""
+
+#: inc/woocommerce.php:794
+msgid "Continue to payment"
+msgstr ""
+
+#: inc/woocommerce.php:797
+#: inc/woocommerce.php:798
+msgid "Payment"
+msgstr ""
+
+#. translators: %s: rush surcharge amount.
+#: inc/woocommerce.php:965
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:215
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:282
+#, php-format
+msgid "incl. %s rush fee"
+msgstr ""
+
+#: inc/woocommerce.php:1120
+msgid "Change"
+msgstr ""
+
+#: inc/woocommerce.php:1164
+msgid "Place order"
+msgstr ""
+
+#. translators: 1: opening emphasis tag, 2: closing emphasis tag.
+#: inc/woocommerce.php:1171
+#, php-format
+msgid "Your browser does not support JavaScript. Please click %1$sUpdate totals%2$s first, otherwise the amount may differ from what is shown above."
+msgstr ""
+
+#: inc/woocommerce.php:1177
+#: inc/woocommerce.php:1178
+msgid "Update totals"
+msgstr ""
+
+#. translators: %s: search term.
+#: index.php:20
+#, php-format
+msgid "Search results for “%s”"
+msgstr ""
+
+#: index.php:24
+msgid "News"
+msgstr ""
+
+#: index.php:59
+msgid "Nothing found"
+msgstr ""
+
+#: index.php:61
+msgid "Try a different search term, or browse the full range."
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:41
+msgid "There are currently no delivery slots available."
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:141
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:341
+msgid "Fastest and cheapest"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:142
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:341
+msgid "Fastest"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:153
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:343
+msgid "Cheapest"
+msgstr ""
+
+#. translators: %s: amount saved against the fastest option.
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:160
+#, php-format
+msgid "%s cheaper"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:219
+msgid "from"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:302
+msgid "Choose yourself"
+msgstr ""
+
+#. translators: 1: number of delivery days, 2: number of carriers.
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:320
+#, php-format
+msgid "Choose yourself from %1$s days and %2$s carriers"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-dates.php:333
+msgid "Delivery day"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-methods.php:33
+msgid "First choose a delivery day."
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-methods.php:123
+#: woocommerce/checkout/form-checkout.php:288
+msgid "Carrier"
+msgstr ""
+
+#: probo-connect/checkout/sections/shipping-blocks-shipping-methods.php:136
+msgid "Pickup point"
+msgstr ""
+
+#: template-parts/header-compact.php:70
+#: template-parts/header-ruim.php:73
+#: woocommerce/cart/cart.php:25
+msgid "Cart"
+msgstr ""
+
+#: template-parts/header-compact.php:137
+#: template-parts/header-ruim.php:117
+msgid "Business account →"
+msgstr ""
+
+#: template-parts/header-ruim.php:87
+msgid "Menu"
+msgstr ""
+
+#: woocommerce/archive-product.php:86
+msgid "Filter"
+msgstr ""
+
+#: woocommerce/cart/cart-empty.php:42
+msgid "Return to shop"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:32
+#: woocommerce/cart/cart-totals.php:86
+msgid "Total"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:36
+#: woocommerce/checkout/review-order.php:88
+msgid "Subtotal"
+msgstr ""
+
+#. translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated.
+#: woocommerce/cart/cart-totals.php:78
+#, php-format
+msgid "Total %s"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:107
+msgid "Enter discount code"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:111
+msgid "Discount code"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:112
+msgid "Code"
+msgstr ""
+
+#: woocommerce/cart/cart-totals.php:113
+#: woocommerce/cart/cart-totals.php:114
+msgid "Apply"
+msgstr ""
+
+#: woocommerce/cart/cart.php:92
+msgid "Available on backorder"
+msgstr ""
+
+#: woocommerce/cart/cart.php:129
+#, php-format
+msgid "Remove %s from cart"
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:51
+msgid "You must be logged in to check out."
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:204
+msgid "This order will not be shipped."
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:232
+msgid "Checkout"
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:248
+#: blocks/contact/index.js:48
+msgid "Contact details"
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:258
+msgid "Delivery address"
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:280
+msgid "First choose a delivery day; the carriers that deliver then will appear."
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:290
+msgid "Large or long shipments always go by freight carrier."
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:297
+msgid "Payment method"
+msgstr ""
+
+#: woocommerce/checkout/form-checkout.php:319
+msgid "Your order"
+msgstr ""
+
+#. translators: %s: quantity.
+#: woocommerce/checkout/review-order.php:52
+#, php-format
+msgid "%s pc"
+msgid_plural "%s pcs"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated.
+#: woocommerce/checkout/review-order.php:80
+#, php-format
+msgid "Subtotal %s"
+msgstr ""
+
+#: woocommerce/checkout/review-order.php:111
+msgid "Shipping"
+msgstr ""
+
+#: woocommerce/checkout/review-order.php:144
+msgid "To pay"
+msgstr ""
+
+#. translators: 1: average rating, 2: review count.
+#: woocommerce/single-product.php:72
+#, php-format
+msgid "%1$s / 5 · %2$s reviews"
+msgstr ""
+
+#: woocommerce/single-product.php:108
+#: woocommerce/single-product.php:150
+msgid "Configure your product"
+msgstr ""
+
+#: blocks/bento-grid/index.js:17
+msgid "Normal"
+msgstr ""
+
+#: blocks/bento-grid/index.js:18
+msgid "Wide (2 columns)"
+msgstr ""
+
+#: blocks/bento-grid/index.js:19
+msgid "Tall (2 rows)"
+msgstr ""
+
+#: blocks/bento-grid/index.js:20
+msgid "Large (2 × 2)"
+msgstr ""
+
+#: blocks/bento-grid/index.js:67
+#: blocks/logo-reel/index.js:51
+#: blocks/shared/repeater.js:162
+msgid "Up"
+msgstr ""
+
+#: blocks/bento-grid/index.js:76
+#: blocks/logo-reel/index.js:60
+#: blocks/shared/repeater.js:171
+msgid "Down"
+msgstr ""
+
+#: blocks/bento-grid/index.js:109
+#: blocks/hero/index.js:137
+#: blocks/hero/index.js:348
+msgid "Replace image"
+msgstr ""
+
+#: blocks/bento-grid/index.js:116
+msgid "Size"
+msgstr ""
+
+#: blocks/bento-grid/index.js:124
+msgid "Caption"
+msgstr ""
+
+#: blocks/bento-grid/index.js:131
+#: blocks/faq/index.js:42
+#: blocks/hero/index.js:237
+#: blocks/logo-reel/index.js:92
+msgid "Link"
+msgstr ""
+
+#: blocks/bento-grid/index.js:132
+msgid "Optional. Leave empty to make the tile unclickable."
+msgstr ""
+
+#: blocks/bento-grid/index.js:149
+#: blocks/bestsellers/index.js:24
+#: blocks/category-grid/index.js:37
+#: blocks/contact/index.js:45
+#: blocks/faq/index.js:39
+#: blocks/hero/index.js:179
+#: blocks/how-it-works/index.js:24
+#: blocks/testimonials/index.js:27
+msgid "Content"
+msgstr ""
+
+#: blocks/bento-grid/index.js:158
+#: blocks/contact/index.js:47
+#: blocks/faq/index.js:41
+#: blocks/hero/index.js:186
+msgid "Intro text"
+msgstr ""
+
+#: blocks/bento-grid/index.js:168
+msgid "Tiles"
+msgstr ""
+
+#: blocks/bento-grid/index.js:178
+#: blocks/hero/index.js:240
+msgid "Add tile"
+msgstr ""
+
+#: blocks/bento-grid/index.js:183
+#: blocks/hero/index.js:291
+#: blocks/logo-reel/index.js:158
+#: blocks/testimonials/index.js:52
+msgid "Display"
+msgstr ""
+
+#: blocks/bento-grid/index.js:185
+msgid "Row height"
+msgstr ""
+
+#: blocks/bento-grid/index.js:186
+msgid "Height of one row; large tiles are two rows tall."
+msgstr ""
+
+#: blocks/bento-grid/index.js:203
+msgid "Bento grid"
+msgstr ""
+
+#: blocks/bento-grid/index.js:204
+msgid "Voeg tegels toe in de zijbalk onder \"Tegels\"."
+msgstr ""
+
+#: blocks/bestsellers/index.js:33
+msgid "Label top right"
+msgstr ""
+
+#: blocks/bestsellers/index.js:42
+#: blocks/category-grid/index.js:125
+msgid "Selection"
+msgstr ""
+
+#: blocks/bestsellers/index.js:44
+msgid "Source"
+msgstr ""
+
+#: blocks/bestsellers/index.js:47
+msgid "Best selling"
+msgstr ""
+
+#: blocks/bestsellers/index.js:48
+msgid "Featured"
+msgstr ""
+
+#: blocks/bestsellers/index.js:49
+msgid "Newest"
+msgstr ""
+
+#: blocks/bestsellers/index.js:56
+msgid "Number of products"
+msgstr ""
+
+#: blocks/category-grid/index.js:39
+msgid "Link top right"
+msgstr ""
+
+#: blocks/category-grid/index.js:40
+#: blocks/faq/index.js:43
+msgid "Link URL"
+msgstr ""
+
+#: blocks/category-grid/index.js:40
+msgid "Leave empty = the WooCommerce shop page."
+msgstr ""
+
+#: blocks/category-grid/index.js:44
+msgid "Callout"
+msgstr ""
+
+#: blocks/category-grid/index.js:46
+msgid "Show category callouts"
+msgstr ""
+
+#: blocks/category-grid/index.js:47
+msgid "Een categorie met een eigen callout (Producten → Categorieën) krijgt die als tegel achter zich."
+msgstr ""
+
+#: blocks/category-grid/index.js:58
+msgid "Show own callout"
+msgstr ""
+
+#: blocks/category-grid/index.js:59
+msgid "A standalone tile for this block, not linked to a category."
+msgstr ""
+
+#: blocks/category-grid/index.js:79
+msgid "Leave empty = same link as top right."
+msgstr ""
+
+#: blocks/category-grid/index.js:92
+msgid "Position"
+msgstr ""
+
+#: blocks/category-grid/index.js:95
+msgid "At the end"
+msgstr ""
+
+#: blocks/category-grid/index.js:96
+msgid "At the start"
+msgstr ""
+
+#: blocks/category-grid/index.js:97
+msgid "Between the tiles"
+msgstr ""
+
+#: blocks/category-grid/index.js:105
+msgid "After every … tiles"
+msgstr ""
+
+#: blocks/category-grid/index.js:106
+msgid "De callout wordt herhaald. Zet dit gelijk aan het aantal kolommen voor één callout per rij."
+msgstr ""
+
+#: blocks/category-grid/index.js:126
+msgid "Category slugs"
+msgstr ""
+
+#: blocks/category-grid/index.js:126
+msgid "Comma-separated. Leave empty = top-level categories, most populated first."
+msgstr ""
+
+#: blocks/category-grid/index.js:128
+msgid "Number of tiles"
+msgstr ""
+
+#: blocks/contact/index.js:52
+#: blocks/usp-bar/index.js:39
+msgid "Icon"
+msgstr ""
+
+#: blocks/contact/index.js:53
+msgid "Value"
+msgstr ""
+
+#: blocks/contact/index.js:54
+msgid "Note"
+msgstr ""
+
+#: blocks/contact/index.js:56
+msgid "Add row"
+msgstr ""
+
+#: blocks/contact/index.js:64
+msgid "Form"
+msgstr ""
+
+#: blocks/contact/index.js:66
+msgid "Form shortcode"
+msgstr ""
+
+#: blocks/contact/index.js:67
+msgid "Leave empty for the theme’s own form, which mails the site administrator. Fill in a shortcode to render a form plugin here instead."
+msgstr ""
+
+#: blocks/faq/index.js:47
+msgid "Questions"
+msgstr ""
+
+#: blocks/faq/index.js:51
+msgid "Question"
+msgstr ""
+
+#: blocks/faq/index.js:52
+msgid "Answer"
+msgstr ""
+
+#: blocks/faq/index.js:54
+msgid "Add question"
+msgstr ""
+
+#: blocks/hero/index.js:102
+msgid "Gradient over the image"
+msgstr ""
+
+#: blocks/hero/index.js:104
+#: blocks/hero/index.js:172
+msgid "None"
+msgstr ""
+
+#: blocks/hero/index.js:105
+msgid "From the bottom"
+msgstr ""
+
+#: blocks/hero/index.js:106
+msgid "From the left"
+msgstr ""
+
+#: blocks/hero/index.js:107
+msgid "All around (vignette)"
+msgstr ""
+
+#: blocks/hero/index.js:109
+msgid "Blends into the hero background color, so it adapts to the style."
+msgstr ""
+
+#: blocks/hero/index.js:114
+msgid "Strength"
+msgstr ""
+
+#: blocks/hero/index.js:152
+msgid "Remove image"
+msgstr ""
+
+#: blocks/hero/index.js:162
+msgid "Variant"
+msgstr ""
+
+#: blocks/hero/index.js:163
+msgid "Hero variant"
+msgstr ""
+
+#: blocks/hero/index.js:165
+msgid "Every variant reads the same content; the fields below are the ones this one uses."
+msgstr ""
+
+#: blocks/hero/index.js:168
+msgid "Image position"
+msgstr ""
+
+#: blocks/hero/index.js:170
+msgid "Right"
+msgstr ""
+
+#: blocks/hero/index.js:171
+msgid "Left"
+msgstr ""
+
+#: blocks/hero/index.js:182
+msgid "Label above the title"
+msgstr ""
+
+#: blocks/hero/index.js:184
+msgid "A new line becomes a line break."
+msgstr ""
+
+#: blocks/hero/index.js:189
+msgid "Show search bar"
+msgstr ""
+
+#: blocks/hero/index.js:197
+msgid "Shortcuts"
+msgstr ""
+
+#: blocks/hero/index.js:198
+msgid "Comma-separated."
+msgstr ""
+
+#: blocks/hero/index.js:205
+msgid "Buttons"
+msgstr ""
+
+#: blocks/hero/index.js:207
+msgid "Primary button"
+msgstr ""
+
+#: blocks/hero/index.js:210
+msgid "Primary button link"
+msgstr ""
+
+#: blocks/hero/index.js:213
+msgid "Secondary button"
+msgstr ""
+
+#: blocks/hero/index.js:216
+msgid "Secondary button link"
+msgstr ""
+
+#: blocks/hero/index.js:218
+msgid "Overview link"
+msgstr ""
+
+#: blocks/hero/index.js:219
+msgid "Overview link URL"
+msgstr ""
+
+#: blocks/hero/index.js:225
+#: blocks/usp-bar/index.js:22
+msgid "USPs"
+msgstr ""
+
+#: blocks/hero/index.js:226
+msgid "USP"
+msgstr ""
+
+#: blocks/hero/index.js:226
+#: blocks/usp-bar/index.js:41
+msgid "Add USP"
+msgstr ""
+
+#: blocks/hero/index.js:232
+msgid "Category tiles"
+msgstr ""
+
+#: blocks/hero/index.js:238
+msgid "From price"
+msgstr ""
+
+#: blocks/hero/index.js:246
+msgid "Variant B shows the first two tiles."
+msgstr ""
+
+#: blocks/hero/index.js:247
+msgid "Variant D shows four tiles; the last one is drawn in the accent colour."
+msgstr ""
+
+#: blocks/hero/index.js:254
+msgid "Figures"
+msgstr ""
+
+#: blocks/hero/index.js:257
+msgid "Figure"
+msgstr ""
+
+#: blocks/hero/index.js:257
+msgid "Explanation"
+msgstr ""
+
+#: blocks/hero/index.js:258
+msgid "Add figure"
+msgstr ""
+
+#: blocks/hero/index.js:265
+msgid "Review card"
+msgstr ""
+
+#: blocks/hero/index.js:266
+#: blocks/testimonials/index.js:39
+msgid "Quote"
+msgstr ""
+
+#: blocks/hero/index.js:267
+msgid "Name and company"
+msgstr ""
+
+#: blocks/hero/index.js:273
+msgid "Campaign"
+msgstr ""
+
+#: blocks/hero/index.js:274
+msgid "Runs until"
+msgstr ""
+
+#: blocks/hero/index.js:276
+msgid "Leave empty to hide the countdown."
+msgstr ""
+
+#: blocks/hero/index.js:283
+msgid "Film"
+msgstr ""
+
+#: blocks/hero/index.js:284
+msgid "Link to the film"
+msgstr ""
+
+#: blocks/hero/index.js:285
+msgid "Without a link the play button is decoration only."
+msgstr ""
+
+#: blocks/hero/index.js:293
+msgid "Hero style"
+msgstr ""
+
+#: blocks/hero/index.js:299
+msgid "The band this hero sits on, derived from the brand colours."
+msgstr ""
+
+#: blocks/hero/index.js:304
+msgid "This variant has a band of its own, so the hero style does not apply to it."
+msgstr ""
+
+#: blocks/hero/index.js:306
+msgid "Title color"
+msgstr ""
+
+#: blocks/hero/index.js:319
+msgid "A color too close to the background is ignored, so the title stays readable."
+msgstr ""
+
+#: blocks/how-it-works/index.js:32
+msgid "Steps"
+msgstr ""
+
+#: blocks/how-it-works/index.js:36
+msgid "Number"
+msgstr ""
+
+#: blocks/how-it-works/index.js:38
+#: blocks/usp-bar/index.js:38
+msgid "Description"
+msgstr ""
+
+#: blocks/how-it-works/index.js:40
+msgid "Add step"
+msgstr ""
+
+#: blocks/logo-reel/index.js:81
+msgid "Becomes the logo alt text."
+msgstr ""
+
+#: blocks/logo-reel/index.js:137
+msgid "Edit selection"
+msgstr ""
+
+#: blocks/logo-reel/index.js:138
+msgid "Choose logos"
+msgstr ""
+
+#: blocks/logo-reel/index.js:152
+msgid "Logos"
+msgstr ""
+
+#: blocks/logo-reel/index.js:160
+msgid "Label"
+msgstr ""
+
+#: blocks/logo-reel/index.js:161
+msgid "Leave empty to hide the label."
+msgstr ""
+
+#: blocks/logo-reel/index.js:168
+msgid "Grayscale"
+msgstr ""
+
+#: blocks/logo-reel/index.js:169
+msgid "Logos gain color when you hover over them."
+msgstr ""
+
+#: blocks/logo-reel/index.js:176
+msgid "Logo height"
+msgstr ""
+
+#: blocks/logo-reel/index.js:193
+msgid "Logo bar"
+msgstr ""
+
+#: blocks/logo-reel/index.js:194
+msgid "Choose logos in the sidebar."
+msgstr ""
+
+#: blocks/shared/repeater.js:225
+msgid "Add item"
+msgstr ""
+
+#: blocks/testimonials/index.js:35
+msgid "Quotes"
+msgstr ""
+
+#: blocks/testimonials/index.js:41
+msgid "Company"
+msgstr ""
+
+#: blocks/testimonials/index.js:42
+msgid "Score (0–5)"
+msgstr ""
+
+#: blocks/testimonials/index.js:44
+msgid "Add quote"
+msgstr ""
+
+#: blocks/testimonials/index.js:54
+msgid "Background"
+msgstr ""
+
+#: blocks/testimonials/index.js:58
+msgid "Dark (follow secondary)"
+msgstr ""
+
+#: blocks/usp-bar/index.js:24
+msgid "Style"
+msgstr ""
+
+#: blocks/usp-bar/index.js:27
+msgid "Bar under the hero"
+msgstr ""
+
+#: blocks/usp-bar/index.js:28
+msgid "Cards"
+msgstr ""
+
+#: blocks/bento-grid/block.json
+msgctxt "block title"
+msgid "Bento-grid"
+msgstr ""
+
+#: blocks/bento-grid/block.json
+msgctxt "block description"
+msgid "Beeldraster met tegels van verschillende grootte, voor sfeer- en productfoto's."
+msgstr ""
+
+#: blocks/bestsellers/block.json
+msgctxt "block title"
+msgid "Bestsellers"
+msgstr ""
+
+#: blocks/bestsellers/block.json
+msgctxt "block description"
+msgid "Rij met productkaarten die eindigen op “Configureer nu”."
+msgstr ""
+
+#: blocks/category-grid/block.json
+msgctxt "block title"
+msgid "Categorietegels"
+msgstr ""
+
+#: blocks/category-grid/block.json
+msgctxt "block description"
+msgid "Raster met productcategorieën in afwisselende kleurvlakken."
+msgstr ""
+
+#: blocks/contact/block.json
+msgctxt "block title"
+msgid "Contact"
+msgstr ""
+
+#: blocks/contact/block.json
+msgctxt "block description"
+msgid "Contactblok: directe contactgegevens naast een formulier."
+msgstr ""
+
+#: blocks/faq/block.json
+msgctxt "block title"
+msgid "FAQ"
+msgstr ""
+
+#: blocks/faq/block.json
+msgctxt "block description"
+msgid "Veelgestelde vragen in twee kolommen, met uitklapbare antwoorden."
+msgstr ""
+
+#: blocks/hero/block.json
+msgctxt "block title"
+msgid "Hero"
+msgstr ""
+
+#: blocks/hero/block.json
+msgctxt "block description"
+msgid "Hero-banner voor de voorpagina — tien varianten, van zoekbalk tot showreel."
+msgstr ""
+
+#: blocks/how-it-works/block.json
+msgctxt "block title"
+msgid "Zo werkt het"
+msgstr ""
+
+#: blocks/how-it-works/block.json
+msgctxt "block description"
+msgid "Drie genummerde stappen die het bestelproces uitleggen."
+msgstr ""
+
+#: blocks/logo-reel/block.json
+msgctxt "block title"
+msgid "Logobalk"
+msgstr ""
+
+#: blocks/logo-reel/block.json
+msgctxt "block description"
+msgid "Rij logo's van klanten of partners."
+msgstr ""
+
+#: blocks/testimonials/block.json
+msgctxt "block title"
+msgid "Klantquotes"
+msgstr ""
+
+#: blocks/testimonials/block.json
+msgctxt "block description"
+msgid "Quotes van klanten, met naam, bedrijf en optioneel een cijfer."
+msgstr ""
+
+#: blocks/usp-bar/block.json
+msgctxt "block title"
+msgid "USP-balk"
+msgstr ""
+
+#: blocks/usp-bar/block.json
+msgctxt "block description"
+msgid "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
+msgstr ""

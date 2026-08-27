@@ -48,7 +48,7 @@ do_action( 'woocommerce_before_checkout_form', $checkout );
 
 // Checkout is blocked for logged-out customers when registration is disabled.
 if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
-	echo '<p class="pp-container py-10 text-[17px] text-ink-2">' . esc_html( apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to check out.', 'probo-connect' ) ) ) . '</p>';
+	echo '<p class="pp-container py-10 text-[17px] text-ink-2">' . esc_html( apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to check out.', 'probo-connect-theme' ) ) ) . '</p>';
 	return;
 }
 
@@ -201,7 +201,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 			} elseif ( $probo_shipping ) {
 				echo $probo_shipping; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in probo_checkout_shipping_html().
 			} else {
-				echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'This order will not be shipped.', 'probo-connect' ) . '</p>';
+				echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'This order will not be shipped.', 'probo-connect-theme' ) . '</p>';
 			}
 
 			$probo_step_close( 2 );
@@ -229,7 +229,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 	<?php else : ?>
 
 		<div>
-			<h1 class="mb-5.5 text-3xl font-extrabold tracking-[-0.035em] lg:text-[40px]"><?php esc_html_e( 'Checkout', 'probo-connect' ); ?></h1>
+			<h1 class="mb-5.5 text-3xl font-extrabold tracking-[-0.035em] lg:text-[40px]"><?php esc_html_e( 'Checkout', 'probo-connect-theme' ); ?></h1>
 
 			<?php probo_checkout_step_bar(); ?>
 
@@ -245,7 +245,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 
 				<div id="customer_details">
 					<section class="mb-8.5">
-						<?php $probo_heading( ++$probo_section, __( 'Contact details', 'probo-connect' ) ); ?>
+						<?php $probo_heading( ++$probo_section, __( 'Contact details', 'probo-connect-theme' ) ); ?>
 						<?php
 						/**
 						 * Hook: woocommerce_checkout_billing.
@@ -255,7 +255,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 					</section>
 
 					<section class="mb-8.5">
-						<?php $probo_heading( ++$probo_section, __( 'Delivery address', 'probo-connect' ) ); ?>
+						<?php $probo_heading( ++$probo_section, __( 'Delivery address', 'probo-connect-theme' ) ); ?>
 						<?php
 						/**
 						 * Hook: woocommerce_checkout_shipping.
@@ -275,9 +275,9 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 
 			<?php if ( $probo_delivery ) : ?>
 				<section class="mb-8.5">
-					<?php $probo_heading( ++$probo_section, __( 'Delivery', 'probo-connect' ) ); ?>
+					<?php $probo_heading( ++$probo_section, __( 'Delivery', 'probo-connect-theme' ) ); ?>
 					<p class="mb-3.5 max-w-[560px] text-sm text-ink-3">
-						<?php esc_html_e( 'First choose a delivery day; the carriers that deliver then will appear.', 'probo-connect' ); ?>
+						<?php esc_html_e( 'First choose a delivery day; the carriers that deliver then will appear.', 'probo-connect-theme' ); ?>
 					</p>
 					<?php $probo_render_delivery(); ?>
 				</section>
@@ -285,16 +285,16 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 
 			<?php if ( $probo_shipping ) : ?>
 				<section class="mb-8.5">
-					<?php $probo_heading( ++$probo_section, __( 'Carrier', 'probo-connect' ) ); ?>
+					<?php $probo_heading( ++$probo_section, __( 'Carrier', 'probo-connect-theme' ) ); ?>
 					<p class="mb-3.5 max-w-[560px] text-sm text-ink-3">
-						<?php esc_html_e( 'Large or long shipments always go by freight carrier.', 'probo-connect' ); ?>
+						<?php esc_html_e( 'Large or long shipments always go by freight carrier.', 'probo-connect-theme' ); ?>
 					</p>
 					<?php echo $probo_shipping; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built and escaped in probo_checkout_shipping_html(). ?>
 				</section>
 			<?php endif; ?>
 
 			<section>
-				<?php $probo_heading( ++$probo_section, __( 'Payment method', 'probo-connect' ) ); ?>
+				<?php $probo_heading( ++$probo_section, __( 'Payment method', 'probo-connect-theme' ) ); ?>
 				<?php
 				/**
 				 * Hook: woocommerce_checkout_order_review is intentionally not
@@ -316,7 +316,7 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 		?>
 
 		<div class="rounded-pp border-2 border-secondary-line p-6.5">
-			<h2 id="order_review_heading" class="mb-4.5 text-xl font-extrabold tracking-[-0.02em]"><?php esc_html_e( 'Your order', 'probo-connect' ); ?></h2>
+			<h2 id="order_review_heading" class="mb-4.5 text-xl font-extrabold tracking-[-0.02em]"><?php esc_html_e( 'Your order', 'probo-connect-theme' ); ?></h2>
 
 			<?php
 			/**

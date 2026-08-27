@@ -21,9 +21,9 @@ $remaining = $timestamp ? max( 0, $timestamp - time() ) : 0;
 
 $countdown = $timestamp
 	? array(
-		array( (int) floor( $remaining / DAY_IN_SECONDS ), __( 'days', 'probo-connect' ) ),
-		array( (int) floor( ( $remaining % DAY_IN_SECONDS ) / HOUR_IN_SECONDS ), __( 'hours', 'probo-connect' ) ),
-		array( (int) floor( ( $remaining % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS ), __( 'min', 'probo-connect' ) ),
+		array( (int) floor( $remaining / DAY_IN_SECONDS ), __( 'days', 'probo-connect-theme' ) ),
+		array( (int) floor( ( $remaining % DAY_IN_SECONDS ) / HOUR_IN_SECONDS ), __( 'hours', 'probo-connect-theme' ) ),
+		array( (int) floor( ( $remaining % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS ), __( 'min', 'probo-connect-theme' ) ),
 	)
 	: array();
 ?>

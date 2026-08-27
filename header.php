@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 <?php wp_body_open(); ?>
 
 <a class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-fg" href="#pp-content">
-	<?php esc_html_e( 'Skip to content', 'probo-connect' ); ?>
+	<?php esc_html_e( 'Skip to content', 'probo-connect-theme' ); ?>
 </a>
 
 <?php

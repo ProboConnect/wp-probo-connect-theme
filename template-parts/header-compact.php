@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 					<span class="h-0.5 bg-current"></span>
 					<span class="h-0.5 bg-current"></span>
 				</span>
-				<?php esc_html_e( 'Products', 'probo-connect' ); ?>
+				<?php esc_html_e( 'Products', 'probo-connect-theme' ); ?>
 			</button>
 
 			<div class="hidden max-w-[520px] flex-1 min-[720px]:block">
@@ -67,7 +67,7 @@ defined( 'ABSPATH' ) || exit;
 				</a>
 
 				<a class="flex items-center gap-2.5 font-bold whitespace-nowrap text-bar-fg no-underline hover:opacity-80" href="<?php echo esc_url( probo_cart_url() ); ?>">
-					<span class="hidden sm:inline"><?php esc_html_e( 'Cart', 'probo-connect' ); ?></span>
+					<span class="hidden sm:inline"><?php esc_html_e( 'Cart', 'probo-connect-theme' ); ?></span>
 					<span class="sm:hidden" aria-hidden="true">🛒</span>
 					<span class="font-mono inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] leading-none font-medium text-accent-fg">
 						<?php echo esc_html( (string) probo_cart_count() ); ?>
@@ -83,7 +83,7 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<?php // The products megamenu: hidden until the trigger opens it, at every width. ?>
-	<nav class="relative border-b border-line bg-white" aria-label="<?php esc_attr_e( 'Products', 'probo-connect' ); ?>">
+	<nav class="relative border-b border-line bg-white" aria-label="<?php esc_attr_e( 'Products', 'probo-connect-theme' ); ?>">
 		<div class="pp-container">
 			<div id="pp-products-menu" class="hidden py-5" data-pp-products>
 				<?php
@@ -134,7 +134,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php endforeach; ?>
 
 			<a class="ml-auto font-semibold whitespace-nowrap text-accent-ink no-underline" href="<?php echo esc_url( probo_account_url() ); ?>">
-				<?php esc_html_e( 'Business account →', 'probo-connect' ); ?>
+				<?php esc_html_e( 'Business account →', 'probo-connect-theme' ); ?>
 			</a>
 		</div>
 	</div>

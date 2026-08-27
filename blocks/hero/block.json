@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "cover-image",
 	"description": "Hero-banner voor de voorpagina — tien varianten, van zoekbalk tot showreel.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": {
 		"className": false,
 		"html": false,

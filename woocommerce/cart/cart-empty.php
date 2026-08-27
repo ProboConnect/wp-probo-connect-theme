@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
 					 * @since 4.6.0
 					 * @param string $default_text Default text.
 					 */
-					echo esc_html( apply_filters( 'woocommerce_return_to_shop_text', __( 'Return to shop', 'probo-connect' ) ) );
+					echo esc_html( apply_filters( 'woocommerce_return_to_shop_text', __( 'Return to shop', 'probo-connect-theme' ) ) );
 				?>
 			</a>
 		</p>

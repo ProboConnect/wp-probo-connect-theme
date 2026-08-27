@@ -491,7 +491,7 @@ function probo_checkout_rate_card( $rate, $index, $selected ) {
 			if ( $rate->get_cost() > 0 ) {
 				echo wp_kses_post( wc_price( $rate->get_cost() ) );
 			} else {
-				esc_html_e( 'free', 'probo-connect' );
+				esc_html_e( 'free', 'probo-connect-theme' );
 			}
 			?>
 		</span>
@@ -534,7 +534,7 @@ function probo_checkout_shipping_html() {
 		$selected = $chosen[ $index ] ?? '';
 
 		if ( ! $rates ) {
-			echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'No carriers are available for this address.', 'probo-connect' ) . '</p>';
+			echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'No carriers are available for this address.', 'probo-connect-theme' ) . '</p>';
 			continue;
 		}
 
@@ -595,7 +595,7 @@ function probo_checkout_shipping_html() {
 							<?php
 							printf(
 								/* translators: %s: number of carriers. */
-								esc_html__( 'Choose a carrier yourself (%s)', 'probo-connect' ),
+								esc_html__( 'Choose a carrier yourself (%s)', 'probo-connect-theme' ),
 								esc_html( number_format_i18n( count( $rest ) ) )
 							);
 							?>
@@ -632,7 +632,7 @@ function probo_checkout_shipping_html() {
 							<?php
 							printf(
 								/* translators: %s: number of pickup points. */
-								esc_html__( 'All %s pickup points', 'probo-connect' ),
+								esc_html__( 'All %s pickup points', 'probo-connect-theme' ),
 								esc_html( number_format_i18n( count( $pickup ) ) )
 							);
 							?>
@@ -706,17 +706,17 @@ function probo_checkout_mode_tabs( $group, $pickup_count = null, $pickup_active 
 	?>
 	<div class="pp-step-tabs">
 		<input type="radio" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>-ship" class="pp-tab-input pp-tab-input--ship" <?php checked( ! $pickup_active ); ?> />
-		<label for="<?php echo esc_attr( $name ); ?>-ship"><?php esc_html_e( 'Delivery', 'probo-connect' ); ?></label>
+		<label for="<?php echo esc_attr( $name ); ?>-ship"><?php esc_html_e( 'Delivery', 'probo-connect-theme' ); ?></label>
 
 		<input type="radio" name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>-pickup" class="pp-tab-input pp-tab-input--pickup" <?php checked( $pickup_active ); ?> />
 		<label for="<?php echo esc_attr( $name ); ?>-pickup">
-			<?php esc_html_e( 'Pickup', 'probo-connect' ); ?>
+			<?php esc_html_e( 'Pickup', 'probo-connect-theme' ); ?>
 			<span class="pp-tab-count" data-pp-pickup-label>
 				<?php
 				if ( null !== $pickup_count ) {
 					printf(
 						/* translators: %s: number of pickup locations. */
-						esc_html__( '(%s locations)', 'probo-connect' ),
+						esc_html__( '(%s locations)', 'probo-connect-theme' ),
 						esc_html( number_format_i18n( $pickup_count ) )
 					);
 				}
@@ -782,20 +782,20 @@ function probo_is_checkout_flow() {
 function probo_checkout_steps() {
 	return array(
 		1 => array(
-			'title' => __( 'Details & address', 'probo-connect' ),
-			'short' => __( 'Details', 'probo-connect' ),
-			'intro' => __( 'Enter your business details once; next time they will already be filled in.', 'probo-connect' ),
-			'next'  => __( 'Continue to delivery', 'probo-connect' ),
+			'title' => __( 'Details & address', 'probo-connect-theme' ),
+			'short' => __( 'Details', 'probo-connect-theme' ),
+			'intro' => __( 'Enter your business details once; next time they will already be filled in.', 'probo-connect-theme' ),
+			'next'  => __( 'Continue to delivery', 'probo-connect-theme' ),
 		),
 		2 => array(
-			'title' => __( 'Delivery', 'probo-connect' ),
-			'short' => __( 'Delivery', 'probo-connect' ),
-			'intro' => __( 'Fast or affordable — we will pick the day and carrier for you. Prefer to choose yourself? That works too.', 'probo-connect' ),
-			'next'  => __( 'Continue to payment', 'probo-connect' ),
+			'title' => __( 'Delivery', 'probo-connect-theme' ),
+			'short' => __( 'Delivery', 'probo-connect-theme' ),
+			'intro' => __( 'Fast or affordable — we will pick the day and carrier for you. Prefer to choose yourself? That works too.', 'probo-connect-theme' ),
+			'next'  => __( 'Continue to payment', 'probo-connect-theme' ),
 		),
 		3 => array(
-			'title' => __( 'Payment', 'probo-connect' ),
-			'short' => __( 'Payment', 'probo-connect' ),
+			'title' => __( 'Payment', 'probo-connect-theme' ),
+			'short' => __( 'Payment', 'probo-connect-theme' ),
 			'intro' => '',
 			'next'  => '',
 		),
@@ -962,7 +962,7 @@ function probo_checkout_delivery_state( $rendered_delivery = null ) {
 		if ( $surcharge > 0 ) {
 			$parts[] = sprintf(
 				/* translators: %s: rush surcharge amount. */
-				__( 'incl. %s rush fee', 'probo-connect' ),
+				__( 'incl. %s rush fee', 'probo-connect-theme' ),
 				wp_strip_all_tags( wc_price( $surcharge ) )
 			);
 		}
@@ -993,7 +993,7 @@ function probo_checkout_delivery_state( $rendered_delivery = null ) {
 			$parts[] = implode( ' · ', $meta );
 		}
 
-		$parts[] = $rate->get_cost() > 0 ? wp_strip_all_tags( wc_price( $rate->get_cost() ) ) : __( 'free', 'probo-connect' );
+		$parts[] = $rate->get_cost() > 0 ? wp_strip_all_tags( wc_price( $rate->get_cost() ) ) : __( 'free', 'probo-connect-theme' );
 	}
 
 	return (object) array(
@@ -1117,7 +1117,7 @@ function probo_checkout_step_summary_row( $step ) {
 			<div class="pp-step-summary-text pp-summary-<?php echo esc_attr( (string) $step ); ?>"><?php echo esc_html( probo_checkout_step_summary( $step ) ); ?></div>
 		</div>
 		<button type="button" class="pp-step-edit" data-pp-step-edit="<?php echo esc_attr( (string) $step ); ?>">
-			<?php esc_html_e( 'Change', 'probo-connect' ); ?>
+			<?php esc_html_e( 'Change', 'probo-connect-theme' ); ?>
 		</button>
 	</div>
 	<?php
@@ -1161,21 +1161,21 @@ function probo_checkout_place_order() {
 		return;
 	}
 
-	$order_button_text = apply_filters( 'woocommerce_order_button_text', __( 'Place order', 'probo-connect' ) );
+	$order_button_text = apply_filters( 'woocommerce_order_button_text', __( 'Place order', 'probo-connect-theme' ) );
 	?>
 	<div class="form-row place-order pp-place-order">
 		<noscript>
 			<?php
 			printf(
 				/* translators: 1: opening emphasis tag, 2: closing emphasis tag. */
-				esc_html__( 'Your browser does not support JavaScript. Please click %1$sUpdate totals%2$s first, otherwise the amount may differ from what is shown above.', 'probo-connect' ),
+				esc_html__( 'Your browser does not support JavaScript. Please click %1$sUpdate totals%2$s first, otherwise the amount may differ from what is shown above.', 'probo-connect-theme' ),
 				'<em>',
 				'</em>'
 			);
 			?>
 			<br/>
-			<button type="submit" class="button alt" name="woocommerce_checkout_update_totals" value="<?php esc_attr_e( 'Update totals', 'probo-connect' ); ?>">
-				<?php esc_html_e( 'Update totals', 'probo-connect' ); ?>
+			<button type="submit" class="button alt" name="woocommerce_checkout_update_totals" value="<?php esc_attr_e( 'Update totals', 'probo-connect-theme' ); ?>">
+				<?php esc_html_e( 'Update totals', 'probo-connect-theme' ); ?>
 			</button>
 		</noscript>
 

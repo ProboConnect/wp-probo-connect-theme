@@ -19,13 +19,13 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'USPs', 'probo-connect' ) },
+						{ title: __( 'USPs', 'probo-connect-theme' ) },
 						el( components.SelectControl, {
-							label: __( 'Style', 'probo-connect' ),
+							label: __( 'Style', 'probo-connect-theme' ),
 							value: props.attributes.style,
 							options: [
-								{ label: __( 'Bar under the hero', 'probo-connect' ), value: 'Balk' },
-								{ label: __( 'Cards', 'probo-connect' ), value: 'Kaarten' },
+								{ label: __( 'Bar under the hero', 'probo-connect-theme' ), value: 'Balk' },
+								{ label: __( 'Cards', 'probo-connect-theme' ), value: 'Kaarten' },
 							],
 							onChange: function ( value ) {
 								props.setAttributes( { style: value } );
@@ -34,11 +34,11 @@
 						window.probo.repeater( {
 							value: props.attributes.items,
 							fields: [
-								{ label: __( 'Title', 'probo-connect' ) },
-								{ label: __( 'Description', 'probo-connect' ) },
-								{ label: __( 'Icon', 'probo-connect' ) },
+								{ label: __( 'Title', 'probo-connect-theme' ) },
+								{ label: __( 'Description', 'probo-connect-theme' ) },
+								{ label: __( 'Icon', 'probo-connect-theme' ) },
 							],
-							addLabel: __( 'Add USP', 'probo-connect' ),
+							addLabel: __( 'Add USP', 'probo-connect-theme' ),
 							onChange: function ( value ) {
 								props.setAttributes( { items: value } );
 							},

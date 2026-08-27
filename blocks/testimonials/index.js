@@ -24,24 +24,24 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
+						{ title: __( 'Content', 'probo-connect-theme' ) },
 						el( components.TextControl, {
-							label: __( 'Title', 'probo-connect' ),
+							label: __( 'Title', 'probo-connect-theme' ),
 							value: a.heading,
 							onChange: function ( value ) {
 								props.setAttributes( { heading: value } );
 							},
 						} ),
-						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Quotes', 'probo-connect' ) ),
+						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Quotes', 'probo-connect-theme' ) ),
 						window.probo.repeater( {
 							value: a.items,
 							fields: [
-								{ label: __( 'Quote', 'probo-connect' ) },
-								{ label: __( 'Name', 'probo-connect' ) },
-								{ label: __( 'Company', 'probo-connect' ) },
-								{ label: __( 'Score (0–5)', 'probo-connect' ) },
+								{ label: __( 'Quote', 'probo-connect-theme' ) },
+								{ label: __( 'Name', 'probo-connect-theme' ) },
+								{ label: __( 'Company', 'probo-connect-theme' ) },
+								{ label: __( 'Score (0–5)', 'probo-connect-theme' ) },
 							],
-							addLabel: __( 'Add quote', 'probo-connect' ),
+							addLabel: __( 'Add quote', 'probo-connect-theme' ),
 							onChange: function ( value ) {
 								props.setAttributes( { items: value } );
 							},
@@ -49,13 +49,13 @@
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Display', 'probo-connect' ), initialOpen: false },
+						{ title: __( 'Display', 'probo-connect-theme' ), initialOpen: false },
 						el( components.SelectControl, {
-							label: __( 'Background', 'probo-connect' ),
+							label: __( 'Background', 'probo-connect-theme' ),
 							value: a.tone,
 							options: [
-								{ label: __( 'Light', 'probo-connect' ), value: 'Licht' },
-								{ label: __( 'Dark (follow secondary)', 'probo-connect' ), value: 'Donker' },
+								{ label: __( 'Light', 'probo-connect-theme' ), value: 'Licht' },
+								{ label: __( 'Dark (follow secondary)', 'probo-connect-theme' ), value: 'Donker' },
 							],
 							onChange: function ( value ) {
 								props.setAttributes( { tone: value } );

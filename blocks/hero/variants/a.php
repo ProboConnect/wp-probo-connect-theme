@@ -84,7 +84,7 @@ $overlay_style = isset( $overlays[ $overlay ] ) && $overlay_amount
 			</div>
 		<?php else : ?>
 			<div class="pp-placeholder-dark h-[320px] lg:h-[520px]">
-				<?php esc_html_e( 'hero photo', 'probo-connect' ); ?>
+				<?php esc_html_e( 'hero photo', 'probo-connect-theme' ); ?>
 			</div>
 		<?php endif; ?>
 	</div>

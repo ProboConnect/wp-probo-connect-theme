@@ -22,16 +22,16 @@
 	// Mirrors probo_hero_variants() in inc/blocks.php. The letters are the
 	// design handoff's own names for the variants.
 	var VARIANTS = [
-		{ value: 'A', label: __( 'A — Search hero, dark', 'probo-connect' ) },
-		{ value: 'B', label: __( 'B — Editorial, large image', 'probo-connect' ) },
-		{ value: 'C', label: __( 'C — Full-bleed image, centred', 'probo-connect' ) },
-		{ value: 'D', label: __( 'D — Showroom, category tiles', 'probo-connect' ) },
-		{ value: 'E', label: __( 'E — Minimal, centred, light', 'probo-connect' ) },
-		{ value: 'F', label: __( 'F — USP rail, dark, B2B', 'probo-connect' ) },
-		{ value: 'G', label: __( 'G — Split with review card', 'probo-connect' ) },
-		{ value: 'H', label: __( 'H — Promotion, accent', 'probo-connect' ) },
-		{ value: 'I', label: __( 'I — Search hero, light with tags', 'probo-connect' ) },
-		{ value: 'J', label: __( 'J — Showreel, image with play', 'probo-connect' ) },
+		{ value: 'A', label: __( 'A — Search hero, dark', 'probo-connect-theme' ) },
+		{ value: 'B', label: __( 'B — Editorial, large image', 'probo-connect-theme' ) },
+		{ value: 'C', label: __( 'C — Full-bleed image, centred', 'probo-connect-theme' ) },
+		{ value: 'D', label: __( 'D — Showroom, category tiles', 'probo-connect-theme' ) },
+		{ value: 'E', label: __( 'E — Minimal, centred, light', 'probo-connect-theme' ) },
+		{ value: 'F', label: __( 'F — USP rail, dark, B2B', 'probo-connect-theme' ) },
+		{ value: 'G', label: __( 'G — Split with review card', 'probo-connect-theme' ) },
+		{ value: 'H', label: __( 'H — Promotion, accent', 'probo-connect-theme' ) },
+		{ value: 'I', label: __( 'I — Search hero, light with tags', 'probo-connect-theme' ) },
+		{ value: 'J', label: __( 'J — Showreel, image with play', 'probo-connect-theme' ) },
 	];
 
 	// Which variants read which attribute. Anything not listed here is read by
@@ -97,21 +97,21 @@
 
 			var mediaPanel = el(
 				components.PanelBody,
-				{ title: __( 'Image', 'probo-connect' ) },
+				{ title: __( 'Image', 'probo-connect-theme' ) },
 				uses( 'overlay' )
-					? field( components.SelectControl, 'overlay', __( 'Gradient over the image', 'probo-connect' ), {
+					? field( components.SelectControl, 'overlay', __( 'Gradient over the image', 'probo-connect-theme' ), {
 							options: [
-								{ label: __( 'None', 'probo-connect' ), value: '' },
-								{ label: __( 'From the bottom', 'probo-connect' ), value: 'Onder' },
-								{ label: __( 'From the left', 'probo-connect' ), value: 'Links' },
-								{ label: __( 'All around (vignette)', 'probo-connect' ), value: 'Rondom' },
+								{ label: __( 'None', 'probo-connect-theme' ), value: '' },
+								{ label: __( 'From the bottom', 'probo-connect-theme' ), value: 'Onder' },
+								{ label: __( 'From the left', 'probo-connect-theme' ), value: 'Links' },
+								{ label: __( 'All around (vignette)', 'probo-connect-theme' ), value: 'Rondom' },
 							],
-							help: __( 'Blends into the hero background color, so it adapts to the style.', 'probo-connect' ),
+							help: __( 'Blends into the hero background color, so it adapts to the style.', 'probo-connect-theme' ),
 					  } )
 					: null,
 				uses( 'overlay' ) && a.overlay
 					? el( components.RangeControl, {
-							label: __( 'Strength', 'probo-connect' ),
+							label: __( 'Strength', 'probo-connect-theme' ),
 							value: a.overlayStrength,
 							min: 0,
 							max: 100,
@@ -134,7 +134,7 @@
 							return el(
 								components.Button,
 								{ variant: 'secondary', onClick: opener.open },
-								a.imageId ? __( 'Replace image', 'probo-connect' ) : __( 'Choose image', 'probo-connect' )
+								a.imageId ? __( 'Replace image', 'probo-connect-theme' ) : __( 'Choose image', 'probo-connect-theme' )
 							);
 						},
 					} )
@@ -149,7 +149,7 @@
 									set( { imageId: 0 } );
 								},
 							},
-							__( 'Remove image', 'probo-connect' )
+							__( 'Remove image', 'probo-connect-theme' )
 					  )
 					: null
 			);
@@ -159,34 +159,34 @@
 				null,
 				el(
 					components.PanelBody,
-					{ title: __( 'Variant', 'probo-connect' ) },
-					field( components.SelectControl, 'variant', __( 'Hero variant', 'probo-connect' ), {
+					{ title: __( 'Variant', 'probo-connect-theme' ) },
+					field( components.SelectControl, 'variant', __( 'Hero variant', 'probo-connect-theme' ), {
 						options: VARIANTS,
-						help: __( 'Every variant reads the same content; the fields below are the ones this one uses.', 'probo-connect' ),
+						help: __( 'Every variant reads the same content; the fields below are the ones this one uses.', 'probo-connect-theme' ),
 					} ),
 					'B' === variant
-						? field( components.SelectControl, 'heroMedia', __( 'Image position', 'probo-connect' ), {
+						? field( components.SelectControl, 'heroMedia', __( 'Image position', 'probo-connect-theme' ), {
 								options: [
-									{ label: __( 'Right', 'probo-connect' ), value: 'Rechts' },
-									{ label: __( 'Left', 'probo-connect' ), value: 'Links' },
-									{ label: __( 'None', 'probo-connect' ), value: 'Geen' },
+									{ label: __( 'Right', 'probo-connect-theme' ), value: 'Rechts' },
+									{ label: __( 'Left', 'probo-connect-theme' ), value: 'Links' },
+									{ label: __( 'None', 'probo-connect-theme' ), value: 'Geen' },
 								],
 						  } )
 						: null
 				),
 				el(
 					components.PanelBody,
-					{ title: __( 'Content', 'probo-connect' ) },
+					{ title: __( 'Content', 'probo-connect-theme' ) },
 					'I' === variant
 						? null
-						: field( components.TextControl, 'eyebrow', __( 'Label above the title', 'probo-connect' ) ),
-					field( components.TextareaControl, 'title', __( 'Title', 'probo-connect' ), {
-						help: __( 'A new line becomes a line break.', 'probo-connect' ),
+						: field( components.TextControl, 'eyebrow', __( 'Label above the title', 'probo-connect-theme' ) ),
+					field( components.TextareaControl, 'title', __( 'Title', 'probo-connect-theme' ), {
+						help: __( 'A new line becomes a line break.', 'probo-connect-theme' ),
 					} ),
-					field( components.TextareaControl, 'subtitle', __( 'Intro text', 'probo-connect' ) ),
+					field( components.TextareaControl, 'subtitle', __( 'Intro text', 'probo-connect-theme' ) ),
 					uses( 'search' )
 						? el( components.ToggleControl, {
-								label: __( 'Show search bar', 'probo-connect' ),
+								label: __( 'Show search bar', 'probo-connect-theme' ),
 								checked: a.showSearch,
 								onChange: function ( value ) {
 									set( { showSearch: value } );
@@ -194,116 +194,116 @@
 						  } )
 						: null,
 					uses( 'chips' )
-						? field( components.TextControl, 'chips', __( 'Shortcuts', 'probo-connect' ), {
-								help: __( 'Comma-separated.', 'probo-connect' ),
+						? field( components.TextControl, 'chips', __( 'Shortcuts', 'probo-connect-theme' ), {
+								help: __( 'Comma-separated.', 'probo-connect-theme' ),
 						  } )
 						: null
 				),
 				uses( 'buttons' ) || uses( 'promoButton' ) || uses( 'link' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Buttons', 'probo-connect' ), initialOpen: false },
+							{ title: __( 'Buttons', 'probo-connect-theme' ), initialOpen: false },
 							uses( 'buttons' ) || uses( 'promoButton' )
-								? field( components.TextControl, 'primaryLabel', __( 'Primary button', 'probo-connect' ) )
+								? field( components.TextControl, 'primaryLabel', __( 'Primary button', 'probo-connect-theme' ) )
 								: null,
 							uses( 'buttons' ) || uses( 'promoButton' )
-								? field( components.TextControl, 'primaryUrl', __( 'Primary button link', 'probo-connect' ) )
+								? field( components.TextControl, 'primaryUrl', __( 'Primary button link', 'probo-connect-theme' ) )
 								: null,
 							uses( 'secondButton' )
-								? field( components.TextControl, 'secondaryLabel', __( 'Secondary button', 'probo-connect' ) )
+								? field( components.TextControl, 'secondaryLabel', __( 'Secondary button', 'probo-connect-theme' ) )
 								: null,
 							uses( 'secondButton' )
-								? field( components.TextControl, 'secondaryUrl', __( 'Secondary button link', 'probo-connect' ) )
+								? field( components.TextControl, 'secondaryUrl', __( 'Secondary button link', 'probo-connect-theme' ) )
 								: null,
-							uses( 'link' ) ? field( components.TextControl, 'linkLabel', __( 'Overview link', 'probo-connect' ) ) : null,
-							uses( 'link' ) ? field( components.TextControl, 'linkUrl', __( 'Overview link URL', 'probo-connect' ) ) : null
+							uses( 'link' ) ? field( components.TextControl, 'linkLabel', __( 'Overview link', 'probo-connect-theme' ) ) : null,
+							uses( 'link' ) ? field( components.TextControl, 'linkUrl', __( 'Overview link URL', 'probo-connect-theme' ) ) : null
 					  )
 					: null,
 				uses( 'usps' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'USPs', 'probo-connect' ), initialOpen: false },
-							lines( 'usps', [ { label: __( 'USP', 'probo-connect' ) } ], __( 'Add USP', 'probo-connect' ) )
+							{ title: __( 'USPs', 'probo-connect-theme' ), initialOpen: false },
+							lines( 'usps', [ { label: __( 'USP', 'probo-connect-theme' ) } ], __( 'Add USP', 'probo-connect-theme' ) )
 					  )
 					: null,
 				uses( 'tiles' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Category tiles', 'probo-connect' ), initialOpen: false },
+							{ title: __( 'Category tiles', 'probo-connect-theme' ), initialOpen: false },
 							lines(
 								'tiles',
 								[
-									{ label: __( 'Name', 'probo-connect' ) },
-									{ label: __( 'Link', 'probo-connect' ) },
-									{ label: __( 'From price', 'probo-connect' ) },
+									{ label: __( 'Name', 'probo-connect-theme' ) },
+									{ label: __( 'Link', 'probo-connect-theme' ) },
+									{ label: __( 'From price', 'probo-connect-theme' ) },
 								],
-								__( 'Add tile', 'probo-connect' )
+								__( 'Add tile', 'probo-connect-theme' )
 							),
 							el(
 								'p',
 								{ style: { fontSize: '12px', color: '#6B6B70' } },
 								'B' === variant
-									? __( 'Variant B shows the first two tiles.', 'probo-connect' )
-									: __( 'Variant D shows four tiles; the last one is drawn in the accent colour.', 'probo-connect' )
+									? __( 'Variant B shows the first two tiles.', 'probo-connect-theme' )
+									: __( 'Variant D shows four tiles; the last one is drawn in the accent colour.', 'probo-connect-theme' )
 							)
 					  )
 					: null,
 				uses( 'stats' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Figures', 'probo-connect' ), initialOpen: false },
+							{ title: __( 'Figures', 'probo-connect-theme' ), initialOpen: false },
 							lines(
 								'stats',
-								[ { label: __( 'Figure', 'probo-connect' ) }, { label: __( 'Explanation', 'probo-connect' ) } ],
-								__( 'Add figure', 'probo-connect' )
+								[ { label: __( 'Figure', 'probo-connect-theme' ) }, { label: __( 'Explanation', 'probo-connect-theme' ) } ],
+								__( 'Add figure', 'probo-connect-theme' )
 							)
 					  )
 					: null,
 				uses( 'review' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Review card', 'probo-connect' ), initialOpen: false },
-							field( components.TextareaControl, 'reviewQuote', __( 'Quote', 'probo-connect' ) ),
-							field( components.TextControl, 'reviewAuthor', __( 'Name and company', 'probo-connect' ) )
+							{ title: __( 'Review card', 'probo-connect-theme' ), initialOpen: false },
+							field( components.TextareaControl, 'reviewQuote', __( 'Quote', 'probo-connect-theme' ) ),
+							field( components.TextControl, 'reviewAuthor', __( 'Name and company', 'probo-connect-theme' ) )
 					  )
 					: null,
 				uses( 'countdown' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Campaign', 'probo-connect' ), initialOpen: false },
-							field( components.TextControl, 'countdownUntil', __( 'Runs until', 'probo-connect' ), {
+							{ title: __( 'Campaign', 'probo-connect-theme' ), initialOpen: false },
+							field( components.TextControl, 'countdownUntil', __( 'Runs until', 'probo-connect-theme' ), {
 								type: 'datetime-local',
-								help: __( 'Leave empty to hide the countdown.', 'probo-connect' ),
+								help: __( 'Leave empty to hide the countdown.', 'probo-connect-theme' ),
 							} )
 					  )
 					: null,
 				uses( 'video' )
 					? el(
 							components.PanelBody,
-							{ title: __( 'Film', 'probo-connect' ), initialOpen: false },
-							field( components.TextControl, 'videoUrl', __( 'Link to the film', 'probo-connect' ), {
-								help: __( 'Without a link the play button is decoration only.', 'probo-connect' ),
+							{ title: __( 'Film', 'probo-connect-theme' ), initialOpen: false },
+							field( components.TextControl, 'videoUrl', __( 'Link to the film', 'probo-connect-theme' ), {
+								help: __( 'Without a link the play button is decoration only.', 'probo-connect-theme' ),
 							} )
 					  )
 					: null,
 				el(
 					components.PanelBody,
-					{ title: __( 'Display', 'probo-connect' ), initialOpen: false },
+					{ title: __( 'Display', 'probo-connect-theme' ), initialOpen: false },
 					uses( 'heroTokens' )
-						? field( components.SelectControl, 'heroStyle', __( 'Hero style', 'probo-connect' ), {
+						? field( components.SelectControl, 'heroStyle', __( 'Hero style', 'probo-connect-theme' ), {
 								options: [
-									{ label: __( 'Follow secondary', 'probo-connect' ), value: 'Zwart' },
-									{ label: __( 'Accent', 'probo-connect' ), value: 'Accent' },
-									{ label: __( 'Light', 'probo-connect' ), value: 'Licht' },
+									{ label: __( 'Follow secondary', 'probo-connect-theme' ), value: 'Zwart' },
+									{ label: __( 'Accent', 'probo-connect-theme' ), value: 'Accent' },
+									{ label: __( 'Light', 'probo-connect-theme' ), value: 'Licht' },
 								],
-								help: __( 'The band this hero sits on, derived from the brand colours.', 'probo-connect' ),
+								help: __( 'The band this hero sits on, derived from the brand colours.', 'probo-connect-theme' ),
 						  } )
 						: el(
 								'p',
 								{ style: { fontSize: '12px', color: '#6B6B70' } },
-								__( 'This variant has a band of its own, so the hero style does not apply to it.', 'probo-connect' )
+								__( 'This variant has a band of its own, so the hero style does not apply to it.', 'probo-connect-theme' )
 						  ),
-					uses( 'heroTokens' ) ? el( 'p', { style: { marginBottom: '4px' } }, __( 'Title color', 'probo-connect' ) ) : null,
+					uses( 'heroTokens' ) ? el( 'p', { style: { marginBottom: '4px' } }, __( 'Title color', 'probo-connect-theme' ) ) : null,
 					uses( 'heroTokens' )
 						? el( components.ColorPalette, {
 								value: a.titleColor,
@@ -316,7 +316,7 @@
 						? el(
 								'p',
 								{ style: { fontSize: '12px', color: '#6B6B70' } },
-								__( 'A color too close to the background is ignored, so the title stays readable.', 'probo-connect' )
+								__( 'A color too close to the background is ignored, so the title stays readable.', 'probo-connect-theme' )
 						  )
 						: null
 				),
@@ -345,8 +345,8 @@
 								return el( components.ToolbarButton, {
 									icon: 'format-image',
 									label: a.imageId
-										? __( 'Replace image', 'probo-connect' )
-										: __( 'Choose image', 'probo-connect' ),
+										? __( 'Replace image', 'probo-connect-theme' )
+										: __( 'Choose image', 'probo-connect-theme' ),
 									onClick: opener.open,
 								} );
 							},

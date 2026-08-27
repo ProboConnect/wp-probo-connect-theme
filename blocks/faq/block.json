@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "editor-help",
 	"description": "Veelgestelde vragen in twee kolommen, met uitklapbare antwoorden.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Veelgestelde vragen" },

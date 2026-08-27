@@ -21,17 +21,17 @@ function probo_customize_register( $wp_customize ) {
 	$wp_customize->add_panel(
 		'probo_theme',
 		array(
-			'title'       => __( 'Theme settings', 'probo-connect' ),
-			'description' => __( 'Colors, typography, and the structure of header and footer.', 'probo-connect' ),
+			'title'       => __( 'Theme settings', 'probo-connect-theme' ),
+			'description' => __( 'Colors, typography, and the structure of header and footer.', 'probo-connect-theme' ),
 			'priority'    => 20,
 		)
 	);
 
 	$sections = array(
-		'probo_brand'      => __( 'Brand', 'probo-connect' ),
-		'probo_typography' => __( 'Typography', 'probo-connect' ),
-		'probo_chrome'     => __( 'Header & footer', 'probo-connect' ),
-		'probo_components' => __( 'Components', 'probo-connect' ),
+		'probo_brand'      => __( 'Brand', 'probo-connect-theme' ),
+		'probo_typography' => __( 'Typography', 'probo-connect-theme' ),
+		'probo_chrome'     => __( 'Header & footer', 'probo-connect-theme' ),
+		'probo_components' => __( 'Components', 'probo-connect-theme' ),
 	);
 
 	foreach ( $sections as $id => $title ) {
@@ -76,7 +76,7 @@ function probo_customize_register( $wp_customize ) {
 		'accent_color',
 		array(
 			'type'    => 'color',
-			'label'   => __( 'Accent color', 'probo-connect' ),
+			'label'   => __( 'Accent color', 'probo-connect-theme' ),
 			'section' => 'probo_brand',
 		),
 		'sanitize_hex_color'
@@ -86,8 +86,8 @@ function probo_customize_register( $wp_customize ) {
 		'secondary_color',
 		array(
 			'type'        => 'color',
-			'label'       => __( 'Secondary', 'probo-connect' ),
-			'description' => __( 'Controls all dark surfaces: hero, top bar, footer, cart button, price bars, and summary boxes.', 'probo-connect' ),
+			'label'       => __( 'Secondary', 'probo-connect-theme' ),
+			'description' => __( 'Controls all dark surfaces: hero, top bar, footer, cart button, price bars, and summary boxes.', 'probo-connect-theme' ),
 			'section'     => 'probo_brand',
 		),
 		'sanitize_hex_color'
@@ -97,7 +97,7 @@ function probo_customize_register( $wp_customize ) {
 		'radius',
 		array(
 			'type'        => 'number',
-			'label'       => __( 'Radius', 'probo-connect' ),
+			'label'       => __( 'Radius', 'probo-connect-theme' ),
 			'section'     => 'probo_brand',
 			'input_attrs' => array( 'min' => 0, 'max' => 16, 'step' => 1 ),
 		),
@@ -109,7 +109,7 @@ function probo_customize_register( $wp_customize ) {
 		'title_font',
 		array(
 			'type'    => 'select',
-			'label'   => __( 'Heading font', 'probo-connect' ),
+			'label'   => __( 'Heading font', 'probo-connect-theme' ),
 			'section' => 'probo_typography',
 			'choices' => probo_font_choices( 'title' ),
 		),
@@ -120,8 +120,8 @@ function probo_customize_register( $wp_customize ) {
 		'body_font',
 		array(
 			'type'        => 'select',
-			'label'       => __( 'Body font', 'probo-connect' ),
-			'description' => __( 'Specifications and prices always stay IBM Plex Mono.', 'probo-connect' ),
+			'label'       => __( 'Body font', 'probo-connect-theme' ),
+			'description' => __( 'Specifications and prices always stay IBM Plex Mono.', 'probo-connect-theme' ),
 			'section'     => 'probo_typography',
 			'choices'     => probo_font_choices( 'body' ),
 		),
@@ -133,11 +133,11 @@ function probo_customize_register( $wp_customize ) {
 		'header_variant',
 		array(
 			'type'    => 'radio',
-			'label'   => __( 'Header style', 'probo-connect' ),
+			'label'   => __( 'Header style', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 			'choices' => array(
-				'ruim'    => __( 'Spacious — logo, search and USPs on three rows', 'probo-connect' ),
-				'compact' => __( 'Compact — one dark bar with a products megamenu', 'probo-connect' ),
+				'ruim'    => __( 'Spacious — logo, search and USPs on three rows', 'probo-connect-theme' ),
+				'compact' => __( 'Compact — one dark bar with a products megamenu', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_header_variant'
@@ -147,13 +147,13 @@ function probo_customize_register( $wp_customize ) {
 		'bar_style',
 		array(
 			'type'    => 'select',
-			'label'   => __( 'Top bar', 'probo-connect' ),
+			'label'   => __( 'Top bar', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 			'choices' => array(
-				'Zwart'  => __( 'Follow secondary', 'probo-connect' ),
-				'Licht'  => __( 'Light', 'probo-connect' ),
-				'Accent' => __( 'Accent', 'probo-connect' ),
-				'Geen'   => __( 'No color block', 'probo-connect' ),
+				'Zwart'  => __( 'Follow secondary', 'probo-connect-theme' ),
+				'Licht'  => __( 'Light', 'probo-connect-theme' ),
+				'Accent' => __( 'Accent', 'probo-connect-theme' ),
+				'Geen'   => __( 'No color block', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_bar_style'
@@ -163,8 +163,8 @@ function probo_customize_register( $wp_customize ) {
 		'bar_color',
 		array(
 			'type'        => 'color',
-			'label'       => __( 'Top bar color', 'probo-connect' ),
-			'description' => __( 'Optional custom color. Leave empty = follow the choice above.', 'probo-connect' ),
+			'label'       => __( 'Top bar color', 'probo-connect-theme' ),
+			'description' => __( 'Optional custom color. Leave empty = follow the choice above.', 'probo-connect-theme' ),
 			'section'     => 'probo_chrome',
 		),
 		'probo_sanitize_optional_hex'
@@ -174,13 +174,13 @@ function probo_customize_register( $wp_customize ) {
 		'footer_style',
 		array(
 			'type'    => 'select',
-			'label'   => __( 'Footer', 'probo-connect' ),
+			'label'   => __( 'Footer', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 			'choices' => array(
-				'Zwart'  => __( 'Follow secondary', 'probo-connect' ),
-				'Licht'  => __( 'Light', 'probo-connect' ),
-				'Wit'    => __( 'White', 'probo-connect' ),
-				'Accent' => __( 'Accent', 'probo-connect' ),
+				'Zwart'  => __( 'Follow secondary', 'probo-connect-theme' ),
+				'Licht'  => __( 'Light', 'probo-connect-theme' ),
+				'Wit'    => __( 'White', 'probo-connect-theme' ),
+				'Accent' => __( 'Accent', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_footer_style'
@@ -193,8 +193,8 @@ function probo_customize_register( $wp_customize ) {
 		'logo_light',
 		array(
 			'type'        => 'image',
-			'label'       => __( 'Logo (light)', 'probo-connect' ),
-			'description' => __( 'For dark surfaces like the footer. Leave empty = the regular logo will be used.', 'probo-connect' ),
+			'label'       => __( 'Logo (light)', 'probo-connect-theme' ),
+			'description' => __( 'For dark surfaces like the footer. Leave empty = the regular logo will be used.', 'probo-connect-theme' ),
 			'section'     => 'probo_chrome',
 		),
 		'esc_url_raw'
@@ -206,7 +206,7 @@ function probo_customize_register( $wp_customize ) {
 			array(
 				'type'    => 'text',
 				/* translators: %d: position of the USP in the top bar. */
-				'label'   => sprintf( __( 'Top bar USP %d', 'probo-connect' ), $index + 1 ),
+				'label'   => sprintf( __( 'Top bar USP %d', 'probo-connect-theme' ), $index + 1 ),
 				'section' => 'probo_chrome',
 			),
 			'sanitize_text_field',
@@ -218,7 +218,7 @@ function probo_customize_register( $wp_customize ) {
 		'search_placeholder',
 		array(
 			'type'    => 'text',
-			'label'   => __( 'Search field placeholder', 'probo-connect' ),
+			'label'   => __( 'Search field placeholder', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 		),
 		'sanitize_text_field',
@@ -229,8 +229,8 @@ function probo_customize_register( $wp_customize ) {
 		'checkout_phone',
 		array(
 			'type'        => 'text',
-			'label'       => __( 'Phone number on checkout', 'probo-connect' ),
-			'description' => __( 'Shown on the right in the plain checkout header. Leave empty to hide it.', 'probo-connect' ),
+			'label'       => __( 'Phone number on checkout', 'probo-connect-theme' ),
+			'description' => __( 'Shown on the right in the plain checkout header. Leave empty to hide it.', 'probo-connect-theme' ),
 			'section'     => 'probo_chrome',
 		),
 		'sanitize_text_field',
@@ -241,7 +241,7 @@ function probo_customize_register( $wp_customize ) {
 		'footer_description',
 		array(
 			'type'    => 'textarea',
-			'label'   => __( 'Footer intro text', 'probo-connect' ),
+			'label'   => __( 'Footer intro text', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 		),
 		'sanitize_textarea_field',
@@ -252,7 +252,7 @@ function probo_customize_register( $wp_customize ) {
 		'footer_legal',
 		array(
 			'type'    => 'text',
-			'label'   => __( 'Footer legal line', 'probo-connect' ),
+			'label'   => __( 'Footer legal line', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
 		),
 		'sanitize_text_field',
@@ -264,12 +264,12 @@ function probo_customize_register( $wp_customize ) {
 		'card_style',
 		array(
 			'type'    => 'select',
-			'label'   => __( 'Card style', 'probo-connect' ),
+			'label'   => __( 'Card style', 'probo-connect-theme' ),
 			'section' => 'probo_components',
 			'choices' => array(
-				'Rand'    => __( 'Border', 'probo-connect' ),
-				'Schaduw' => __( 'Shadow', 'probo-connect' ),
-				'Vlak'    => __( 'Flat', 'probo-connect' ),
+				'Rand'    => __( 'Border', 'probo-connect-theme' ),
+				'Schaduw' => __( 'Shadow', 'probo-connect-theme' ),
+				'Vlak'    => __( 'Flat', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_card_style'
@@ -279,12 +279,12 @@ function probo_customize_register( $wp_customize ) {
 		'checkout_style',
 		array(
 			'type'        => 'select',
-			'label'       => __( 'Checkout style', 'probo-connect' ),
-			'description' => __( 'The step version collapses the checkout to one open step, turns the delivery choice into a single decision, and puts the order button in step 3. The classic version is the long page with all sections stacked.', 'probo-connect' ),
+			'label'       => __( 'Checkout style', 'probo-connect-theme' ),
+			'description' => __( 'The step version collapses the checkout to one open step, turns the delivery choice into a single decision, and puts the order button in step 3. The classic version is the long page with all sections stacked.', 'probo-connect-theme' ),
 			'section'     => 'probo_components',
 			'choices'     => array(
-				'Eén pagina' => __( 'One page (classic)', 'probo-connect' ),
-				'Stappen'    => __( 'Steps (accordion)', 'probo-connect' ),
+				'Eén pagina' => __( 'One page (classic)', 'probo-connect-theme' ),
+				'Stappen'    => __( 'Steps (accordion)', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_checkout_style'

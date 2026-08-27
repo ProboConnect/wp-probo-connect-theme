@@ -69,7 +69,7 @@ if ( 'Geen' === $media ) {
 		<?php if ( 'Geen' !== $media ) : ?>
 			<div class="grid grid-cols-[1.4fr_1fr] grid-rows-2 gap-3.5 py-8 <?php echo 'Links' === $media ? 'lg:order-1 lg:pr-2' : 'lg:order-2 lg:pl-2'; ?>">
 				<div class="row-span-2 min-h-[260px]">
-					<?php probo_hero_media( $attributes['imageId'], 'rounded-pp h-full w-full', __( 'hero photo', 'probo-connect' ) ); ?>
+					<?php probo_hero_media( $attributes['imageId'], 'rounded-pp h-full w-full', __( 'hero photo', 'probo-connect-theme' ) ); ?>
 				</div>
 
 				<?php foreach ( $tiles as $index => $tile ) : ?>
@@ -79,7 +79,7 @@ if ( 'Geen' === $media ) {
 						: 'bg-white text-ink pp-card';
 					?>
 					<a class="rounded-pp flex min-h-0 flex-col justify-between p-4.5 no-underline <?php echo esc_attr( $tone ); ?>" href="<?php echo esc_url( $tile[1] ? $tile[1] : '#' ); ?>">
-						<span class="pp-eyebrow <?php echo 0 === $index ? 'opacity-80' : 'text-ink-4'; ?>"><?php esc_html_e( 'category', 'probo-connect' ); ?></span>
+						<span class="pp-eyebrow <?php echo 0 === $index ? 'opacity-80' : 'text-ink-4'; ?>"><?php esc_html_e( 'category', 'probo-connect-theme' ); ?></span>
 						<span class="text-[19px] font-extrabold tracking-[-0.02em]"><?php echo esc_html( $tile[0] ); ?> →</span>
 					</a>
 				<?php endforeach; ?>

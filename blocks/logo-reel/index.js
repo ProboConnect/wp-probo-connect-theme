@@ -48,7 +48,7 @@
 							icon: 'arrow-up-alt2',
 							size: 'small',
 							disabled: index === 0,
-							label: __( 'Up', 'probo-connect' ),
+							label: __( 'Up', 'probo-connect-theme' ),
 							onClick: function () {
 								move( index, -1 );
 							},
@@ -57,7 +57,7 @@
 							icon: 'arrow-down-alt2',
 							size: 'small',
 							disabled: index === logos.length - 1,
-							label: __( 'Down', 'probo-connect' ),
+							label: __( 'Down', 'probo-connect-theme' ),
 							onClick: function () {
 								move( index, 1 );
 							},
@@ -66,7 +66,7 @@
 							icon: 'trash',
 							size: 'small',
 							isDestructive: true,
-							label: __( 'Remove', 'probo-connect' ),
+							label: __( 'Remove', 'probo-connect-theme' ),
 							onClick: function () {
 								commit(
 									logos.filter( function ( _, i ) {
@@ -77,8 +77,8 @@
 						} )
 					),
 					el( components.TextControl, {
-						label: __( 'Name', 'probo-connect' ),
-						help: __( 'Becomes the logo alt text.', 'probo-connect' ),
+						label: __( 'Name', 'probo-connect-theme' ),
+						help: __( 'Becomes the logo alt text.', 'probo-connect-theme' ),
 						value: logo.name || '',
 						onChange: function ( value ) {
 							commit(
@@ -89,8 +89,8 @@
 						},
 					} ),
 					el( components.TextControl, {
-						label: __( 'Link', 'probo-connect' ),
-						help: __( 'Optional.', 'probo-connect' ),
+						label: __( 'Link', 'probo-connect-theme' ),
+						help: __( 'Optional.', 'probo-connect-theme' ),
 						value: logo.url || '',
 						onChange: function ( value ) {
 							commit(
@@ -134,8 +134,8 @@
 							components.Button,
 							{ variant: 'primary', onClick: opener.open },
 							logos.length
-								? __( 'Edit selection', 'probo-connect' )
-								: __( 'Choose logos', 'probo-connect' )
+								? __( 'Edit selection', 'probo-connect-theme' )
+								: __( 'Choose logos', 'probo-connect-theme' )
 						);
 					},
 				} )
@@ -149,31 +149,31 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Logos', 'probo-connect' ) },
+						{ title: __( 'Logos', 'probo-connect-theme' ) },
 						picker,
 						el( 'div', { style: { marginTop: '16px' } }, rows )
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Display', 'probo-connect' ), initialOpen: false },
+						{ title: __( 'Display', 'probo-connect-theme' ), initialOpen: false },
 						el( components.TextControl, {
-							label: __( 'Label', 'probo-connect' ),
-							help: __( 'Leave empty to hide the label.', 'probo-connect' ),
+							label: __( 'Label', 'probo-connect-theme' ),
+							help: __( 'Leave empty to hide the label.', 'probo-connect-theme' ),
 							value: a.heading,
 							onChange: function ( value ) {
 								props.setAttributes( { heading: value } );
 							},
 						} ),
 						el( components.ToggleControl, {
-							label: __( 'Grayscale', 'probo-connect' ),
-							help: __( 'Logos gain color when you hover over them.', 'probo-connect' ),
+							label: __( 'Grayscale', 'probo-connect-theme' ),
+							help: __( 'Logos gain color when you hover over them.', 'probo-connect-theme' ),
 							checked: a.grayscale,
 							onChange: function ( value ) {
 								props.setAttributes( { grayscale: value } );
 							},
 						} ),
 						el( components.RangeControl, {
-							label: __( 'Logo height', 'probo-connect' ),
+							label: __( 'Logo height', 'probo-connect-theme' ),
 							value: a.height,
 							min: 16,
 							max: 96,
@@ -190,8 +190,8 @@
 							components.Placeholder,
 							{
 								icon: 'images-alt2',
-								label: __( 'Logo bar', 'probo-connect' ),
-								instructions: __( 'Choose logos in the sidebar.', 'probo-connect' ),
+								label: __( 'Logo bar', 'probo-connect-theme' ),
+								instructions: __( 'Choose logos in the sidebar.', 'probo-connect-theme' ),
 							},
 							picker
 					  )

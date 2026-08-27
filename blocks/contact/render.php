@@ -63,12 +63,12 @@ $label     = 'mb-[7px] block text-[13px] font-bold text-ink';
 			<?php else : ?>
 				<?php if ( 'verzonden' === $status ) : ?>
 					<p class="rounded-pp m-0 border border-line bg-white p-4.5 text-sm text-ink-2">
-						<?php esc_html_e( 'Thanks — your message has been sent. We will get back to you within one working day.', 'probo-connect' ); ?>
+						<?php esc_html_e( 'Thanks — your message has been sent. We will get back to you within one working day.', 'probo-connect-theme' ); ?>
 					</p>
 				<?php else : ?>
 					<?php if ( 'fout' === $status ) : ?>
 						<p class="rounded-pp mt-0 mb-4.5 border border-l-4 border-line border-l-red-600 bg-white p-4.5 text-sm text-ink-2">
-							<?php esc_html_e( 'Your message could not be sent. Please check your name, email address and message.', 'probo-connect' ); ?>
+							<?php esc_html_e( 'Your message could not be sent. Please check your name, email address and message.', 'probo-connect-theme' ); ?>
 						</p>
 					<?php endif; ?>
 
@@ -79,26 +79,26 @@ $label     = 'mb-[7px] block text-[13px] font-bold text-ink';
 
 						<div class="mb-3.5 grid gap-3.5 sm:grid-cols-2">
 							<div>
-								<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-name"><?php esc_html_e( 'Name', 'probo-connect' ); ?></label>
-								<input class="<?php echo esc_attr( $field ); ?>" id="probo-contact-name" name="probo_name" type="text" required placeholder="<?php esc_attr_e( 'First and last name', 'probo-connect' ); ?>" />
+								<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-name"><?php esc_html_e( 'Name', 'probo-connect-theme' ); ?></label>
+								<input class="<?php echo esc_attr( $field ); ?>" id="probo-contact-name" name="probo_name" type="text" required placeholder="<?php esc_attr_e( 'First and last name', 'probo-connect-theme' ); ?>" />
 							</div>
 							<div>
-								<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-email"><?php esc_html_e( 'Email', 'probo-connect' ); ?></label>
+								<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-email"><?php esc_html_e( 'Email', 'probo-connect-theme' ); ?></label>
 								<input class="<?php echo esc_attr( $field ); ?>" id="probo-contact-email" name="probo_email" type="email" required placeholder="name@company.com" />
 							</div>
 						</div>
 
 						<div class="mb-3.5">
 							<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-order">
-								<?php esc_html_e( 'Order number', 'probo-connect' ); ?>
-								<span class="font-medium text-ink-4"><?php esc_html_e( '(optional)', 'probo-connect' ); ?></span>
+								<?php esc_html_e( 'Order number', 'probo-connect-theme' ); ?>
+								<span class="font-medium text-ink-4"><?php esc_html_e( '(optional)', 'probo-connect-theme' ); ?></span>
 							</label>
-							<input class="<?php echo esc_attr( $field ); ?>" id="probo-contact-order" name="probo_order" type="text" placeholder="<?php esc_attr_e( 'e.g. PB-102934', 'probo-connect' ); ?>" />
+							<input class="<?php echo esc_attr( $field ); ?>" id="probo-contact-order" name="probo_order" type="text" placeholder="<?php esc_attr_e( 'e.g. PB-102934', 'probo-connect-theme' ); ?>" />
 						</div>
 
 						<div class="mb-4.5">
-							<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-message"><?php esc_html_e( 'Message', 'probo-connect' ); ?></label>
-							<textarea class="rounded-pp min-h-26 w-full border border-line bg-white p-3.5 text-sm text-ink" id="probo-contact-message" name="probo_message" required placeholder="<?php esc_attr_e( 'How can we help?', 'probo-connect' ); ?>"></textarea>
+							<label class="<?php echo esc_attr( $label ); ?>" for="probo-contact-message"><?php esc_html_e( 'Message', 'probo-connect-theme' ); ?></label>
+							<textarea class="rounded-pp min-h-26 w-full border border-line bg-white p-3.5 text-sm text-ink" id="probo-contact-message" name="probo_message" required placeholder="<?php esc_attr_e( 'How can we help?', 'probo-connect-theme' ); ?>"></textarea>
 						</div>
 
 						<?php
@@ -107,7 +107,7 @@ $label     = 'mb-[7px] block text-[13px] font-bold text-ink';
 						// class so it stays out of the tab order as well.
 						?>
 						<div class="sr-only" aria-hidden="true">
-							<label for="probo-contact-website"><?php esc_html_e( 'Leave this field empty', 'probo-connect' ); ?></label>
+							<label for="probo-contact-website"><?php esc_html_e( 'Leave this field empty', 'probo-connect-theme' ); ?></label>
 							<input id="probo-contact-website" name="probo_website" type="text" tabindex="-1" autocomplete="off" />
 						</div>
 

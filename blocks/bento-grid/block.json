@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "layout",
 	"description": "Beeldraster met tegels van verschillende grootte, voor sfeer- en productfoto's.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full", "wide"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Werk uit eigen productie" },

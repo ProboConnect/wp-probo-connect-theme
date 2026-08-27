@@ -44,7 +44,7 @@ $dark = 'Donker' === $attributes['tone'];
 					<?php echo $dark ? 'style="background:color-mix(in srgb, var(--pp-secondary-fg) 8%, transparent)"' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed string. ?>
 				>
 					<?php if ( $stars ) : ?>
-						<div class="font-mono mb-4 text-[13px] font-medium <?php echo $dark ? 'text-accent' : 'text-accent-ink'; ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: score out of five. */ __( '%d out of 5 stars', 'probo-connect' ), $stars ) ); ?>">
+						<div class="font-mono mb-4 text-[13px] font-medium <?php echo $dark ? 'text-accent' : 'text-accent-ink'; ?>" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: score out of five. */ __( '%d out of 5 stars', 'probo-connect-theme' ), $stars ) ); ?>">
 							<?php echo esc_html( str_repeat( '★', $stars ) . str_repeat( '☆', 5 - $stars ) ); ?>
 						</div>
 					<?php endif; ?>

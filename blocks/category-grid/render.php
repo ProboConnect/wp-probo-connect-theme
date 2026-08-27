@@ -78,7 +78,7 @@ $callout_drawn = false;
 							<img class="h-[150px] w-full object-cover" src="<?php echo esc_url( $thumb_url ); ?>" alt="" />
 						<?php else : ?>
 							<div class="pp-eyebrow flex h-[150px] items-end p-4 <?php echo esc_attr( $tone[0] . ' ' . $tone[1] ); ?>">
-								<?php esc_html_e( 'tile visual', 'probo-connect' ); ?>
+								<?php esc_html_e( 'tile visual', 'probo-connect-theme' ); ?>
 							</div>
 						<?php endif; ?>
 
@@ -120,7 +120,7 @@ $callout_drawn = false;
 			</div>
 		<?php else : ?>
 			<p class="text-[15px] text-ink-3">
-				<?php esc_html_e( 'No product categories found yet. Add categories in WooCommerce, or enter slugs above yourself.', 'probo-connect' ); ?>
+				<?php esc_html_e( 'No product categories found yet. Add categories in WooCommerce, or enter slugs above yourself.', 'probo-connect-theme' ); ?>
 			</p>
 		<?php endif; ?>
 	</div>

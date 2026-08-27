@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 $probo_methods = array_values( (array) $data );
 
 if ( ! $probo_methods ) {
-	echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'First choose a delivery day.', 'probo-connect' ) . '</p>';
+	echo '<p class="text-[15px] text-ink-3">' . esc_html__( 'First choose a delivery day.', 'probo-connect-theme' ) . '</p>';
 	return;
 }
 
@@ -120,7 +120,7 @@ $probo_group = static function ( $methods, $visible, $label ) use ( $probo_metho
 	<?php if ( $probo_delivery ) : ?>
 		<div class="connect-shipping-methods-group connect-shipping-methods-group--delivery pp-delivery-pane pp-delivery-pane--ship">
 			<div class="pp-carrier-list">
-				<span class="pp-picker-label"><?php esc_html_e( 'Carrier', 'probo-connect' ); ?></span>
+				<span class="pp-picker-label"><?php esc_html_e( 'Carrier', 'probo-connect-theme' ); ?></span>
 				<?php
 				foreach ( $probo_delivery as $probo_method ) {
 					$probo_method_row( $probo_method );
@@ -133,14 +133,14 @@ $probo_group = static function ( $methods, $visible, $label ) use ( $probo_metho
 	<?php if ( $probo_pickup ) : ?>
 		<div class="connect-shipping-methods-group connect-shipping-methods-group--pickup pp-delivery-pane pp-delivery-pane--pickup">
 			<div class="pp-carrier-list">
-				<span class="pp-picker-label"><?php esc_html_e( 'Pickup point', 'probo-connect' ); ?></span>
+				<span class="pp-picker-label"><?php esc_html_e( 'Pickup point', 'probo-connect-theme' ); ?></span>
 				<?php
 				$probo_group(
 					$probo_pickup,
 					3,
 					sprintf(
 						/* translators: %s: number of pickup points. */
-						__( 'All %s pickup points', 'probo-connect' ),
+						__( 'All %s pickup points', 'probo-connect-theme' ),
 						number_format_i18n( count( $probo_pickup ) )
 					)
 				);

@@ -39,7 +39,7 @@ $posts = probo_get_products( $attributes['source'], (int) $attributes['count'] )
 			</div>
 		<?php else : ?>
 			<p class="text-[15px] text-ink-3">
-				<?php esc_html_e( 'No products found yet. As soon as there are products, they will appear here automatically.', 'probo-connect' ); ?>
+				<?php esc_html_e( 'No products found yet. As soon as there are products, they will appear here automatically.', 'probo-connect-theme' ); ?>
 			</p>
 		<?php endif; ?>
 	</div>

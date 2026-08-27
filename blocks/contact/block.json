@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "email",
 	"description": "Contactblok: directe contactgegevens naast een formulier.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Vragen over je bestand of order?" },

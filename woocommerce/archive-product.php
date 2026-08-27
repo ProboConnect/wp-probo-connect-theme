@@ -83,7 +83,7 @@ $probo_description = $probo_term ? term_description( $probo_term ) : '';
 		<div class="pp-container grid gap-10 <?php echo $probo_has_filters ? 'lg:grid-cols-[248px_1fr] lg:items-start' : ''; ?>">
 			<?php if ( $probo_has_filters ) : ?>
 				<aside class="pp-shop-filters border-line py-8 lg:border-r lg:pr-8 lg:pb-16">
-					<div class="pp-eyebrow mb-4 text-ink-4"><?php esc_html_e( 'Filter', 'probo-connect' ); ?></div>
+					<div class="pp-eyebrow mb-4 text-ink-4"><?php esc_html_e( 'Filter', 'probo-connect-theme' ); ?></div>
 					<?php dynamic_sidebar( 'shop-filters' ); ?>
 				</aside>
 			<?php endif; ?>

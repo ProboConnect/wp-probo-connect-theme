@@ -113,9 +113,9 @@ function probo_callout_placements() {
 	return (array) apply_filters(
 		'probo_callout_placements',
 		array(
-			'category_top'    => __( 'Category page — above the products', 'probo-connect' ),
-			'grid'            => __( 'Between the products / in a tile grid', 'probo-connect' ),
-			'category_bottom' => __( 'Category page — below the products', 'probo-connect' ),
+			'category_top'    => __( 'Category page — above the products', 'probo-connect-theme' ),
+			'grid'            => __( 'Between the products / in a tile grid', 'probo-connect-theme' ),
+			'category_bottom' => __( 'Category page — below the products', 'probo-connect-theme' ),
 		)
 	);
 }
@@ -395,51 +395,51 @@ function probo_callout_render( $callout, $placement = '' ) {
 function probo_callout_fields() {
 	return array(
 		'enabled' => array(
-			'label' => __( 'Show callout', 'probo-connect' ),
+			'label' => __( 'Show callout', 'probo-connect-theme' ),
 			'type'  => 'checkbox',
-			'help'  => __( 'Turning it off keeps the text, but does not show this callout anywhere.', 'probo-connect' ),
+			'help'  => __( 'Turning it off keeps the text, but does not show this callout anywhere.', 'probo-connect-theme' ),
 		),
 		'title' => array(
-			'label' => __( 'Title', 'probo-connect' ),
+			'label' => __( 'Title', 'probo-connect-theme' ),
 			'type'  => 'text',
-			'help'  => __( 'Leave empty = this block will not be used.', 'probo-connect' ),
+			'help'  => __( 'Leave empty = this block will not be used.', 'probo-connect-theme' ),
 		),
 		'text'  => array(
-			'label' => __( 'Text', 'probo-connect' ),
+			'label' => __( 'Text', 'probo-connect-theme' ),
 			'type'  => 'textarea',
 		),
 		'image' => array(
-			'label' => __( 'Image', 'probo-connect' ),
+			'label' => __( 'Image', 'probo-connect-theme' ),
 			'type'  => 'image',
-			'help'  => __( 'Optional.', 'probo-connect' ),
+			'help'  => __( 'Optional.', 'probo-connect-theme' ),
 		),
 		'cta'   => array(
-			'label' => __( 'Button text', 'probo-connect' ),
+			'label' => __( 'Button text', 'probo-connect-theme' ),
 			'type'  => 'text',
 		),
 		'url'   => array(
-			'label' => __( 'Button URL', 'probo-connect' ),
+			'label' => __( 'Button URL', 'probo-connect-theme' ),
 			'type'  => 'text',
-			'help'  => __( 'Leave empty = the category page itself.', 'probo-connect' ),
+			'help'  => __( 'Leave empty = the category page itself.', 'probo-connect-theme' ),
 		),
 		'tone'  => array(
-			'label'   => __( 'Color', 'probo-connect' ),
+			'label'   => __( 'Color', 'probo-connect-theme' ),
 			'type'    => 'select',
 			'options' => array(
-				'Accent'    => __( 'Accent', 'probo-connect' ),
-				'Secondary' => __( 'Secondary', 'probo-connect' ),
+				'Accent'    => __( 'Accent', 'probo-connect-theme' ),
+				'Secondary' => __( 'Secondary', 'probo-connect-theme' ),
 			),
 		),
 		'template' => array(
-			'label'   => __( 'Template', 'probo-connect' ),
+			'label'   => __( 'Template', 'probo-connect-theme' ),
 			'type'    => 'select',
 			'options' => probo_callout_template_options(),
-			'help'    => __( 'The template decides where the callout lands. Want the same pitch in two places? Create two callouts, one per template. In the Category Tiles block every callout is drawn with a tile template, whatever it uses on the category page.', 'probo-connect' ),
+			'help'    => __( 'The template decides where the callout lands. Want the same pitch in two places? Create two callouts, one per template. In the Category Tiles block every callout is drawn with a tile template, whatever it uses on the category page.', 'probo-connect-theme' ),
 		),
 		'interval' => array(
-			'label' => __( 'Tile after product number', 'probo-connect' ),
+			'label' => __( 'Tile after product number', 'probo-connect-theme' ),
 			'type'  => 'text',
-			'help'  => __( 'Only for the tile view. Appears once, right after this product number — not repeated. Leave empty = after product 4.', 'probo-connect' ),
+			'help'  => __( 'Only for the tile view. Appears once, right after this product number — not repeated. Leave empty = after product 4.', 'probo-connect-theme' ),
 		),
 	);
 }
@@ -604,7 +604,7 @@ function probo_callout_field_input( $name, $id, $config, $value ) {
 			esc_attr( $name ),
 			esc_attr( $id ),
 			checked( $value, '1', false ),
-			esc_html__( 'On', 'probo-connect' )
+			esc_html__( 'On', 'probo-connect-theme' )
 		);
 
 		return;
@@ -631,8 +631,8 @@ function probo_callout_field_input( $name, $id, $config, $value ) {
 				<img src="<?php echo esc_url( $image_url ); ?>" alt="" />
 			</div>
 			<p class="probo-callout-image-buttons">
-				<button type="button" class="button probo-callout-image-select"><?php esc_html_e( 'Choose image', 'probo-connect' ); ?></button>
-				<button type="button" class="button probo-callout-image-remove" style="<?php echo $image_url ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Remove', 'probo-connect' ); ?></button>
+				<button type="button" class="button probo-callout-image-select"><?php esc_html_e( 'Choose image', 'probo-connect-theme' ); ?></button>
+				<button type="button" class="button probo-callout-image-remove" style="<?php echo $image_url ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Remove', 'probo-connect-theme' ); ?></button>
 			</p>
 		</div>
 		<?php
@@ -777,14 +777,14 @@ function probo_callout_edit_fields( $term, $taxonomy = 'product_cat' ) {
 	?>
 	<tr class="form-field probo-callouts-field">
 		<th scope="row" valign="top">
-			<label><?php esc_html_e( 'Callouts', 'probo-connect' ); ?></label>
+			<label><?php esc_html_e( 'Callouts', 'probo-connect-theme' ); ?></label>
 		</th>
 		<td>
 			<p class="description" style="margin-top:0;">
 				<?php
 				printf(
 					/* translators: %d: number of slots. */
-					esc_html__( 'A callout is a small block with a button next to this category — on the category page and as a tile in the Category Tiles block. Up to %d per category; leave the title empty to skip a block.', 'probo-connect' ),
+					esc_html__( 'A callout is a small block with a button next to this category — on the category page and as a tile in the Category Tiles block. Up to %d per category; leave the title empty to skip a block.', 'probo-connect-theme' ),
 					(int) $slots
 				);
 				?>
@@ -800,13 +800,13 @@ function probo_callout_edit_fields( $term, $taxonomy = 'product_cat' ) {
 							<?php
 							printf(
 								/* translators: %d: callout number. */
-								esc_html__( 'Callout %d', 'probo-connect' ),
+								esc_html__( 'Callout %d', 'probo-connect-theme' ),
 								$i + 1
 							);
 							?>
 						</span>
 						<span class="probo-callout-card-status <?php echo $probo_slot_title ? 'is-filled' : 'is-empty'; ?>">
-							<?php echo $probo_slot_title ? esc_html( $probo_slot_title ) : esc_html__( 'empty', 'probo-connect' ); ?>
+							<?php echo $probo_slot_title ? esc_html( $probo_slot_title ) : esc_html__( 'empty', 'probo-connect-theme' ); ?>
 						</span>
 					</summary>
 
@@ -938,7 +938,7 @@ function probo_callout_edit_fields( $term, $taxonomy = 'product_cat' ) {
 				}
 
 				frame = wp.media( {
-					title:    <?php echo wp_json_encode( __( 'Choose an image', 'probo-connect' ) ); ?>,
+					title:    <?php echo wp_json_encode( __( 'Choose an image', 'probo-connect-theme' ) ); ?>,
 					multiple: false,
 				} );
 

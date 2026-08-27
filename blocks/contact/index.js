@@ -42,18 +42,18 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
-						field( components.TextControl, 'heading', __( 'Title', 'probo-connect' ) ),
-						field( components.TextareaControl, 'intro', __( 'Intro text', 'probo-connect' ) ),
-						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Contact details', 'probo-connect' ) ),
+						{ title: __( 'Content', 'probo-connect-theme' ) },
+						field( components.TextControl, 'heading', __( 'Title', 'probo-connect-theme' ) ),
+						field( components.TextareaControl, 'intro', __( 'Intro text', 'probo-connect-theme' ) ),
+						el( 'p', { style: { margin: '16px 0 8px', fontWeight: 500 } }, __( 'Contact details', 'probo-connect-theme' ) ),
 						window.probo.repeater( {
 							value: a.rows,
 							fields: [
-								{ label: __( 'Icon', 'probo-connect' ) },
-								{ label: __( 'Value', 'probo-connect' ) },
-								{ label: __( 'Note', 'probo-connect' ) },
+								{ label: __( 'Icon', 'probo-connect-theme' ) },
+								{ label: __( 'Value', 'probo-connect-theme' ) },
+								{ label: __( 'Note', 'probo-connect-theme' ) },
 							],
-							addLabel: __( 'Add row', 'probo-connect' ),
+							addLabel: __( 'Add row', 'probo-connect-theme' ),
 							onChange: function ( value ) {
 								props.setAttributes( { rows: value } );
 							},
@@ -61,12 +61,12 @@
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Form', 'probo-connect' ), initialOpen: false },
-						field( components.TextControl, 'submitLabel', __( 'Button text', 'probo-connect' ) ),
-						field( components.TextControl, 'shortcode', __( 'Form shortcode', 'probo-connect' ), {
+						{ title: __( 'Form', 'probo-connect-theme' ), initialOpen: false },
+						field( components.TextControl, 'submitLabel', __( 'Button text', 'probo-connect-theme' ) ),
+						field( components.TextControl, 'shortcode', __( 'Form shortcode', 'probo-connect-theme' ), {
 							help: __(
 								'Leave empty for the theme’s own form, which mails the site administrator. Fill in a shortcode to render a form plugin here instead.',
-								'probo-connect'
+								'probo-connect-theme'
 							),
 						} )
 					)

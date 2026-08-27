@@ -29,11 +29,11 @@ $probo_usps = array_filter(
 	do_action( 'woocommerce_before_cart_totals' );
 	?>
 
-	<h2 class="mb-4.5 text-xl font-extrabold tracking-[-0.02em]"><?php esc_html_e( 'Total', 'probo-connect' ); ?></h2>
+	<h2 class="mb-4.5 text-xl font-extrabold tracking-[-0.02em]"><?php esc_html_e( 'Total', 'probo-connect-theme' ); ?></h2>
 
 	<div class="flex flex-col gap-3 border-b border-line pb-4 text-sm">
 		<div class="cart-subtotal flex justify-between">
-			<span class="text-ink-3"><?php esc_html_e( 'Subtotal', 'probo-connect' ); ?></span>
+			<span class="text-ink-3"><?php esc_html_e( 'Subtotal', 'probo-connect-theme' ); ?></span>
 			<span class="font-semibold"><?php wc_cart_totals_subtotal_html(); ?></span>
 		</div>
 
@@ -75,7 +75,7 @@ $probo_usps = array_filter(
 			if ( wc_tax_enabled() ) {
 				printf(
 					/* translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated. */
-					esc_html__( 'Total %s', 'probo-connect' ),
+					esc_html__( 'Total %s', 'probo-connect-theme' ),
 					esc_html(
 						WC()->cart->display_prices_including_tax()
 							? WC()->countries->inc_tax_or_vat()
@@ -83,7 +83,7 @@ $probo_usps = array_filter(
 					)
 				);
 			} else {
-				esc_html_e( 'Total', 'probo-connect' );
+				esc_html_e( 'Total', 'probo-connect-theme' );
 			}
 			?>
 		</span>
@@ -104,14 +104,14 @@ $probo_usps = array_filter(
 	<?php if ( wc_coupons_enabled() ) : ?>
 		<details class="mt-2.5">
 			<summary class="rounded-pp cursor-pointer border border-line-strong px-4 py-3 text-center text-sm font-semibold">
-				<?php esc_html_e( 'Enter discount code', 'probo-connect' ); ?>
+				<?php esc_html_e( 'Enter discount code', 'probo-connect-theme' ); ?>
 			</summary>
 
 			<form class="mt-2.5 flex gap-2" method="post" action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-				<label class="sr-only" for="pp-coupon"><?php esc_html_e( 'Discount code', 'probo-connect' ); ?></label>
-				<input class="pp-field" id="pp-coupon" type="text" name="coupon_code" value="" placeholder="<?php esc_attr_e( 'Code', 'probo-connect' ); ?>" />
-				<button class="pp-btn-secondary shrink-0" type="submit" name="apply_coupon" value="<?php esc_attr_e( 'Apply', 'probo-connect' ); ?>">
-					<?php esc_html_e( 'Apply', 'probo-connect' ); ?>
+				<label class="sr-only" for="pp-coupon"><?php esc_html_e( 'Discount code', 'probo-connect-theme' ); ?></label>
+				<input class="pp-field" id="pp-coupon" type="text" name="coupon_code" value="" placeholder="<?php esc_attr_e( 'Code', 'probo-connect-theme' ); ?>" />
+				<button class="pp-btn-secondary shrink-0" type="submit" name="apply_coupon" value="<?php esc_attr_e( 'Apply', 'probo-connect-theme' ); ?>">
+					<?php esc_html_e( 'Apply', 'probo-connect-theme' ); ?>
 				</button>
 				<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>
 			</form>

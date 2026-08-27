@@ -17,13 +17,13 @@ $video = trim( (string) $attributes['videoUrl'] );
 $play  = 'absolute top-1/2 left-1/2 flex h-22 w-22 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-white/[0.16] backdrop-blur-[4px]';
 ?>
 <section <?php echo probo_block_wrapper( $attributes, 'relative flex min-h-[560px] flex-col justify-end overflow-hidden' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>>
-	<?php probo_hero_media( $attributes['imageId'], 'absolute inset-0 h-full w-full', __( 'showreel still', 'probo-connect' ) ); ?>
+	<?php probo_hero_media( $attributes['imageId'], 'absolute inset-0 h-full w-full', __( 'showreel still', 'probo-connect-theme' ) ); ?>
 
 	<div class="pointer-events-none absolute inset-0" style="background:linear-gradient(180deg,rgba(11,11,12,.15),rgba(11,11,12,.8))" aria-hidden="true"></div>
 
 	<?php if ( $video ) : ?>
 		<a class="<?php echo esc_attr( $play ); ?>" href="<?php echo esc_url( $video ); ?>">
-			<span class="sr-only"><?php esc_html_e( 'Play the film', 'probo-connect' ); ?></span>
+			<span class="sr-only"><?php esc_html_e( 'Play the film', 'probo-connect-theme' ); ?></span>
 			<span class="pp-play-triangle" aria-hidden="true"></span>
 		</a>
 	<?php else : ?>

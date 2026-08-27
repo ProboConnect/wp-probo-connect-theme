@@ -90,12 +90,12 @@ function probo_handle_contact_form() {
 	}
 
 	$body = array(
-		sprintf( /* translators: %s: sender name. */ __( 'Name: %s', 'probo-connect' ), $name ),
-		sprintf( /* translators: %s: sender email. */ __( 'Email: %s', 'probo-connect' ), $email ),
+		sprintf( /* translators: %s: sender name. */ __( 'Name: %s', 'probo-connect-theme' ), $name ),
+		sprintf( /* translators: %s: sender email. */ __( 'Email: %s', 'probo-connect-theme' ), $email ),
 	);
 
 	if ( $order ) {
-		$body[] = sprintf( /* translators: %s: order number. */ __( 'Order number: %s', 'probo-connect' ), $order );
+		$body[] = sprintf( /* translators: %s: order number. */ __( 'Order number: %s', 'probo-connect-theme' ), $order );
 	}
 
 	$body[] = '';
@@ -105,7 +105,7 @@ function probo_handle_contact_form() {
 		probo_contact_recipient(),
 		sprintf(
 			/* translators: 1: site name, 2: sender name. */
-			__( '[%1$s] Contact form — %2$s', 'probo-connect' ),
+			__( '[%1$s] Contact form — %2$s', 'probo-connect-theme' ),
 			wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			$name
 		),

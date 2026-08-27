@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "format-quote",
 	"description": "Quotes van klanten, met naam, bedrijf en optioneel een cijfer.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full", "wide"], "anchor": true },
 	"attributes": {
 		"heading": { "type": "string", "default": "Wat klanten zeggen" },

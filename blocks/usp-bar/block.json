@@ -6,7 +6,7 @@
 	"category": "probo",
 	"icon": "yes-alt",
 	"description": "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten.",
-	"textdomain": "probo-connect",
+	"textdomain": "probo-connect-theme",
 	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
 		"style": { "type": "string", "default": "Balk" },

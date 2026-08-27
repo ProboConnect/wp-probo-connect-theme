@@ -120,8 +120,8 @@ function probo_account_url() {
  */
 function probo_account_link_text() {
 	return is_user_logged_in()
-		? __( 'Dashboard', 'probo-connect' )
-		: __( 'Log in', 'probo-connect' );
+		? __( 'Dashboard', 'probo-connect-theme' )
+		: __( 'Log in', 'probo-connect-theme' );
 }
 
 /**
@@ -158,7 +158,7 @@ function probo_search_form( $size = 'header' ) {
 	$uid = 'pp-search-' . $size . '-' . ++$instance;
 	?>
 	<form role="search" method="get" class="rounded-pp flex w-full overflow-hidden bg-white <?php echo esc_attr( $height . ' ' . $border ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<label class="sr-only" for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
+		<label class="sr-only" for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Search', 'probo-connect-theme' ); ?></label>
 		<input
 			id="<?php echo esc_attr( $uid ); ?>"
 			class="min-w-0 flex-1 overflow-hidden border-0 bg-transparent text-ink text-ellipsis whitespace-nowrap outline-none <?php echo esc_attr( $in_pad . ' ' . $in_size ); ?>"
@@ -170,7 +170,7 @@ function probo_search_form( $size = 'header' ) {
 		<?php if ( class_exists( 'WooCommerce' ) ) : ?>
 			<input type="hidden" name="post_type" value="product" />
 		<?php endif; ?>
-		<button class="bg-accent font-bold whitespace-nowrap text-accent-fg hover:bg-ink hover:text-white <?php echo esc_attr( $btn_pad ); ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect' ); ?></button>
+		<button class="bg-accent font-bold whitespace-nowrap text-accent-fg hover:bg-ink hover:text-white <?php echo esc_attr( $btn_pad ); ?>" type="submit"><?php esc_html_e( 'Search', 'probo-connect-theme' ); ?></button>
 	</form>
 	<?php
 }
@@ -182,7 +182,7 @@ function probo_search_form( $size = 'header' ) {
  * correct, and falls back to a Home / Title pair elsewhere.
  */
 function probo_breadcrumb() {
-	echo '<nav class="text-[13px] text-ink-3" aria-label="' . esc_attr__( 'Breadcrumb', 'probo-connect' ) . '">';
+	echo '<nav class="text-[13px] text-ink-3" aria-label="' . esc_attr__( 'Breadcrumb', 'probo-connect-theme' ) . '">';
 
 	if ( function_exists( 'woocommerce_breadcrumb' ) ) {
 		woocommerce_breadcrumb(
@@ -198,7 +198,7 @@ function probo_breadcrumb() {
 		printf(
 			'<a class="text-ink-4 no-underline" href="%s">%s</a> / <span class="text-ink">%s</span>',
 			esc_url( home_url( '/' ) ),
-			esc_html__( 'Home', 'probo-connect' ),
+			esc_html__( 'Home', 'probo-connect-theme' ),
 			esc_html( wp_get_document_title() )
 		);
 	}
@@ -213,7 +213,7 @@ function probo_breadcrumb() {
  * configurator, the cart and the checkout.
  */
 function probo_configure_cta() {
-	echo '<div class="mt-3.5 text-sm font-bold text-accent-ink">' . esc_html__( 'Configure now →', 'probo-connect' ) . '</div>';
+	echo '<div class="mt-3.5 text-sm font-bold text-accent-ink">' . esc_html__( 'Configure now →', 'probo-connect-theme' ) . '</div>';
 }
 
 /**
@@ -277,9 +277,9 @@ function probo_product_badge( $product = null ) {
 
 	if ( $product instanceof WC_Product ) {
 		if ( $product->is_featured() ) {
-			$badge = array( 'label' => __( 'Most popular', 'probo-connect' ), 'tone' => 'accent' );
+			$badge = array( 'label' => __( 'Most popular', 'probo-connect-theme' ), 'tone' => 'accent' );
 		} elseif ( $product->is_on_sale() ) {
-			$badge = array( 'label' => __( 'On sale', 'probo-connect' ), 'tone' => 'secondary' );
+			$badge = array( 'label' => __( 'On sale', 'probo-connect-theme' ), 'tone' => 'secondary' );
 		}
 	}
 
@@ -513,7 +513,7 @@ function probo_primary_menu_fallback() {
 	if ( ! $items ) {
 		$items = array(
 			array(
-				'label'    => __( 'All products', 'probo-connect' ),
+				'label'    => __( 'All products', 'probo-connect-theme' ),
 				'url'      => home_url( '/' ),
 				'children' => array(),
 			),
@@ -615,7 +615,7 @@ function probo_product_card( $product = null, $image_height = 'h-[190px]' ) {
 			if ( $image ) {
 				echo wp_kses_post( $image );
 			} else {
-				probo_placeholder( __( 'product photo', 'probo-connect' ), $image_height );
+				probo_placeholder( __( 'product photo', 'probo-connect-theme' ), $image_height );
 			}
 
 			if ( $badge ) :
@@ -676,7 +676,7 @@ function probo_checkout_header() {
 					<?php
 					printf(
 						/* translators: %s: phone number. */
-						esc_html__( 'Need help? %s', 'probo-connect' ),
+						esc_html__( 'Need help? %s', 'probo-connect-theme' ),
 						'<span data-pp-partial="checkout_phone">' . esc_html( $phone ) . '</span>'
 					);
 					?>

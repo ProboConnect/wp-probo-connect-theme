@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="relative pb-12 lg:py-11">
-			<?php probo_hero_media( $attributes['imageId'], 'rounded-pp h-[280px] w-full lg:h-full lg:min-h-[400px]', __( 'hero photo', 'probo-connect' ) ); ?>
+			<?php probo_hero_media( $attributes['imageId'], 'rounded-pp h-[280px] w-full lg:h-full lg:min-h-[400px]', __( 'hero photo', 'probo-connect-theme' ) ); ?>
 
 			<?php if ( $attributes['reviewQuote'] ) : ?>
 				<div class="pp-card mt-[-40px] ml-4 max-w-[290px] bg-white p-5 shadow-[0_24px_48px_rgba(0,0,0,.14)] lg:absolute lg:bottom-19 lg:-left-6 lg:mt-0 lg:ml-0">

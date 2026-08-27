@@ -14,10 +14,10 @@
 	var blockEditor = wp.blockEditor;
 
 	var SPANS = [
-		{ label: __( 'Normal', 'probo-connect' ), value: 'Normaal' },
-		{ label: __( 'Wide (2 columns)', 'probo-connect' ), value: 'Breed' },
-		{ label: __( 'Tall (2 rows)', 'probo-connect' ), value: 'Hoog' },
-		{ label: __( 'Large (2 × 2)', 'probo-connect' ), value: 'Groot' },
+		{ label: __( 'Normal', 'probo-connect-theme' ), value: 'Normaal' },
+		{ label: __( 'Wide (2 columns)', 'probo-connect-theme' ), value: 'Breed' },
+		{ label: __( 'Tall (2 rows)', 'probo-connect-theme' ), value: 'Hoog' },
+		{ label: __( 'Large (2 × 2)', 'probo-connect-theme' ), value: 'Groot' },
 	];
 
 	wp.blocks.registerBlockType( 'probo/bento-grid', {
@@ -64,7 +64,7 @@
 							icon: 'arrow-up-alt2',
 							size: 'small',
 							disabled: index === 0,
-							label: __( 'Up', 'probo-connect' ),
+							label: __( 'Up', 'probo-connect-theme' ),
 							onClick: function () {
 								move( index, -1 );
 							},
@@ -73,7 +73,7 @@
 							icon: 'arrow-down-alt2',
 							size: 'small',
 							disabled: index === tiles.length - 1,
-							label: __( 'Down', 'probo-connect' ),
+							label: __( 'Down', 'probo-connect-theme' ),
 							onClick: function () {
 								move( index, 1 );
 							},
@@ -82,7 +82,7 @@
 							icon: 'trash',
 							size: 'small',
 							isDestructive: true,
-							label: __( 'Remove', 'probo-connect' ),
+							label: __( 'Remove', 'probo-connect-theme' ),
 							onClick: function () {
 								commit(
 									tiles.filter( function ( _, i ) {
@@ -106,14 +106,14 @@
 									components.Button,
 									{ variant: 'secondary', onClick: opener.open },
 									tile.id
-										? __( 'Replace image', 'probo-connect' )
-										: __( 'Choose image', 'probo-connect' )
+										? __( 'Replace image', 'probo-connect-theme' )
+										: __( 'Choose image', 'probo-connect-theme' )
 								);
 							},
 						} )
 					),
 					el( components.SelectControl, {
-						label: __( 'Size', 'probo-connect' ),
+						label: __( 'Size', 'probo-connect-theme' ),
 						value: tile.span || 'Normaal',
 						options: SPANS,
 						onChange: function ( value ) {
@@ -121,15 +121,15 @@
 						},
 					} ),
 					el( components.TextControl, {
-						label: __( 'Caption', 'probo-connect' ),
+						label: __( 'Caption', 'probo-connect-theme' ),
 						value: tile.caption || '',
 						onChange: function ( value ) {
 							patch( index, { caption: value } );
 						},
 					} ),
 					el( components.TextControl, {
-						label: __( 'Link', 'probo-connect' ),
-						help: __( 'Optional. Leave empty to make the tile unclickable.', 'probo-connect' ),
+						label: __( 'Link', 'probo-connect-theme' ),
+						help: __( 'Optional. Leave empty to make the tile unclickable.', 'probo-connect-theme' ),
 						value: tile.url || '',
 						onChange: function ( value ) {
 							patch( index, { url: value } );
@@ -146,16 +146,16 @@
 					null,
 					el(
 						components.PanelBody,
-						{ title: __( 'Content', 'probo-connect' ) },
+						{ title: __( 'Content', 'probo-connect-theme' ) },
 						el( components.TextControl, {
-							label: __( 'Title', 'probo-connect' ),
+							label: __( 'Title', 'probo-connect-theme' ),
 							value: a.heading,
 							onChange: function ( value ) {
 								props.setAttributes( { heading: value } );
 							},
 						} ),
 						el( components.TextareaControl, {
-							label: __( 'Intro text', 'probo-connect' ),
+							label: __( 'Intro text', 'probo-connect-theme' ),
 							rows: 3,
 							value: a.intro,
 							onChange: function ( value ) {
@@ -165,7 +165,7 @@
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Tiles', 'probo-connect' ) },
+						{ title: __( 'Tiles', 'probo-connect-theme' ) },
 						rows,
 						el(
 							components.Button,
@@ -175,15 +175,15 @@
 									commit( tiles.concat( [ { id: 0, span: 'Normaal', caption: '', url: '' } ] ) );
 								},
 							},
-							__( 'Add tile', 'probo-connect' )
+							__( 'Add tile', 'probo-connect-theme' )
 						)
 					),
 					el(
 						components.PanelBody,
-						{ title: __( 'Display', 'probo-connect' ), initialOpen: false },
+						{ title: __( 'Display', 'probo-connect-theme' ), initialOpen: false },
 						el( components.RangeControl, {
-							label: __( 'Row height', 'probo-connect' ),
-							help: __( 'Height of one row; large tiles are two rows tall.', 'probo-connect' ),
+							label: __( 'Row height', 'probo-connect-theme' ),
+							help: __( 'Height of one row; large tiles are two rows tall.', 'probo-connect-theme' ),
 							value: a.height,
 							min: 120,
 							max: 480,
@@ -200,10 +200,10 @@
 							components.Placeholder,
 							{
 								icon: 'layout',
-								label: __( 'Bento grid', 'probo-connect' ),
+								label: __( 'Bento grid', 'probo-connect-theme' ),
 								instructions: __(
 									'Voeg tegels toe in de zijbalk onder "Tegels".',
-									'probo-connect'
+									'probo-connect-theme'
 								),
 							}
 					  )

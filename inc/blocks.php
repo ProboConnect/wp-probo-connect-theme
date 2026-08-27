@@ -61,7 +61,7 @@ function probo_block_categories( $categories ) {
 		$categories,
 		array(
 			'slug'  => 'probo',
-			'title' => __( 'Probo Connect', 'probo-connect' ),
+			'title' => __( 'Probo Connect', 'probo-connect-theme' ),
 			'icon'  => null,
 		)
 	);
@@ -97,8 +97,8 @@ function probo_register_patterns() {
 	register_block_pattern(
 		'probo/homepage',
 		array(
-			'title'       => __( 'Probo Connect homepage', 'probo-connect' ),
-			'description' => __( 'Hero, USP bar, categories, bestsellers, and “How it works”.', 'probo-connect' ),
+			'title'       => __( 'Probo Connect homepage', 'probo-connect-theme' ),
+			'description' => __( 'Hero, USP bar, categories, bestsellers, and “How it works”.', 'probo-connect-theme' ),
 			'categories'  => array( 'featured' ),
 			'content'     => probo_homepage_blocks(),
 		)
@@ -116,7 +116,7 @@ function probo_starter_content() {
 			'posts'   => array(
 				'home' => array(
 					'post_type'    => 'page',
-					'post_title'   => _x( 'Home', 'Theme starter content', 'probo-connect' ),
+					'post_title'   => _x( 'Home', 'Theme starter content', 'probo-connect-theme' ),
 					'post_content' => probo_homepage_blocks(),
 				),
 			),
@@ -259,16 +259,16 @@ function probo_get_category_terms( $slugs, $count ) {
  */
 function probo_hero_variants() {
 	return array(
-		'A' => __( 'A — Search hero, dark', 'probo-connect' ),
-		'B' => __( 'B — Editorial, large image', 'probo-connect' ),
-		'C' => __( 'C — Full-bleed image, centred', 'probo-connect' ),
-		'D' => __( 'D — Showroom, category tiles', 'probo-connect' ),
-		'E' => __( 'E — Minimal, centred, light', 'probo-connect' ),
-		'F' => __( 'F — USP rail, dark, B2B', 'probo-connect' ),
-		'G' => __( 'G — Split with review card', 'probo-connect' ),
-		'H' => __( 'H — Promotion, accent', 'probo-connect' ),
-		'I' => __( 'I — Search hero, light with tags', 'probo-connect' ),
-		'J' => __( 'J — Showreel, image with play', 'probo-connect' ),
+		'A' => __( 'A — Search hero, dark', 'probo-connect-theme' ),
+		'B' => __( 'B — Editorial, large image', 'probo-connect-theme' ),
+		'C' => __( 'C — Full-bleed image, centred', 'probo-connect-theme' ),
+		'D' => __( 'D — Showroom, category tiles', 'probo-connect-theme' ),
+		'E' => __( 'E — Minimal, centred, light', 'probo-connect-theme' ),
+		'F' => __( 'F — USP rail, dark, B2B', 'probo-connect-theme' ),
+		'G' => __( 'G — Split with review card', 'probo-connect-theme' ),
+		'H' => __( 'H — Promotion, accent', 'probo-connect-theme' ),
+		'I' => __( 'I — Search hero, light with tags', 'probo-connect-theme' ),
+		'J' => __( 'J — Showreel, image with play', 'probo-connect-theme' ),
 	);
 }
 

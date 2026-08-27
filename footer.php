@@ -8,9 +8,9 @@
 defined( 'ABSPATH' ) || exit;
 
 $probo_columns = array(
-	'footer-1' => __( 'Products', 'probo-connect' ),
-	'footer-2' => __( 'Service', 'probo-connect' ),
-	'footer-3' => __( 'Business', 'probo-connect' ),
+	'footer-1' => __( 'Products', 'probo-connect-theme' ),
+	'footer-2' => __( 'Service', 'probo-connect-theme' ),
+	'footer-3' => __( 'Business', 'probo-connect-theme' ),
 );
 ?>
 </div><!-- #pp-content -->
@@ -48,7 +48,7 @@ $probo_bare = function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_f
 					<?php dynamic_sidebar( $probo_id ); ?>
 				<?php else : ?>
 					<p class="text-sm text-footer-muted">
-						<?php esc_html_e( 'Add a menu or text widget here.', 'probo-connect' ); ?>
+						<?php esc_html_e( 'Add a menu or text widget here.', 'probo-connect-theme' ); ?>
 					</p>
 				<?php endif; ?>
 			</div>

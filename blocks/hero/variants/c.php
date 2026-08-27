@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <section <?php echo probo_block_wrapper( $attributes, 'relative flex min-h-[520px] items-center justify-center overflow-hidden' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>>
-	<?php probo_hero_media( $attributes['imageId'], 'absolute inset-0 h-full w-full', __( 'hero photo', 'probo-connect' ) ); ?>
+	<?php probo_hero_media( $attributes['imageId'], 'absolute inset-0 h-full w-full', __( 'hero photo', 'probo-connect-theme' ) ); ?>
 
 	<div class="pointer-events-none absolute inset-0" style="background:linear-gradient(180deg,rgba(11,11,12,.35),rgba(11,11,12,.72))" aria-hidden="true"></div>
 
