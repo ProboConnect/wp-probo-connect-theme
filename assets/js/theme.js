@@ -190,34 +190,30 @@
 	 * unit on screen is a minute.
 	 */
 	function initCountdown() {
-		var root = document.querySelector( '[data-pp-countdown]' );
+		document.querySelectorAll( '[data-pp-countdown]' ).forEach( function ( root ) {
+			var target = Date.parse( root.getAttribute( 'data-pp-countdown' ) );
 
-		if ( ! root ) {
-			return;
-		}
+			if ( isNaN( target ) ) {
+				return;
+			}
 
-		var target = Date.parse( root.getAttribute( 'data-pp-countdown' ) );
+			function tick() {
+				var left = Math.max( 0, target - Date.now() );
+				var minutes = Math.floor( left / 60000 );
+				var parts = [ Math.floor( minutes / 1440 ), Math.floor( ( minutes % 1440 ) / 60 ), minutes % 60 ];
 
-		if ( isNaN( target ) ) {
-			return;
-		}
+				parts.forEach( function ( value, index ) {
+					var cell = root.querySelector( '[data-pp-countdown-value="' + index + '"]' );
 
-		function tick() {
-			var left = Math.max( 0, target - Date.now() );
-			var minutes = Math.floor( left / 60000 );
-			var parts = [ Math.floor( minutes / 1440 ), Math.floor( ( minutes % 1440 ) / 60 ), minutes % 60 ];
+					if ( cell ) {
+						cell.textContent = value < 10 ? '0' + value : String( value );
+					}
+				} );
+			}
 
-			parts.forEach( function ( value, index ) {
-				var cell = root.querySelector( '[data-pp-countdown-value="' + index + '"]' );
-
-				if ( cell ) {
-					cell.textContent = value < 10 ? '0' + value : String( value );
-				}
-			} );
-		}
-
-		tick();
-		window.setInterval( tick, 60000 );
+			tick();
+			window.setInterval( tick, 60000 );
+		} );
 	}
 
 	/**

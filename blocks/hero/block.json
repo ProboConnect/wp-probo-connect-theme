@@ -10,7 +10,6 @@
 	"supports": {
 		"className": false,
 		"html": false,
-		"multiple": false,
 		"align": ["full"],
 		"anchor": true
 	},
