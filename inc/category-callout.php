@@ -709,7 +709,9 @@ function probo_callout_field_option_values( $config ) {
  * @return string
  */
 function probo_callout_capability() {
-	return current_user_can( 'manage_product_terms' ) ? 'manage_product_terms' : 'manage_categories';
+	$tax = get_taxonomy( 'product_cat' );
+
+	return $tax ? $tax->cap->edit_terms : 'manage_categories';
 }
 
 /**
@@ -980,7 +982,7 @@ add_action( 'product_cat_edit_form_fields', 'probo_callout_edit_fields', 20, 2 )
  * @param int $term_id Product category id being saved.
  */
 function probo_callout_save_term( $term_id ) {
-	if ( ! isset( $_POST['probo_callout'] ) || ! current_user_can( probo_callout_capability() ) ) {
+	if ( ! isset( $_POST['probo_callout'] ) || ! current_user_can( probo_callout_capability() ) || ! current_user_can( 'edit_term', $term_id ) ) {
 		return;
 	}
 

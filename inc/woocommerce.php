@@ -596,7 +596,7 @@ function probo_checkout_shipping_html() {
 							printf(
 								/* translators: %s: number of carriers. */
 								esc_html__( 'Choose a carrier yourself (%s)', 'probo-connect' ),
-								esc_html( number_format_i18n( count( $ship ) ) )
+								esc_html( number_format_i18n( count( $rest ) ) )
 							);
 							?>
 						</summary>
@@ -777,7 +777,7 @@ function probo_is_checkout_flow() {
 /**
  * The three steps, in order.
  *
- * @return array<int, array{title: string, intro: string}>
+ * @return array<int, array{title: string, short: string, intro: string, next: string}>
  */
 function probo_checkout_steps() {
 	return array(
@@ -844,31 +844,147 @@ function probo_checkout_step_1_complete( $checkout = null ) {
 }
 
 /**
+ * Resolves who owns delivery for the current cart, and what that owner
+ * considers "done" — the single source of truth behind
+ * probo_checkout_step_2_complete(), probo_checkout_delivery_summary_parts()
+ * and, over AJAX, probo_shipping_fragment(). Before this, those three worked
+ * out ownership independently and could disagree: a cart that falls back to
+ * WooCommerce's own rates (freight/oversized items — see the `$probo_shipping`
+ * fallback in form-checkout.php) would leave step 2 permanently incomplete
+ * while its summary line showed a confirmed WooCommerce answer, and the
+ * customer could never reach step 3.
+ *
+ * Three states, in `source`:
+ *  - `none`    — the cart does not need shipping. Nothing to decide;
+ *                `complete` is true and `parts` is empty.
+ *  - `connect` — Probo Connect is carrying this cart. `complete` mirrors what
+ *                probo_checkout_step_2_complete() always checked: a delivery
+ *                date *and* a method code stamped into the session. `parts`
+ *                mirrors what probo_checkout_delivery_summary_parts() always
+ *                built from those same session values.
+ *  - `woo`     — either Probo Connect is not active, or it is active but has
+ *                not (yet, or ever, for this cart) taken over — no delivery
+ *                date in the session. WooCommerce's own `chosen_shipping_methods`
+ *                decides `complete`, and its chosen rates build `parts`, same
+ *                as the fallback branches both functions already had.
+ *
+ * `$rendered_delivery` lets form-checkout.php — the one caller that actually
+ * fires `probo_checkout_shipping_selector` to render the plugin's picker —
+ * hand in what it got back, so `source` there matches the template's own
+ * long-standing rule ("connect" iff the renderer produced markup) instead of
+ * being decided twice. Every other caller (the AJAX fragment builder, the
+ * step summaries) has no rendered markup to test, so it falls back to the
+ * session check — which is exactly the stricter condition
+ * probo_checkout_delivery_summary_parts() already used to pick its Probo
+ * branch, now applied consistently everywhere instead of only here.
+ *
+ * @param string|null $rendered_delivery Optional. HTML already produced by
+ *                                        firing `probo_checkout_shipping_selector`,
+ *                                        when the caller has it. Non-empty
+ *                                        means Probo Connect took this cart;
+ *                                        omit to fall back to the session
+ *                                        check.
+ * @return object{source: string, complete: bool, parts: string[]}
+ */
+function probo_checkout_delivery_state( $rendered_delivery = null ) {
+	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return (object) array(
+			'source'   => 'none',
+			'complete' => false,
+			'parts'    => array(),
+		);
+	}
+
+	if ( ! WC()->cart->needs_shipping() ) {
+		return (object) array(
+			'source'   => 'none',
+			'complete' => true,
+			'parts'    => array(),
+		);
+	}
+
+	$has_connect = class_exists( 'Probo_Meta_Keys' ) && WC()->session;
+
+	$is_connect = null !== $rendered_delivery
+		? ( '' !== $rendered_delivery && $has_connect )
+		: ( $has_connect && WC()->session->get( Probo_Meta_Keys::SHIPPING_DELIVERY_DATE ) );
+
+	if ( $is_connect ) {
+		$date      = WC()->session->get( Probo_Meta_Keys::SHIPPING_DELIVERY_DATE );
+		$method    = WC()->session->get( Probo_Meta_Keys::SHIPPING_METHOD_CODE );
+		$name      = (string) WC()->session->get( Probo_Meta_Keys::SHIPPING_METHOD_NAME );
+		$cost      = WC()->session->get( Probo_Meta_Keys::SHIPPING_COST );
+		$surcharge = (float) WC()->session->get( Probo_Meta_Keys::SHIPPING_RUSH_SURCHARGE );
+		$timestamp = strtotime( (string) $date );
+
+		$parts = array();
+
+		if ( $timestamp ) {
+			$parts[] = wp_date( 'D j M', $timestamp );
+		}
+
+		$parts[] = $name;
+
+		if ( null !== $cost ) {
+			$parts[] = wp_strip_all_tags( wc_price( (float) $cost ) );
+		}
+
+		if ( $surcharge > 0 ) {
+			$parts[] = sprintf(
+				/* translators: %s: rush surcharge amount. */
+				__( 'incl. %s rush fee', 'probo-connect' ),
+				wp_strip_all_tags( wc_price( $surcharge ) )
+			);
+		}
+
+		return (object) array(
+			'source'   => 'connect',
+			'complete' => (bool) $date && (bool) $method,
+			'parts'    => $parts,
+		);
+	}
+
+	$packages = WC()->shipping() ? WC()->shipping()->get_packages() : array();
+	$chosen   = WC()->session ? (array) WC()->session->get( 'chosen_shipping_methods', array() ) : array();
+	$parts    = array();
+
+	foreach ( $packages as $index => $package ) {
+		$rate = $package['rates'][ $chosen[ $index ] ?? '' ] ?? null;
+
+		if ( ! $rate ) {
+			continue;
+		}
+
+		$meta = array_filter( array_map( 'wp_strip_all_tags', (array) $rate->get_meta_data() ) );
+
+		$parts[] = wp_strip_all_tags( $rate->get_label() );
+
+		if ( $meta ) {
+			$parts[] = implode( ' · ', $meta );
+		}
+
+		$parts[] = $rate->get_cost() > 0 ? wp_strip_all_tags( wc_price( $rate->get_cost() ) ) : __( 'free', 'probo-connect' );
+	}
+
+	return (object) array(
+		'source'   => 'woo',
+		'complete' => (bool) array_filter( $chosen ),
+		'parts'    => $parts,
+	);
+}
+
+/**
  * Whether a delivery choice has been made.
  *
  * With Probo Connect that is its own date-and-method pair in the session — the
  * plugin stays the authority on what was chosen. Without the plugin it is
- * simply WooCommerce's chosen rate.
+ * simply WooCommerce's chosen rate. A thin reading of
+ * probo_checkout_delivery_state() — see that docblock for the three states.
  *
  * @return bool
  */
 function probo_checkout_step_2_complete() {
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
-		return false;
-	}
-
-	if ( ! WC()->cart->needs_shipping() ) {
-		return true;
-	}
-
-	if ( class_exists( 'Probo_Meta_Keys' ) && WC()->session ) {
-		return (bool) WC()->session->get( Probo_Meta_Keys::SHIPPING_DELIVERY_DATE )
-			&& (bool) WC()->session->get( Probo_Meta_Keys::SHIPPING_METHOD_CODE );
-	}
-
-	$chosen = WC()->session ? (array) WC()->session->get( 'chosen_shipping_methods', array() ) : array();
-
-	return (bool) array_filter( $chosen );
+	return probo_checkout_delivery_state()->complete;
 }
 
 /**
@@ -943,67 +1059,13 @@ function probo_checkout_step_summary( $step ) {
  *
  * Read from Probo Connect's own session values where the plugin is active —
  * the date, the method name and the shipping cost are exactly what it stamps on
- * the order — and from WooCommerce's chosen rate otherwise.
+ * the order — and from WooCommerce's chosen rate otherwise. A thin reading of
+ * probo_checkout_delivery_state() — see that docblock for the three states.
  *
  * @return string[]
  */
 function probo_checkout_delivery_summary_parts() {
-	$parts = array();
-
-	if ( ! WC()->cart || ! WC()->cart->needs_shipping() ) {
-		return $parts;
-	}
-
-	if ( class_exists( 'Probo_Meta_Keys' ) && WC()->session && WC()->session->get( Probo_Meta_Keys::SHIPPING_DELIVERY_DATE ) ) {
-		$date      = (string) WC()->session->get( Probo_Meta_Keys::SHIPPING_DELIVERY_DATE );
-		$name      = (string) WC()->session->get( Probo_Meta_Keys::SHIPPING_METHOD_NAME );
-		$cost      = WC()->session->get( Probo_Meta_Keys::SHIPPING_COST );
-		$surcharge = (float) WC()->session->get( Probo_Meta_Keys::SHIPPING_RUSH_SURCHARGE );
-		$timestamp = strtotime( $date );
-
-		if ( $timestamp ) {
-			$parts[] = wp_date( 'D j M', $timestamp );
-		}
-
-		$parts[] = $name;
-
-		if ( null !== $cost ) {
-			$parts[] = wp_strip_all_tags( wc_price( (float) $cost ) );
-		}
-
-		if ( $surcharge > 0 ) {
-			$parts[] = sprintf(
-				/* translators: %s: rush surcharge amount. */
-				__( 'incl. %s rush fee', 'probo-connect' ),
-				wp_strip_all_tags( wc_price( $surcharge ) )
-			);
-		}
-
-		return $parts;
-	}
-
-	$packages = WC()->shipping() ? WC()->shipping()->get_packages() : array();
-	$chosen   = WC()->session ? (array) WC()->session->get( 'chosen_shipping_methods', array() ) : array();
-
-	foreach ( $packages as $index => $package ) {
-		$rate = $package['rates'][ $chosen[ $index ] ?? '' ] ?? null;
-
-		if ( ! $rate ) {
-			continue;
-		}
-
-		$meta = array_filter( array_map( 'wp_strip_all_tags', (array) $rate->get_meta_data() ) );
-
-		$parts[] = wp_strip_all_tags( $rate->get_label() );
-
-		if ( $meta ) {
-			$parts[] = implode( ' · ', $meta );
-		}
-
-		$parts[] = $rate->get_cost() > 0 ? wp_strip_all_tags( wc_price( $rate->get_cost() ) ) : __( 'free', 'probo-connect' );
-	}
-
-	return $parts;
+	return probo_checkout_delivery_state()->parts;
 }
 
 /**
@@ -1127,11 +1189,21 @@ function probo_checkout_place_order() {
  * The amount on the order button is not a fragment; see
  * probo_checkout_order_total_suffix() for why.
  *
+ * The `.pp-checkout-shipping` fragment is only worth building when it is the
+ * markup actually in the DOM — with Probo Connect carrying the cart,
+ * form-checkout.php never prints that element, so rebuilding it on every
+ * keystroke was pure waste (it walks every shipping package). Reusing
+ * probo_checkout_delivery_state() here — instead of a fourth ownership check —
+ * is exactly the fix P1-1 set up: `source` is `woo` only where that markup is
+ * actually rendered.
+ *
  * @param array $fragments Existing fragments, keyed by selector.
  * @return array
  */
 function probo_shipping_fragment( $fragments ) {
-	$fragments['.pp-checkout-shipping'] = probo_checkout_shipping_html();
+	if ( 'woo' === probo_checkout_delivery_state()->source ) {
+		$fragments['.pp-checkout-shipping'] = probo_checkout_shipping_html();
+	}
 
 	if ( ! probo_checkout_is_stepped() ) {
 		return $fragments;

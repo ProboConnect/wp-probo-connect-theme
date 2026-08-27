@@ -18,8 +18,8 @@ $title_color = $attributes['titleColor'] ? $attributes['titleColor'] : probo_get
 $tokens      = probo_hero_tokens(
 	$hero_style,
 	$title_color,
-	probo_get( 'accent_color' ),
-	probo_get( 'secondary_color' )
+	probo_get_color( 'accent_color' ),
+	probo_get_color( 'secondary_color' )
 );
 
 $chips = array_filter( array_map( 'trim', explode( ',', (string) $attributes['chips'] ) ) );

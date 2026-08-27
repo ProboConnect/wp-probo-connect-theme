@@ -126,10 +126,16 @@ ob_start();
 do_action( 'probo_checkout_shipping_selector' );
 $probo_delivery = trim( (string) ob_get_clean() );
 
+// Handing the rendered markup to probo_checkout_delivery_state() is what makes
+// this the same ownership decision inc/woocommerce.php's step-2 functions
+// make — see that docblock. This is the one place that has the markup itself
+// to test.
+$probo_delivery_state = probo_checkout_delivery_state( $probo_delivery );
+
 // WooCommerce's own shipping rates. With Probo Connect active these are driven
 // by the selector above and show a placeholder until a date is picked, so they
 // are only rendered as the fallback for a shop without the plugin.
-$probo_shipping = $probo_delivery ? '' : probo_checkout_shipping_html();
+$probo_shipping = 'woo' === $probo_delivery_state->source ? probo_checkout_shipping_html() : '';
 
 /**
  * The delivery choice, wherever the layout puts it.

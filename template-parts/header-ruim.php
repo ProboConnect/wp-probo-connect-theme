@@ -17,16 +17,26 @@ defined( 'ABSPATH' ) || exit;
 		<div class="pp-container flex h-10 items-center justify-between gap-6 text-xs leading-none font-medium tracking-[0.04em]">
 			<div class="flex items-center gap-7 overflow-hidden">
 				<?php
-				foreach ( array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3' ) as $index => $key ) :
+				$topbar_usps = array();
+
+				foreach ( array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3' ) as $key ) {
 					$usp = probo_get( $key );
 
 					if ( ! $usp ) {
 						continue;
 					}
+
+					$topbar_usps[] = array(
+						'key'  => $key,
+						'text' => $usp,
+					);
+				}
+
+				foreach ( $topbar_usps as $index => $topbar_usp ) :
 					?>
 					<span class="flex shrink-0 items-center gap-2 <?php echo 0 === $index ? '' : 'hidden text-bar-muted md:flex'; ?>">
 						<span class="text-bar-accent" aria-hidden="true">✓</span>
-						<span data-pp-partial="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $usp ); ?></span>
+						<span data-pp-partial="<?php echo esc_attr( $topbar_usp['key'] ); ?>"><?php echo esc_html( $topbar_usp['text'] ); ?></span>
 					</span>
 				<?php endforeach; ?>
 			</div>

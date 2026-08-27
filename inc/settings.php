@@ -56,6 +56,26 @@ function probo_get( $key ) {
 }
 
 /**
+ * Read one theme colour setting, falling back to its default.
+ *
+ * `probo_get()` only substitutes the default when the mod is *absent* —
+ * `get_theme_mod()`'s own rule. A stored-but-empty or invalid hex value
+ * passes straight through instead, which for a colour is never a value
+ * worth rendering. This wrapper closes that gap for colours specifically;
+ * it does not touch `probo_get()` because other settings (`checkout_phone`)
+ * rely on empty-means-"leave it out", not empty-means-default.
+ *
+ * @param string $key Setting key, without the theme_mod prefix.
+ * @return string A valid `#rrggbb` hex colour.
+ */
+function probo_get_color( $key ) {
+	$value    = probo_get( $key );
+	$defaults = probo_defaults();
+
+	return sanitize_hex_color( $value ) ? $value : ( $defaults[ $key ] ?? '' );
+}
+
+/**
  * Fonts offered in the Customizer, with the Google Fonts query for each.
  *
  * Title and body pick from this same catalogue; the prototype offered a

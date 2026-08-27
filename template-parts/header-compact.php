@@ -124,7 +124,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="border-b border-line bg-white">
 		<div class="pp-container flex h-[46px] items-center gap-7 text-xs font-medium leading-none tracking-[0.04em] text-ink-2">
 			<?php
-			$compact_usps = array_filter( array_map( 'probo_get', array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3' ) ) );
+			$compact_usps = array_values( array_filter( array_map( 'probo_get', array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3' ) ) ) );
 
 			foreach ( $compact_usps as $index => $usp ) :
 				?>

@@ -153,11 +153,14 @@ function probo_search_form( $size = 'header' ) {
 		$in_size  = 'text-[15px]';
 		$btn_pad  = 'px-6.5 text-sm';
 	}
+
+	static $instance = 0;
+	$uid = 'pp-search-' . $size . '-' . ++$instance;
 	?>
 	<form role="search" method="get" class="rounded-pp flex w-full overflow-hidden bg-white <?php echo esc_attr( $height . ' ' . $border ); ?>" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<label class="sr-only" for="pp-search-<?php echo esc_attr( $size ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
+		<label class="sr-only" for="<?php echo esc_attr( $uid ); ?>"><?php esc_html_e( 'Search', 'probo-connect' ); ?></label>
 		<input
-			id="pp-search-<?php echo esc_attr( $size ); ?>"
+			id="<?php echo esc_attr( $uid ); ?>"
 			class="min-w-0 flex-1 overflow-hidden border-0 bg-transparent text-ink text-ellipsis whitespace-nowrap outline-none <?php echo esc_attr( $in_pad . ' ' . $in_size ); ?>"
 			type="search"
 			name="s"
@@ -239,7 +242,9 @@ function probo_product_spec_line( $product = null ) {
 			continue;
 		}
 
-		$values = wc_get_product_terms( $product->get_id(), $attribute->get_name(), array( 'fields' => 'names' ) );
+		$values = $attribute->is_taxonomy()
+			? wc_get_product_terms( $product->get_id(), $attribute->get_name(), array( 'fields' => 'names' ) )
+			: $attribute->get_options();
 
 		if ( $values ) {
 			$parts[] = $values[0];
@@ -384,80 +389,146 @@ function probo_menu_products( $term ) {
 }
 
 /**
+ * Resolves a product category's link to a plain string.
+ *
+ * get_term_link() can return a WP_Error (an orphaned or malformed term); every
+ * caller wants a usable href, so the fallback lives here once instead of at
+ * each read site.
+ *
+ * @param WP_Term $term Product category.
+ * @return string Absolute URL.
+ */
+function probo_menu_fallback_term_url( $term ) {
+	$link = get_term_link( $term );
+
+	return is_wp_error( $link ) ? home_url( '/' ) : (string) $link;
+}
+
+/**
+ * Builds the fallback nav's data: product categories, two levels deep, with
+ * the products under each subcategory.
+ *
+ * One get_terms() call for the whole product_cat tree, grouped into a
+ * parent => children map, rather than a nested get_terms() per top-level
+ * term. This shop's category tree is small and finite, so fetching it whole
+ * is cheaper than the 1 + N queries it replaces — and the caller caches the
+ * result (see probo_primary_menu_fallback()), so the cost is paid once per
+ * day rather than once per request. `exclude` is applied on this single
+ * query, so an excluded category is left out at every level — it cannot
+ * reappear as someone else's child the way a parent-only exclude would allow.
+ *
+ * Every node has a stable shape: a top-level item always carries `term_id`,
+ * `label`, `url` (a string, never a WP_Error) and `children` (an array,
+ * possibly empty); a child group always carries `label`, `url` and `items`
+ * (an array, possibly empty) of `label`/`url` product links.
+ *
+ * @return array[] Menu items. Empty when product_cat does not exist or has
+ *                  no (non-excluded) top-level terms.
+ */
+function probo_build_menu_fallback_items() {
+	$items = array();
+
+	if ( ! taxonomy_exists( 'product_cat' ) ) {
+		return $items;
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => false,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+			'exclude'    => probo_excluded_category_ids(),
+		)
+	);
+
+	if ( is_wp_error( $terms ) ) {
+		return $items;
+	}
+
+	// Group by parent once, instead of re-querying children per top-level term.
+	$by_parent = array();
+
+	foreach ( $terms as $term ) {
+		$by_parent[ $term->parent ][] = $term;
+	}
+
+	$parents = array_slice( isset( $by_parent[0] ) ? $by_parent[0] : array(), 0, 6 );
+
+	foreach ( $parents as $term ) {
+		// Only subcategories are listed; products with no subcategory of
+		// their own do not get a column, so the panel only ever shows a
+		// category -> subcategory -> product hierarchy.
+		$children = array_slice( isset( $by_parent[ $term->term_id ] ) ? $by_parent[ $term->term_id ] : array(), 0, 12 );
+
+		// The panel is built as groups, not a flat list: a subcategory is a
+		// column heading with its own products underneath it. That is what
+		// makes a wide flyout scannable — you read the heading, then the
+		// products belonging to it.
+		$groups = array();
+
+		foreach ( $children as $child ) {
+			$groups[] = array(
+				'label' => $child->name,
+				'url'   => probo_menu_fallback_term_url( $child ),
+				'items' => array_map(
+					static function ( $product ) {
+						return array(
+							'label' => get_the_title( $product ),
+							'url'   => (string) get_permalink( $product ),
+						);
+					},
+					probo_menu_products( $child )
+				),
+			);
+		}
+
+		$items[] = array(
+			'term_id'  => $term->term_id,
+			'label'    => $term->name,
+			'url'      => probo_menu_fallback_term_url( $term ),
+			'children' => $groups,
+		);
+	}
+
+	return $items;
+}
+
+/**
  * Primary-menu fallback: product categories, so a fresh install still has a nav.
  */
 function probo_primary_menu_fallback() {
-	$items = array();
+	// The assembled data does not depend on the current request, so it is
+	// cached; which item is "current" does, so that stays out of the cache
+	// and is decided fresh below, on every render.
+	$key   = 'probo_menu_fallback_' . wp_cache_get_last_changed( 'terms' ) . '_' . wp_cache_get_last_changed( 'posts' );
+	$items = get_transient( $key );
 
-	if ( taxonomy_exists( 'product_cat' ) ) {
-		$terms = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => false,
-				'parent'     => 0,
-				'number'     => 6,
-				'exclude'    => probo_excluded_category_ids(),
-			)
-		);
+	if ( false === $items ) {
+		$items = probo_build_menu_fallback_items();
 
-		if ( ! is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				// Only subcategories are listed; products with no subcategory of
-				// their own do not get a column, so the panel only ever shows a
-				// category -> subcategory -> product hierarchy.
-				$children = get_terms(
-					array(
-						'taxonomy'   => 'product_cat',
-						'hide_empty' => false,
-						'parent'     => $term->term_id,
-						'number'     => 12,
-					)
-				);
-
-				// The panel is built as groups, not a flat list: a subcategory is a
-				// column heading with its own products underneath it. That is what
-				// makes a wide flyout scannable — you read the heading, then the
-				// products belonging to it.
-				$groups = array();
-
-				foreach ( is_wp_error( $children ) ? array() : $children as $child ) {
-					$child_link = get_term_link( $child );
-
-					$groups[] = array(
-						'label' => $child->name,
-						'url'   => is_wp_error( $child_link ) ? home_url( '/' ) : $child_link,
-						'items' => array_map(
-							static function ( $product ) {
-								return array(
-									'label' => get_the_title( $product ),
-									'url'   => (string) get_permalink( $product ),
-								);
-							},
-							probo_menu_products( $child )
-						),
-					);
-				}
-
-				$items[] = array(
-					'label'    => $term->name,
-					'url'      => get_term_link( $term ),
-					'children' => $groups,
-				);
-			}
-		}
+		set_transient( $key, $items, DAY_IN_SECONDS );
 	}
 
 	if ( ! $items ) {
-		$items[] = array( 'label' => __( 'All products', 'probo-connect' ), 'url' => home_url( '/' ) );
+		$items = array(
+			array(
+				'label'    => __( 'All products', 'probo-connect' ),
+				'url'      => home_url( '/' ),
+				'children' => array(),
+			),
+		);
 	}
+
+	$current_term = is_tax( 'product_cat' ) ? get_queried_object_id() : 0;
 
 	echo '<ul class="pp-nav-menu">';
 
-	foreach ( $items as $index => $item ) {
-		$children = isset( $item['children'] ) ? $item['children'] : array();
+	foreach ( $items as $item ) {
+		$children = $item['children'];
 		$classes  = array();
 
-		if ( 0 === $index ) {
+		if ( $current_term && isset( $item['term_id'] ) && $current_term === $item['term_id'] ) {
 			$classes[] = 'current-menu-item';
 		}
 
@@ -470,7 +541,7 @@ function probo_primary_menu_fallback() {
 		printf(
 			'<li class="%s"><a href="%s">%s</a>',
 			esc_attr( implode( ' ', $classes ) ),
-			esc_url( is_wp_error( $item['url'] ) ? home_url( '/' ) : $item['url'] ),
+			esc_url( $item['url'] ),
 			esc_html( $item['label'] )
 		);
 
@@ -478,10 +549,7 @@ function probo_primary_menu_fallback() {
 			echo '<ul class="sub-menu">';
 
 			foreach ( $children as $child ) {
-				printf(
-					'<li class="pp-flyout-group%s">',
-					empty( $child['self'] ) ? '' : ' pp-flyout-group--self'
-				);
+				echo '<li class="pp-flyout-group">';
 
 				printf(
 					'<a class="pp-flyout-heading" href="%s">%s</a>',
@@ -489,7 +557,7 @@ function probo_primary_menu_fallback() {
 					esc_html( $child['label'] )
 				);
 
-				if ( ! empty( $child['items'] ) ) {
+				if ( $child['items'] ) {
 					echo '<ul class="pp-flyout-links">';
 
 					foreach ( $child['items'] as $link ) {

@@ -11,7 +11,10 @@
 	 * Mobile navigation toggle.
 	 *
 	 * The nav is hidden below the lg breakpoint and revealed by the burger, so
-	 * the class list mirrors what Tailwind applies at that breakpoint.
+	 * the class list mirrors what Tailwind applies at that breakpoint. A single
+	 * setOpen() is the only writer of both the `hidden` class and
+	 * `aria-expanded`, so the two can never drift apart the way they used to
+	 * when initNav() and initNavReset() each poked one representation.
 	 */
 	function initNav() {
 		var toggle = document.querySelector( '[data-pp-nav-toggle]' );
@@ -21,36 +24,26 @@
 			return;
 		}
 
-		toggle.addEventListener( 'click', function () {
-			var open = nav.classList.toggle( 'hidden' ) === false;
-
+		function setOpen( open ) {
+			nav.classList.toggle( 'hidden', ! open );
 			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+		}
+
+		toggle.addEventListener( 'click', function () {
+			setOpen( nav.classList.contains( 'hidden' ) );
 		} );
-	}
 
-	/**
-	 * Keep the burger state honest when the viewport crosses the breakpoint.
-	 */
-	function initNavReset() {
-		var nav = document.querySelector( '[data-pp-nav]' );
-		var toggle = document.querySelector( '[data-pp-nav-toggle]' );
-
-		if ( ! nav || ! toggle || ! window.matchMedia ) {
-			return;
+		// Keep the burger state honest when the viewport crosses the
+		// breakpoint, in either direction: the panel is reset to closed so a
+		// disclosure left open on one side of the breakpoint can never
+		// reappear open on the other.
+		if ( window.matchMedia ) {
+			window.matchMedia( '(min-width: 1024px)' ).addEventListener( 'change', function () {
+				setOpen( false );
+			} );
 		}
 
-		var desktop = window.matchMedia( '(min-width: 1024px)' );
-
-		function sync() {
-			if ( desktop.matches ) {
-				nav.classList.remove( 'hidden' );
-			} else if ( toggle.getAttribute( 'aria-expanded' ) !== 'true' ) {
-				nav.classList.add( 'hidden' );
-			}
-		}
-
-		desktop.addEventListener( 'change', sync );
-		sync();
+		setOpen( false );
 	}
 
 	/**
@@ -63,7 +56,7 @@
 	 */
 	function initFlyouts() {
 		var parents = document.querySelectorAll( '.pp-nav-menu > li.menu-item-has-children' );
-		var coarse = window.matchMedia && window.matchMedia( '(hover: none)' ).matches;
+		var coarse = window.matchMedia ? window.matchMedia( '(hover: none)' ) : null;
 		var desktop = window.matchMedia ? window.matchMedia( '(min-width: 1024px)' ) : null;
 
 		if ( ! parents.length ) {
@@ -97,7 +90,7 @@
 			link.addEventListener( 'click', function ( event ) {
 				// Only hijack the first tap, and only where hovering is not a
 				// thing. Everywhere else the parent link stays a plain link.
-				if ( ! coarse || ! desktop || ! desktop.matches ) {
+				if ( ! coarse || ! coarse.matches || ! desktop || ! desktop.matches ) {
 					return;
 				}
 
@@ -166,7 +159,15 @@
 
 		document.addEventListener( 'keydown', function ( event ) {
 			if ( event.key === 'Escape' ) {
+				// Escape inside the panel should land the caret back on the
+				// trigger that opened it, not nowhere.
+				var returnFocus = panel.contains( document.activeElement );
+
 				setOpen( false );
+
+				if ( returnFocus ) {
+					toggle.focus();
+				}
 			}
 		} );
 
@@ -182,7 +183,6 @@
 
 	function start() {
 		initNav();
-		initNavReset();
 		initFlyouts();
 		initProductsMenu();
 	}

@@ -45,6 +45,7 @@ $position      = (string) $attributes['calloutPosition'];
 $callout_first = 'Begin' === $position;
 $interval      = 'Interval' === $position ? max( 1, (int) $attributes['calloutInterval'] ) : 0;
 $term_callouts = ! empty( $attributes['showTermCallouts'] );
+$callout_drawn = false;
 ?>
 <section <?php echo probo_block_wrapper( $attributes, 'pt-16 lg:pt-18' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by get_block_wrapper_attributes(). ?>>
 	<div class="pp-container">
@@ -63,6 +64,7 @@ $term_callouts = ! empty( $attributes['showTermCallouts'] );
 				<?php
 				if ( $callout && $callout_first ) {
 					probo_callout_render( $callout, 'grid' );
+					$callout_drawn = true;
 				}
 
 				foreach ( $terms as $index => $term ) :
@@ -104,13 +106,15 @@ $term_callouts = ! empty( $attributes['showTermCallouts'] );
 					// setting, not an interval.
 					if ( $callout && $interval && 0 === ( $index + 1 ) % $interval && $index + 1 < count( $terms ) ) {
 						probo_callout_render( $callout, 'grid' );
+						$callout_drawn = true;
 					}
 					?>
 				<?php endforeach; ?>
 
 				<?php
-				if ( $callout && ! $callout_first && ! $interval ) {
+				if ( $callout && ! $callout_drawn ) {
 					probo_callout_render( $callout, 'grid' );
+					$callout_drawn = true;
 				}
 				?>
 			</div>

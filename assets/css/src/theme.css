@@ -216,6 +216,90 @@
     background: repeating-linear-gradient(45deg, #1A1A1E 0 10px, #141418 10px 20px);
     @apply font-mono flex items-center justify-center text-center text-[11px] leading-relaxed tracking-[0.1em] text-ink-3 uppercase;
   }
+
+  /* Long-form reading style for the_content() on page.php and single.php.
+     The wrapper div sets its own size, leading, max-width and colour — this
+     styles descendants only, on the same type scale and tracking the theme's
+     headings already use elsewhere (page.php, single.php, comments.php). */
+  .prose-pp h2 {
+    @apply mt-10 mb-4 text-2xl font-extrabold tracking-[-0.02em] text-ink;
+  }
+
+  .prose-pp h3 {
+    @apply mt-8 mb-3 text-xl font-bold tracking-[-0.02em] text-ink;
+  }
+
+  .prose-pp h4 {
+    @apply mt-6 mb-2 text-lg font-bold tracking-[-0.015em] text-ink;
+  }
+
+  .prose-pp p {
+    @apply mb-5;
+  }
+
+  .prose-pp ul,
+  .prose-pp ol {
+    @apply mb-5 pl-6;
+  }
+
+  .prose-pp ul {
+    @apply list-disc;
+  }
+
+  .prose-pp ol {
+    @apply list-decimal;
+  }
+
+  .prose-pp li {
+    @apply mb-2;
+  }
+
+  .prose-pp li > ul,
+  .prose-pp li > ol {
+    @apply mt-2 mb-0;
+  }
+
+  .prose-pp a {
+    @apply text-accent-ink underline underline-offset-2;
+  }
+
+  .prose-pp a:hover {
+    @apply text-ink;
+  }
+
+  .prose-pp strong {
+    @apply font-bold text-ink;
+  }
+
+  .prose-pp blockquote {
+    @apply rounded-pp my-6 border-l-4 py-1 pl-5 text-ink-3 italic;
+    border-left-color: var(--color-accent);
+  }
+
+  .prose-pp code {
+    @apply rounded-pp bg-surface px-1.5 py-0.5 font-mono text-[0.9em] text-ink;
+  }
+
+  .prose-pp table {
+    @apply my-6 w-full border-collapse text-[15px];
+  }
+
+  .prose-pp th,
+  .prose-pp td {
+    @apply border border-line px-3.5 py-2.5 text-left;
+  }
+
+  .prose-pp th {
+    @apply bg-surface font-bold text-ink;
+  }
+
+  .prose-pp hr {
+    @apply my-8 border-line;
+  }
+
+  .prose-pp img {
+    @apply rounded-pp my-6 h-auto max-w-full;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -765,15 +849,6 @@
     @apply block text-[13px] font-bold text-ink no-underline normal-case hover:text-accent-ink;
   }
 
-  /* The column holding the products that sit directly in the category is headed
-     by that category's own name — the word you just clicked in the menu bar. So
-     the heading goes: below lg it is dropped from the stacked list, and from lg
-     it keeps its box but not its ink, so the column still lines up with the
-     headed columns beside it in the grid. */
-  .pp-flyout-group--self > .pp-flyout-heading {
-    @apply hidden;
-  }
-
   .pp-flyout-links {
     @apply m-0 flex list-none flex-col gap-1 p-0;
   }
@@ -817,11 +892,6 @@
 
     .pp-flyout-heading {
       @apply mb-1.5 text-[15px];
-    }
-
-    .pp-flyout-group--self > .pp-flyout-heading {
-      @apply block;
-      visibility: hidden;
     }
 
     .pp-nav-menu .pp-flyout-links a {

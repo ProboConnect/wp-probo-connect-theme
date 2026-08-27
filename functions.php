@@ -155,6 +155,12 @@ function probo_enqueue_assets() {
 			true
 		);
 	}
+
+	// Threaded comments need core's script to move the reply form instead of
+	// jumping the page to the bottom.
+	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'probo_enqueue_assets' );
 
@@ -191,14 +197,13 @@ function probo_asset_version( $relative_path ) {
 /**
  * Whether the current request can contain the Probo Connect configurator.
  *
+ * Without WooCommerce the configurator provably cannot exist, so this must
+ * return false rather than fall back to a broader guard.
+ *
  * @return bool
  */
 function probo_is_configurator_context() {
-	if ( ! function_exists( 'is_product' ) ) {
-		return is_singular();
-	}
-
-	return is_product() || is_cart() || is_checkout();
+	return function_exists( 'is_product' ) && ( is_product() || is_cart() || is_checkout() );
 }
 
 /**

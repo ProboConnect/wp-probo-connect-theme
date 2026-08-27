@@ -70,7 +70,23 @@ $probo_usps = array_filter(
 	<?php do_action( 'woocommerce_cart_totals_before_order_total' ); ?>
 
 	<div class="order-total flex items-baseline justify-between py-4.5 pb-5.5">
-		<span class="text-base font-bold"><?php esc_html_e( 'Total incl. VAT', 'probo-connect' ); ?></span>
+		<span class="text-base font-bold">
+			<?php
+			if ( wc_tax_enabled() ) {
+				printf(
+					/* translators: %s: tax suffix from WooCommerce, e.g. "(incl. VAT)" or "(excl. VAT)", already translated. */
+					esc_html__( 'Total %s', 'probo-connect' ),
+					esc_html(
+						WC()->cart->display_prices_including_tax()
+							? WC()->countries->inc_tax_or_vat()
+							: WC()->countries->ex_tax_or_vat()
+					)
+				);
+			} else {
+				esc_html_e( 'Total', 'probo-connect' );
+			}
+			?>
+		</span>
 		<span class="text-3xl font-extrabold tracking-[-0.025em]"><?php wc_cart_totals_order_total_html(); ?></span>
 	</div>
 
