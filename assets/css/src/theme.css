@@ -308,19 +308,98 @@
    markup from a template, so it is styled by selector here.
 --------------------------------------------------------------------------- */
 @layer components {
-  .woocommerce-notices-wrapper .woocommerce-message,
-  .woocommerce-notices-wrapper .woocommerce-info,
-  .woocommerce-notices-wrapper .woocommerce-error {
-    @apply rounded-pp mb-4 list-none border border-line bg-surface px-5 py-4 text-sm text-ink-2;
+  /* WooCommerce prints the notices wrapper on woocommerce_before_cart — above
+     the cart template's own <main class="pp-container">, so left alone it runs
+     edge to edge. Constrain it to the content column and give it the same top
+     padding the page has, so the notice sits above the <h1> instead of against
+     the header. */
+  .woocommerce-notices-wrapper:not(:empty) {
+    @apply mx-auto w-full max-w-[1280px] px-6 pt-8 lg:px-10;
   }
 
-  .woocommerce-notices-wrapper .woocommerce-error {
+  /* On the empty cart the wrapper already sits inside .pp-container, so it
+     must not add the column's width and gutters a second time. */
+  .pp-container .woocommerce-notices-wrapper:not(:empty) {
+    @apply max-w-none px-0 pt-0 pb-6 lg:px-0;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-message,
+  .woocommerce-notices-wrapper .woocommerce-info,
+  .woocommerce-notices-wrapper .woocommerce-error,
+  .woocommerce-NoticeGroup .woocommerce-message,
+  .woocommerce-NoticeGroup .woocommerce-info,
+  .woocommerce-NoticeGroup .woocommerce-error {
+    @apply rounded-pp mb-3 list-none border border-line bg-surface px-5 py-4 text-sm text-ink-2;
+  }
+
+  /* .woocommerce-error is a <ul> of messages, so only the single-message
+     notices become a row — the error list keeps its stacked lines. */
+  .woocommerce-notices-wrapper .woocommerce-message,
+  .woocommerce-notices-wrapper .woocommerce-info,
+  .woocommerce-NoticeGroup .woocommerce-message,
+  .woocommerce-NoticeGroup .woocommerce-info {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-message:last-child,
+  .woocommerce-notices-wrapper .woocommerce-info:last-child,
+  .woocommerce-notices-wrapper .woocommerce-error:last-child,
+  .woocommerce-NoticeGroup .woocommerce-message:last-child,
+  .woocommerce-NoticeGroup .woocommerce-info:last-child,
+  .woocommerce-NoticeGroup .woocommerce-error:last-child {
+    @apply mb-0;
+  }
+
+  /* The ::before is a glyph from the WooCommerce icon font, which not every
+     system renders — it drew as a stray coloured square. */
+  .woocommerce-notices-wrapper .woocommerce-message::before,
+  .woocommerce-notices-wrapper .woocommerce-info::before,
+  .woocommerce-notices-wrapper .woocommerce-error::before,
+  .woocommerce-NoticeGroup .woocommerce-message::before,
+  .woocommerce-NoticeGroup .woocommerce-info::before,
+  .woocommerce-NoticeGroup .woocommerce-error::before {
+    content: none;
+  }
+
+  /* Inline links in a notice — the "Ongedaan maken?" restore link, "Bekijk
+     winkelwagen" — read as links, not as the plugin's own button chrome. */
+  .woocommerce-notices-wrapper .woocommerce-message a,
+  .woocommerce-notices-wrapper .woocommerce-info a,
+  .woocommerce-notices-wrapper .woocommerce-error a,
+  .woocommerce-NoticeGroup .woocommerce-message a,
+  .woocommerce-NoticeGroup .woocommerce-info a,
+  .woocommerce-NoticeGroup .woocommerce-error a {
+    @apply font-bold text-ink underline;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-message a.button,
+  .woocommerce-notices-wrapper .woocommerce-info a.button,
+  .woocommerce-notices-wrapper .woocommerce-error a.button,
+  .woocommerce-NoticeGroup .woocommerce-message a.button,
+  .woocommerce-NoticeGroup .woocommerce-info a.button,
+  .woocommerce-NoticeGroup .woocommerce-error a.button {
+    @apply m-0 ml-auto min-h-0 border-0 bg-transparent p-0 text-sm;
+  }
+
+  .woocommerce-notices-wrapper .woocommerce-error,
+  .woocommerce-NoticeGroup .woocommerce-error {
     @apply border-l-4 border-l-red-600;
   }
 
-  .woocommerce-notices-wrapper .woocommerce-message {
+  .woocommerce-notices-wrapper .woocommerce-message,
+  .woocommerce-NoticeGroup .woocommerce-message {
     @apply border-l-4;
     border-left-color: var(--color-accent);
+  }
+
+  /* WooCommerce's checkout.js prepends a fresh .woocommerce-NoticeGroup as the
+     first child of form.checkout on a validation error. That form is the
+     checkout/summary grid (lg:grid-cols-[1fr_400px]), so left alone the notice
+     claims the first column as its own grid item and shoves .pp-steps into the
+     400px column meant for the order summary. It has to span both columns
+     instead of taking one. */
+  .checkout.woocommerce-checkout > .woocommerce-NoticeGroup {
+    @apply col-span-full;
   }
 
   /* The empty-cart message (cart/cart-empty.php). It carries .woocommerce-info,
