@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "scripts": {
     "dev": "tailwindcss -i ./assets/css/src/theme.css -o ./assets/css/theme.css --watch",
-    "build": "tailwindcss -i ./assets/css/src/theme.css -o ./assets/css/theme.css --minify",
+    "build": "tailwindcss -i ./assets/css/src/theme.css -o ./assets/css/theme.css --minify"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.11",
