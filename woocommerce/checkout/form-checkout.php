@@ -229,7 +229,9 @@ $probo_render_delivery = static function () use ( $probo_delivery, $probo_steppe
 	<?php else : ?>
 
 		<div>
-			<h1 class="mb-7 text-3xl font-extrabold tracking-[-0.035em] lg:text-[40px]"><?php esc_html_e( 'Checkout', 'probo-connect' ); ?></h1>
+			<h1 class="mb-5.5 text-3xl font-extrabold tracking-[-0.035em] lg:text-[40px]"><?php esc_html_e( 'Checkout', 'probo-connect' ); ?></h1>
+
+			<?php probo_checkout_step_bar(); ?>
 
 			<?php $probo_section = 0; ?>
 

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string[]
  */
 function probo_block_names() {
-	return array( 'hero', 'usp-bar', 'category-grid', 'bento-grid', 'testimonials', 'logo-reel', 'bestsellers', 'how-it-works' );
+	return array( 'hero', 'usp-bar', 'category-grid', 'bento-grid', 'testimonials', 'logo-reel', 'bestsellers', 'how-it-works', 'contact', 'faq' );
 }
 
 /**
@@ -246,4 +246,111 @@ function probo_get_category_terms( $slugs, $count ) {
 	$terms = get_terms( $args );
 
 	return is_wp_error( $terms ) ? array() : $terms;
+}
+
+/**
+ * The hero variants, keyed by the letter the design handoff names them by.
+ *
+ * The letters are the shared vocabulary between the design file and this
+ * theme — renaming them to something descriptive would only break that link.
+ * Each key has a matching blocks/hero/variants/{letter}.php.
+ *
+ * @return array<string, string> Letter => editor label.
+ */
+function probo_hero_variants() {
+	return array(
+		'A' => __( 'A — Search hero, dark', 'probo-connect' ),
+		'B' => __( 'B — Editorial, large image', 'probo-connect' ),
+		'C' => __( 'C — Full-bleed image, centred', 'probo-connect' ),
+		'D' => __( 'D — Showroom, category tiles', 'probo-connect' ),
+		'E' => __( 'E — Minimal, centred, light', 'probo-connect' ),
+		'F' => __( 'F — USP rail, dark, B2B', 'probo-connect' ),
+		'G' => __( 'G — Split with review card', 'probo-connect' ),
+		'H' => __( 'H — Promotion, accent', 'probo-connect' ),
+		'I' => __( 'I — Search hero, light with tags', 'probo-connect' ),
+		'J' => __( 'J — Showreel, image with play', 'probo-connect' ),
+	);
+}
+
+/**
+ * The hero's photo, or the striped placeholder that stands in for it.
+ *
+ * Every hero in the design shows photography that has not been shot yet, so a
+ * variant that has no image still has to draw something the size of the one it
+ * is waiting for — otherwise the whole band collapses in the editor.
+ *
+ * @param int    $image_id Attachment id, 0 for none.
+ * @param string $classes  Classes for the image or the placeholder alike.
+ * @param string $label    Placeholder caption.
+ * @param string $style    Inline style, already escaped.
+ */
+function probo_hero_media( $image_id, $classes, $label, $style = '' ) {
+	$attr = $style ? ' style="' . esc_attr( $style ) . '"' : '';
+
+	if ( $image_id ) {
+		echo wp_get_attachment_image(
+			(int) $image_id,
+			'full',
+			false,
+			array(
+				'class' => $classes . ' object-cover',
+				'style' => $style,
+				'alt'   => '',
+			)
+		);
+
+		return;
+	}
+
+	printf(
+		'<div class="pp-placeholder-dark %s"%s>%s</div>',
+		esc_attr( $classes ),
+		$attr, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above.
+		esc_html( $label )
+	);
+}
+
+/**
+ * One hero button.
+ *
+ * A hero button without a link is still drawn: the design's own prototype has
+ * no destinations either, and a half-finished front page should show the shape
+ * it is going to have. Without a URL it renders as a <span>, so it cannot be
+ * tabbed to or clicked.
+ *
+ * @param string $label   Button text; empty prints nothing.
+ * @param string $url     Destination.
+ * @param string $classes Classes.
+ */
+function probo_hero_button( $label, $url, $classes ) {
+	if ( ! $label ) {
+		return;
+	}
+
+	if ( $url ) {
+		printf(
+			'<a class="%s" href="%s">%s</a>',
+			esc_attr( $classes ),
+			esc_url( $url ),
+			esc_html( $label )
+		);
+
+		return;
+	}
+
+	printf( '<span class="%s">%s</span>', esc_attr( $classes ), esc_html( $label ) );
+}
+
+/**
+ * The hero's title, with its line breaks kept.
+ *
+ * @param string  $title   Raw title.
+ * @param string  $classes Classes.
+ */
+function probo_hero_title( $title, $classes ) {
+	if ( ! $title ) {
+		return;
+	}
+
+	printf( '<h1 class="%s">%s</h1>', esc_attr( $classes ), nl2br( esc_html( $title ) ) );
 }

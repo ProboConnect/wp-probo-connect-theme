@@ -26,8 +26,6 @@ function probo_defaults() {
 		'bar_style'          => 'Zwart',
 		'bar_color'          => '',
 		'footer_style'       => 'Zwart',
-		'hero_style'         => 'Zwart',
-		'hero_title_color'   => '',
 		'card_style'         => 'Rand',
 		'checkout_style'     => 'Eén pagina',
 		'logo_light'         => '',
@@ -37,7 +35,6 @@ function probo_defaults() {
 		'search_placeholder' => 'Zoek op product, formaat of materiaal…',
 		'checkout_phone'     => '0519 24 12 00',
 		'footer_description' => 'Grootformaat drukwerk uit eigen productie. Bestel vandaag, morgen op locatie.',
-		'footer_payments'    => 'iDEAL, Bancontact, Op rekening',
 		'footer_legal'       => '© 2026 Probo Connect · KvK 12345678 · BTW NL0012.34.567.B01',
 	);
 }

@@ -16,6 +16,7 @@ require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/category-callout.php';
 require_once get_template_directory() . '/inc/blocks.php';
+require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/woocommerce.php';
 
 /**
@@ -69,8 +70,8 @@ add_action( 'after_setup_theme', 'probo_setup' );
 function probo_widgets_init() {
 	foreach ( array(
 		// The brand column under the logo. Left empty it falls back to the
-		// Customizer's intro text and payment chips, so an existing site keeps
-		// what it had until someone drops a widget in here.
+		// Customizer's intro text, so an existing site keeps what it had until
+		// someone drops a widget in here.
 		'footer-intro' => __( 'Footer brand column (below the logo)', 'probo-connect' ),
 		'footer-1'     => __( 'Footer column 1 (Products)', 'probo-connect' ),
 		'footer-2'     => __( 'Footer column 2 (Service)', 'probo-connect' ),

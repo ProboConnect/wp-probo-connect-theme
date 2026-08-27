@@ -22,7 +22,7 @@ function probo_customize_register( $wp_customize ) {
 		'probo_theme',
 		array(
 			'title'       => __( 'Theme settings', 'probo-connect' ),
-			'description' => __( 'Colors, typography, and the structure of header, hero, and footer.', 'probo-connect' ),
+			'description' => __( 'Colors, typography, and the structure of header and footer.', 'probo-connect' ),
 			'priority'    => 20,
 		)
 	);
@@ -31,7 +31,6 @@ function probo_customize_register( $wp_customize ) {
 		'probo_brand'      => __( 'Brand', 'probo-connect' ),
 		'probo_typography' => __( 'Typography', 'probo-connect' ),
 		'probo_chrome'     => __( 'Header & footer', 'probo-connect' ),
-		'probo_hero'       => __( 'Hero', 'probo-connect' ),
 		'probo_components' => __( 'Components', 'probo-connect' ),
 	);
 
@@ -250,17 +249,6 @@ function probo_customize_register( $wp_customize ) {
 	);
 
 	$add(
-		'footer_payments',
-		array(
-			'type'        => 'text',
-			'label'       => __( 'Payment methods in the footer', 'probo-connect' ),
-			'description' => __( 'Comma-separated, for example: iDEAL, Bancontact, Invoice', 'probo-connect' ),
-			'section'     => 'probo_chrome',
-		),
-		'sanitize_text_field'
-	);
-
-	$add(
 		'footer_legal',
 		array(
 			'type'    => 'text',
@@ -269,34 +257,6 @@ function probo_customize_register( $wp_customize ) {
 		),
 		'sanitize_text_field',
 		'postMessage'
-	);
-
-	// --- Hero -------------------------------------------------------------
-	$add(
-		'hero_style',
-		array(
-			'type'        => 'select',
-			'label'       => __( 'Hero style', 'probo-connect' ),
-			'description' => __( 'Default for the hero block; can be overridden per block.', 'probo-connect' ),
-			'section'     => 'probo_hero',
-			'choices'     => array(
-				'Zwart'  => __( 'Follow secondary', 'probo-connect' ),
-				'Accent' => __( 'Accent', 'probo-connect' ),
-				'Licht'  => __( 'Light', 'probo-connect' ),
-			),
-		),
-		'probo_sanitize_hero_style'
-	);
-
-	$add(
-		'hero_title_color',
-		array(
-			'type'        => 'color',
-			'label'       => __( 'Title color', 'probo-connect' ),
-			'description' => __( 'A color too close to the background is ignored, so the title stays readable.', 'probo-connect' ),
-			'section'     => 'probo_hero',
-		),
-		'probo_sanitize_optional_hex'
 	);
 
 	// --- Componenten ------------------------------------------------------
@@ -424,16 +384,6 @@ function probo_sanitize_bar_style( $value ) {
  */
 function probo_sanitize_footer_style( $value ) {
 	return in_array( $value, array( 'Zwart', 'Licht', 'Wit', 'Accent' ), true ) ? $value : 'Zwart';
-}
-
-/**
- * Sanitize the hero style.
- *
- * @param mixed $value Raw value.
- * @return string
- */
-function probo_sanitize_hero_style( $value ) {
-	return in_array( $value, array( 'Zwart', 'Accent', 'Licht' ), true ) ? $value : 'Zwart';
 }
 
 /**

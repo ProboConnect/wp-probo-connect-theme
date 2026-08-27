@@ -5,10 +5,11 @@
 	"title": "USP-balk",
 	"category": "probo",
 	"icon": "yes-alt",
-	"description": "Rij met vertrouwenssignalen onder de hero.",
+	"description": "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten.",
 	"textdomain": "probo-connect",
 	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
 	"attributes": {
+		"style": { "type": "string", "default": "Balk" },
 		"items": {
 			"type": "string",
 			"default": "Gratis bestandscontrole | Wij checken je bestand vóór druk\nLevering vanaf 1 werkdag | Kies zelf je leverdatum\n9,1 / 10 klantcijfer | 12.480 beoordelingen\nAchteraf betalen | Voor zakelijke klanten"
