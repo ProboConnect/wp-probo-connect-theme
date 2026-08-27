@@ -1,7 +1,17 @@
-# Probo Connect — WordPress theme
+# Probo Connect — Free WordPress theme
 
-Classic WordPress theme for a print-on-demand shop running WooCommerce and the
-Probo Connect plugin. Built from the Claude Design handoff in `../project/`.
+This theme is free to use and acts as a kick starter for yout a print-on-demand 
+shop running WooCommerce and the Probo Connect plugin. 
+
+We the power of AI we where able to set up an easy to use starterkit that works wel with our Probo Connect plug-in 
+
+
+## Support and usage
+Please be aware, that Probo supplies the theme "as-is". You are free to customize the theme or change it.
+If you found a bug you can submit a pull request, that would greatly be appricaited. 
+
+You may not sell the theme as your own. Whiles using it you do not have to mention Probo.
+
 
 ## Install
 
@@ -10,6 +20,36 @@ it. WooCommerce is optional for the theme to load, but the shop templates only
 do anything with it active.
 
 The compiled CSS is committed, so the theme works without running npm.
+
+## Child themes
+
+A standard WordPress child theme works, nothing theme-specific to wire up —
+just `Template: probo-connect` in the child's `style.css` header.
+
+`probo_enqueue_assets()` already chains the parent's compiled CSS (`pp-theme`)
+and the active theme's own `style.css` (`pp-style`, via `get_stylesheet_uri()`)
+as dependencies, so a child theme does not need to enqueue the parent
+stylesheet itself — just write rules into its own `style.css`, or enqueue
+further stylesheets after `pp-theme`.
+
+What a child theme's file copies shadow, same as core template overrides:
+
+* Any template WordPress' template hierarchy covers — `single-product.php`,
+  `header.php`, `footer.php`, `woocommerce/*` overrides, and so on.
+* Callout templates, `templates/callouts/{placement}/{name}.php` — looked up
+  child-first by `probo_callout_template_roots()`.
+
+What file copies **cannot** shadow: block registration
+(`inc/blocks.php`) and the `assets/` JS/CSS always load from the parent
+theme's directory. Change those from the child's `functions.php` (which loads
+after the parent's) via filters instead — the ones most likely to matter:
+
+| Filter | Controls |
+| --- | --- |
+| `probo_layered_style_handles` | which plugin stylesheets get moved into the `plugins` cascade layer |
+| `probo_checkout_is_stepped` | one-page vs. stepped checkout |
+| `probo_checkout_pickup_instance_ids` | which shipping methods count as pickup |
+| `probo_callout_template_roots`, `_dir`, `_placements`, `probo_callout_max_slots` | callout template discovery |
 
 ## Customizing without code
 
@@ -291,22 +331,21 @@ is flagged: diff the plugin's current template against ours, port anything new
 
 Shop owners install and update this theme through the companion Probo
 Connect plugin (`Probo_Theme_Installer`), not the WordPress.org theme
-directory — the plugin reads GitHub releases directly. To cut one:
+directory — the plugin reads GitHub releases directly.
+
+Releases are automatic: every push to `main` runs
+`.github/workflows/auto-version.yml`, which bumps `Version` in
+`style.css` to the next whole number (`1.0.0` → `2.0.0` → `3.0.0` → ...),
+runs `npm run build`, commits that bump back to `main`, tags it, and
+publishes a GitHub release with a `probo-connect.zip` asset — root folder
+named `probo-connect`, the theme's stylesheet slug, which is what
+WordPress installs it as. The plugin's update check expects exactly that:
+one asset, that folder name, on `releases/latest`. The zip is also
+attached to the workflow run itself as a build artifact.
+
+For a manual/hotfix release off another ref, `.github/workflows/release.yml`
+still works the old way:
 
 1. Bump `Version` in `style.css`.
 2. Run `npm run build` and commit the resulting `assets/css/theme.css`.
 3. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`.
-
-`.github/workflows/release.yml` then builds the theme, checks the tag
-against `style.css`'s `Version` header, and publishes a GitHub release
-with a `probo-connect.zip` asset — root folder named `probo-connect`, the
-theme's stylesheet slug, which is what WordPress installs it as. The
-plugin's update check expects exactly that: one asset, that folder name,
-on `releases/latest`.
-
-## Not included
-
-* Product photography and the logo file — placeholders throughout, as in the
-  prototype.
-* `screenshot.png` — add a 1200×900 render of the homepage before shipping the
-  theme anywhere it will be browsed in the theme picker.

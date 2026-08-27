@@ -7,8 +7,12 @@ name: Release theme zip
 # folder is named "probo-connect" (the theme's stylesheet slug), and
 # expects the tag to match the "Version" header in style.css.
 #
-# Release flow: bump Version in style.css, run `npm run build` and commit
-# the compiled assets/css/theme.css, then:
+# Every push to main now cuts a release automatically via
+# auto-version.yml, which bumps style.css, tags, and publishes the
+# release itself (a GITHUB_TOKEN-pushed tag doesn't retrigger this
+# workflow, so the two don't double up). This workflow stays around for
+# manual releases off other refs: bump Version in style.css, run
+# `npm run build` and commit the compiled assets/css/theme.css, then:
 #   git tag vX.Y.Z && git push origin vX.Y.Z
 
 on:

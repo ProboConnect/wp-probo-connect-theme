@@ -1,0 +1,101 @@
+name: Auto version & release
+
+# Runs on every push to main: bumps the major version in style.css to the
+# next whole number (1.0.0 -> 2.0.0 -> 3.0.0 -> ...), builds the compiled
+# CSS, commits that bump back to main, tags it, and cuts a GitHub release
+# with the theme zip attached — same zip format release.yml produces, for
+# the Probo Connect plugin's theme installer/updater (Probo_Theme_Installer
+# in the plugin repo), which reads exactly one asset off releases/latest.
+#
+# The zip is also uploaded as a workflow run artifact for quick download
+# without going through the release page.
+#
+# Skips itself on the commit it creates (marked "[skip ci]") to avoid
+# looping — not that it strictly would: GITHUB_TOKEN-authored pushes don't
+# retrigger workflows, but the guard keeps this safe even if that ever
+# changes (e.g. a PAT is swapped in).
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  auto-release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump version
+        id: bump
+        run: |
+          current=$(grep -m1 '^Version:' style.css | sed 's/Version:[[:space:]]*//')
+          major="${current%%.*}"
+          if ! [[ "$major" =~ ^[0-9]+$ ]]; then
+            echo "::error::Could not parse a numeric major version out of '$current' in style.css."
+            exit 1
+          fi
+          new_version="$((major + 1)).0.0"
+          sed -i "s/^Version:.*/Version: ${new_version}/" style.css
+          echo "version=${new_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Build compiled CSS
+        run: npm run build
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add style.css assets/css/theme.css
+          git commit -m "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
+          git push origin HEAD:main
+
+      - name: Tag release
+        run: |
+          git tag "v${{ steps.bump.outputs.version }}"
+          git push origin "v${{ steps.bump.outputs.version }}"
+
+      - name: Assemble theme folder
+        run: |
+          mkdir -p build/probo-connect
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.idea' \
+            --exclude='.claude' \
+            --exclude='.DS_Store' \
+            --exclude='build' \
+            ./ build/probo-connect/
+
+      - name: Zip theme folder
+        working-directory: build
+        run: zip -r ../probo-connect.zip probo-connect
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: probo-connect-v${{ steps.bump.outputs.version }}
+          path: probo-connect.zip
+          retention-days: 90
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.bump.outputs.version }}
+          files: probo-connect.zip
+          generate_release_notes: true
