@@ -3,7 +3,7 @@
 This theme is free to use and acts as a kick starter for yout a print-on-demand 
 shop running WooCommerce and the Probo Connect plugin. 
 
-We the power of AI we where able to set up an easy to use starterkit that works wel with our Probo Connect plug-in 
+With the power of AI we where able to set up an easy to use starterkit that works wel with our Probo Connect plug-in 
 
 
 ## Support and usage
