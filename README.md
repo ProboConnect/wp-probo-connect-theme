@@ -61,7 +61,7 @@ Everything the design session iterated on is a Customizer control, under
 | Merk | Accent colour, secondary colour, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
 | Header & footer | Top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
-| Componenten | Card style: Rand / Schaduw / Vlak, the checkout style — see [Checkout](#checkout) — and whether ordering requires a login, see [Login before ordering](#login-before-ordering) |
+| Componenten | Card style: Rand / Schaduw / Vlak, the checkout style — see [Checkout](#checkout) — and how much of the shop needs a login, see [Login required](#login-required) |
 
 The hero's own band — dark, accent or light, and its title colour — is **not**
 here: a front page has one hero, and what it looks like is a decision about that
@@ -238,36 +238,67 @@ Four filters if you need something else:
 and `probo_product_access_profile_limit` how many products the profile screen
 lists before it sends you to the product's own tab instead.
 
-## Login before ordering
+## Login required
 
 Off by default — the shop sells to whoever walks in. Under **Customizer →
-Thema-instellingen → Componenten → Login required for ordering** the wall goes
-up at one of two heights (`inc/login-required.php`):
+Thema-instellingen → Componenten → Login required** the wall goes up at one of
+three heights (`inc/login-required.php`):
 
 | Setting | What a logged-out visitor can do |
 | --- | --- |
 | `Uit` | Everything. Browse, fill a cart, order. |
 | `Kassa` | Browse and fill a cart, but log in to order it. The cart survives the login. |
 | `Winkelwagen` | Browse, and nothing more — the cart itself needs an account. |
+| `Hele site` | Nothing. Every page sends them to the login form: a closed order portal. |
 
-Browsing is never walled by this setting; hiding products from people is a
-different decision, and it lives in [Products per customer](#products-per-customer).
+The first three leave browsing open on purpose. Which customer may see which
+product is a per-product decision and lives in
+[Products per customer](#products-per-customer); this setting is about how much
+of the shop needs an account at all.
+
+### The closed portal
+
+`Hele site` is the setting for a portal that is not a public shop. A logged-out
+visitor is turned away on `template_redirect` at priority 1 — ahead of the
+sitemap and the feeds, which render on that same hook, so a closed portal does
+not hand out its catalogue on the way out. `wp-json` closes with it, through
+`rest_authentication_errors`; leaving it open would serve posts, products and
+users to anyone who asks, which is the whole point being missed. And the site
+goes `noindex`, because a portal nobody may read is not one to list.
+
+Two things stay open, and only two: the **My account page**, which carries the
+login form, the registration form and the password reset — closing it would
+close the portal to its own members — and **robots.txt**, which holds no content
+of its own and is the one file that tells a crawler to stay out. A portal that
+needs a public page of its own (a contact page, or one explaining how to get an
+account) opens it through `probo_login_required_public_request`.
+
+### Both walls
 
 The visitor is told where the button is, not where it is not: the cart carries a
 prompt with a **Log in** button while it is being filled, and under the cart wall
-so does the product page, next to the add-to-cart it replaces. Following it
-comes back to the page they were on — the return trip rides in a `probo_redirect`
-argument that WooCommerce's own login form carries through the POST, and it is
-run past `wp_validate_redirect()`, so it can only ever point back into this site.
+so does the product page, next to the add-to-cart it replaces. Above the login
+form itself, one line says why they are looking at it.
 
-What actually holds is server-side. The redirect off the checkout is a courtesy;
-the refusal sits on `woocommerce_checkout_process` and on the add-to-cart
-validation, where a hand-made POST lands too. The order-received page and the
-pay-for-order link stay open either way: both belong to an order that already
-exists, and a customer paying an invoice link is not placing a new one.
+Following any of it comes back to the page they were on. The return trip rides
+in a `probo_redirect` argument that WooCommerce's own login form carries through
+the POST, and both the outbound URL and the way back run past
+`wp_validate_redirect()`, so a spoofed `Host` header cannot turn the login link
+into an off-site one.
 
-`probo_login_required_scope` overrides the setting from code (`off`, `checkout`
-or `cart`), `probo_login_required_message` the wording.
+No message is parked in a WooCommerce session to say any of this. A closed
+portal turns away every crawler that ever finds it, and a session notice would
+mean a session row and a cookie each, for a message nobody reads.
+
+What actually holds is server-side. The redirects are a courtesy; the refusals
+sit on `woocommerce_checkout_process`, on the add-to-cart validation and on
+`rest_authentication_errors`, where a hand-made request lands too. The
+order-received page and the pay-for-order link stay open under the order walls:
+both belong to an order that already exists, and a customer paying an invoice
+link is not placing a new one.
+
+`probo_login_required_scope` overrides the setting from code (`off`, `checkout`,
+`cart` or `site`), `probo_login_required_message` the wording.
 
 ## Checkout
 

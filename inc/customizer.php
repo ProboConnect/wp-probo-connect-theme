@@ -294,13 +294,14 @@ function probo_customize_register( $wp_customize ) {
 		'require_login',
 		array(
 			'type'        => 'select',
-			'label'       => __( 'Login required for ordering', 'probo-connect-theme' ),
-			'description' => __( 'Off, the shop sells to anyone who walks in. At the checkout a visitor can still fill a cart but has to log in to order it — the cart survives the login. From the cart nothing goes in without an account at all, which is what a trade shop with account-only pricing wants.', 'probo-connect-theme' ),
+			'label'       => __( 'Login required', 'probo-connect-theme' ),
+			'description' => __( 'How much of the shop needs an account. Off, it sells to anyone who walks in. At the checkout a visitor can still fill a cart but has to log in to order it — the cart survives the login. From the cart nothing goes in without an account. The whole site closes everything: every page sends a logged-out visitor to the login form, which is what a closed order portal is.', 'probo-connect-theme' ),
 			'section'     => 'probo_components',
 			'choices'     => array(
 				'Uit'         => __( 'Off — guests can order', 'probo-connect-theme' ),
 				'Kassa'       => __( 'At the checkout', 'probo-connect-theme' ),
 				'Winkelwagen' => __( 'From the cart', 'probo-connect-theme' ),
+				'Hele site'   => __( 'The whole site — a closed portal', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_require_login'
@@ -432,5 +433,5 @@ function probo_sanitize_checkout_style( $value ) {
  * @return string
  */
 function probo_sanitize_require_login( $value ) {
-	return in_array( $value, array( 'Uit', 'Kassa', 'Winkelwagen' ), true ) ? $value : 'Uit';
+	return in_array( $value, array( 'Uit', 'Kassa', 'Winkelwagen', 'Hele site' ), true ) ? $value : 'Uit';
 }
