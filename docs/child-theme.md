@@ -285,6 +285,17 @@ variation resolves to its parent. Writing goes through
 `probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
 which keep the cached list of restricted products honest.
 
+### Login before ordering
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_login_required_scope` | filter | The wall's height regardless of the Customizer: `off`, `checkout` or `cart`. |
+| `probo_login_required_message` | filter | What a walled visitor is told. `string $message, string $stage` |
+
+`probo_login_required_for( 'cart' | 'checkout' )` answers whether this visitor
+still has to log in, and `probo_login_required_url( $return_to )` builds the
+login link that comes back to where they were.
+
 ### Checkout
 
 | Hook | Type | Use |

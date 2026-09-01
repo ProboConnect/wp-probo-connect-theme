@@ -61,7 +61,7 @@ Everything the design session iterated on is a Customizer control, under
 | Merk | Accent colour, secondary colour, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
 | Header & footer | Top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
-| Componenten | Card style: Rand / Schaduw / Vlak, and the checkout style — see [Checkout](#checkout) |
+| Componenten | Card style: Rand / Schaduw / Vlak, the checkout style — see [Checkout](#checkout) — and whether ordering requires a login, see [Login before ordering](#login-before-ordering) |
 
 The hero's own band — dark, accent or light, and its title colour — is **not**
 here: a front page has one hero, and what it looks like is a decision about that
@@ -237,6 +237,37 @@ Four filters if you need something else:
 `probo_product_access_role_choices` narrows the roles the product screen offers,
 and `probo_product_access_profile_limit` how many products the profile screen
 lists before it sends you to the product's own tab instead.
+
+## Login before ordering
+
+Off by default — the shop sells to whoever walks in. Under **Customizer →
+Thema-instellingen → Componenten → Login required for ordering** the wall goes
+up at one of two heights (`inc/login-required.php`):
+
+| Setting | What a logged-out visitor can do |
+| --- | --- |
+| `Uit` | Everything. Browse, fill a cart, order. |
+| `Kassa` | Browse and fill a cart, but log in to order it. The cart survives the login. |
+| `Winkelwagen` | Browse, and nothing more — the cart itself needs an account. |
+
+Browsing is never walled by this setting; hiding products from people is a
+different decision, and it lives in [Products per customer](#products-per-customer).
+
+The visitor is told where the button is, not where it is not: the cart carries a
+prompt with a **Log in** button while it is being filled, and under the cart wall
+so does the product page, next to the add-to-cart it replaces. Following it
+comes back to the page they were on — the return trip rides in a `probo_redirect`
+argument that WooCommerce's own login form carries through the POST, and it is
+run past `wp_validate_redirect()`, so it can only ever point back into this site.
+
+What actually holds is server-side. The redirect off the checkout is a courtesy;
+the refusal sits on `woocommerce_checkout_process` and on the add-to-cart
+validation, where a hand-made POST lands too. The order-received page and the
+pay-for-order link stay open either way: both belong to an order that already
+exists, and a customer paying an invoice link is not placing a new one.
+
+`probo_login_required_scope` overrides the setting from code (`off`, `checkout`
+or `cart`), `probo_login_required_message` the wording.
 
 ## Checkout
 

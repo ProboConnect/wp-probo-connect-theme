@@ -290,6 +290,22 @@ function probo_customize_register( $wp_customize ) {
 		'probo_sanitize_checkout_style'
 	);
 
+	$add(
+		'require_login',
+		array(
+			'type'        => 'select',
+			'label'       => __( 'Login required for ordering', 'probo-connect-theme' ),
+			'description' => __( 'Off, the shop sells to anyone who walks in. At the checkout a visitor can still fill a cart but has to log in to order it — the cart survives the login. From the cart nothing goes in without an account at all, which is what a trade shop with account-only pricing wants.', 'probo-connect-theme' ),
+			'section'     => 'probo_components',
+			'choices'     => array(
+				'Uit'         => __( 'Off — guests can order', 'probo-connect-theme' ),
+				'Kassa'       => __( 'At the checkout', 'probo-connect-theme' ),
+				'Winkelwagen' => __( 'From the cart', 'probo-connect-theme' ),
+			),
+		),
+		'probo_sanitize_require_login'
+	);
+
 	// Live-edit the text bits that carry no derived styling.
 	foreach ( array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3', 'checkout_phone', 'footer_description', 'footer_legal' ) as $key ) {
 		$setting = $wp_customize->get_setting( 'probo_' . $key );
@@ -404,4 +420,17 @@ function probo_sanitize_card_style( $value ) {
  */
 function probo_sanitize_checkout_style( $value ) {
 	return in_array( $value, array( 'Eén pagina', 'Stappen' ), true ) ? $value : 'Eén pagina';
+}
+
+/**
+ * Sanitize the login-before-ordering setting.
+ *
+ * Anything unrecognised falls back to 'Uit': a setting that cannot be read is
+ * not a reason to lock customers out of a shop that was selling fine.
+ *
+ * @param string $value Raw value.
+ * @return string
+ */
+function probo_sanitize_require_login( $value ) {
+	return in_array( $value, array( 'Uit', 'Kassa', 'Winkelwagen' ), true ) ? $value : 'Uit';
 }

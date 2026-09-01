@@ -19,6 +19,7 @@ require_once get_template_directory() . '/inc/blocks.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/woocommerce.php';
 require_once get_template_directory() . '/inc/product-access.php';
+require_once get_template_directory() . '/inc/login-required.php';
 
 /**
  * Theme supports, menus and image sizes.
