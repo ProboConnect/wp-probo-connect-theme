@@ -292,11 +292,14 @@ which keep the cached list of restricted products honest.
 | `probo_login_required_scope` | filter | The wall's height regardless of the Customizer: `off`, `checkout`, `cart` or `site`. |
 | `probo_login_required_message` | filter | What a walled visitor is told. `string $message, string $stage` (`cart`, `checkout` or `site`) |
 | `probo_login_required_public_request` | filter | Which requests a closed portal still answers when logged out. The account page and robots.txt already do; this is where a public contact or privacy page is added. |
+| `probo_login_required_is_staff` | filter | Who keeps wp-admin and the toolbar in a closed portal. `bool $staff, int $user_id` — `edit_posts` or `manage_woocommerce` by default. |
 
 `probo_login_required_for( 'cart' | 'checkout' )` answers whether this visitor
 still has to log in, `probo_login_required_site_closed()` whether the whole site
-is shut to them, and `probo_login_required_url( $return_to )` builds the login
-link that comes back to where they were.
+is shut to them, `probo_login_required_portal()` whether the shop is running as
+a closed portal at all (whoever is asking), and
+`probo_login_required_url( $return_to )` builds the login link that comes back
+to where they were.
 
 ### Checkout
 

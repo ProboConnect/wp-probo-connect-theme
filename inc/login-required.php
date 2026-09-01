@@ -14,7 +14,10 @@
  *   'Hele site'    a closed order portal: every page, feed, sitemap and REST
  *                  call sends a logged-out visitor to the login form. Only the
  *                  account page itself stays open, because that is where the
- *                  login form and the password reset live.
+ *                  login form and the password reset live. Customers who are
+ *                  logged in stay on the front end — wp-admin and its toolbar
+ *                  are for staff — where they see their own products, their own
+ *                  orders, and a checkout to finish. That is the whole portal.
  *
  * The first two leave browsing open on purpose — who may see which product is
  * inc/product-access.php's job, and that is a different decision from who may
@@ -449,3 +452,98 @@ function probo_login_required_product_prompt() {
 }
 add_action( 'probo_configurator_band', 'probo_login_required_product_prompt', 5 );
 add_action( 'woocommerce_before_add_to_cart_form', 'probo_login_required_product_prompt' );
+
+/* ---------------------------------------------------------------------------
+   Front end only.
+
+   A closed portal has one door and one set of rooms: customers log in on the
+   front end, see the products they were given and the orders they placed, and
+   finish a checkout. wp-admin is not part of that — it is where the shop works,
+   not where the customer does — so under 'Hele site' it is closed to everyone
+   who is not staff, and its toolbar goes with it.
+--------------------------------------------------------------------------- */
+
+/**
+ * Whether the shop is running as a closed portal at all.
+ *
+ * Unlike probo_login_required_site_closed() this says nothing about who is
+ * asking: the admin rules below apply to customers who *are* logged in.
+ *
+ * @return bool
+ */
+function probo_login_required_portal() {
+	return 'site' === probo_login_required_scope();
+}
+
+/**
+ * Whether a user is shop staff rather than a customer.
+ *
+ * Two capabilities rather than one: `edit_posts` covers editors and shop
+ * managers, `manage_woocommerce` covers a role built for the shop floor that
+ * was never given the post capabilities. A customer has neither.
+ *
+ * @param int|null $user_id User to test, defaults to the current one.
+ * @return bool
+ */
+function probo_login_required_is_staff( $user_id = null ) {
+	$user_id = null === $user_id ? get_current_user_id() : absint( $user_id );
+	$staff   = $user_id && ( user_can( $user_id, 'edit_posts' ) || user_can( $user_id, 'manage_woocommerce' ) );
+
+	/**
+	 * Filters who counts as staff, and so keeps wp-admin in a closed portal.
+	 *
+	 * @param bool $staff   Whether this user is staff.
+	 * @param int  $user_id User id, 0 for a logged-out visitor.
+	 */
+	return (bool) apply_filters( 'probo_login_required_is_staff', $staff, $user_id );
+}
+
+/**
+ * Send customers back to the front end when they land in wp-admin.
+ *
+ * Three doors stay open, because closing them would break the front end this
+ * portal is made of: admin-ajax.php, which is how the shop's own front-end
+ * requests come back; admin-post.php, which is where the theme's contact form
+ * posts (inc/contact.php); and cron. A logged-out visitor is left to
+ * WordPress, which sends them to the login form by itself.
+ */
+function probo_login_required_block_admin() {
+	if ( ! probo_login_required_portal() || wp_doing_ajax() || wp_doing_cron() ) {
+		return;
+	}
+
+	if ( ! is_user_logged_in() || probo_login_required_is_staff() ) {
+		return;
+	}
+
+	if ( isset( $GLOBALS['pagenow'] ) && in_array( $GLOBALS['pagenow'], array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+		return;
+	}
+
+	// The account page, not probo_login_required_url(): this customer is already
+	// logged in, and its wp-login fallback would send them to a login form that
+	// logs them in and lands them right back here.
+	$account = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount', '' ) : '';
+
+	wp_safe_redirect( $account ? $account : home_url( '/' ) );
+	exit;
+}
+add_action( 'admin_init', 'probo_login_required_block_admin' );
+
+/**
+ * No toolbar for a customer either.
+ *
+ * It is a strip of links into an admin they cannot open, on every page of a
+ * portal that is meant to be a shop and nothing else.
+ *
+ * @param bool $show Whether to show the toolbar.
+ * @return bool
+ */
+function probo_login_required_admin_bar( $show ) {
+	if ( probo_login_required_portal() && ! probo_login_required_is_staff() ) {
+		return false;
+	}
+
+	return $show;
+}
+add_filter( 'show_admin_bar', 'probo_login_required_admin_bar' );

@@ -251,6 +251,10 @@ three heights (`inc/login-required.php`):
 | `Winkelwagen` | Browse, and nothing more — the cart itself needs an account. |
 | `Hele site` | Nothing. Every page sends them to the login form: a closed order portal. |
 
+Under `Hele site` a customer's whole world is the front end: they log in there,
+see the products they were given and the orders they placed, finish a checkout,
+and that is the portal. wp-admin is not part of it — see below.
+
 The first three leave browsing open on purpose. Which customer may see which
 product is a per-product decision and lives in
 [Products per customer](#products-per-customer); this setting is about how much
@@ -272,6 +276,18 @@ close the portal to its own members — and **robots.txt**, which holds no conte
 of its own and is the one file that tells a crawler to stay out. A portal that
 needs a public page of its own (a contact page, or one explaining how to get an
 account) opens it through `probo_login_required_public_request`.
+
+**wp-admin closes too.** A logged-in customer who lands there is sent back to
+the account page, and the toolbar disappears from the front end with it — it is
+a strip of links into an admin they cannot open. Staff keep both: anyone with
+`edit_posts` or `manage_woocommerce`, so an editor, a shop manager and a
+shop-floor role that was never given the post capabilities all still work.
+`probo_login_required_is_staff` decides, and is filterable.
+
+Three doors in wp-admin stay open regardless, because closing them would break
+the front end the portal is made of: `admin-ajax.php`, which is how the shop's
+own front-end requests come back; `admin-post.php`, where the theme's contact
+form posts (`inc/contact.php`); and cron.
 
 ### Both walls
 
@@ -299,6 +315,11 @@ link is not placing a new one.
 
 `probo_login_required_scope` overrides the setting from code (`off`, `checkout`,
 `cart` or `site`), `probo_login_required_message` the wording.
+
+One thing this setting deliberately does not touch: who may create an account.
+Whether a closed portal lets people register themselves or only admits accounts
+the shop makes for them is WooCommerce's own setting, under **WooCommerce →
+Settings → Accounts & Privacy**.
 
 ## Checkout
 
