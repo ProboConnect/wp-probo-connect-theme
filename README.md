@@ -60,7 +60,7 @@ Everything the design session iterated on is a Customizer control, under
 | --- | --- |
 | Merk | Accent colour, secondary colour, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
-| Header & footer | Top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
+| Header & footer | Header style (see [Header](#header)), top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
 | Componenten | Card style: Rand / Schaduw / Vlak, and the checkout style — see [Checkout](#checkout) |
 
 The hero's own band — dark, accent or light, and its title colour — is **not**
@@ -76,6 +76,42 @@ Two behaviours are deliberate and worth knowing about:
 * **A hero title colour too close to the hero background is ignored.** The title
   falls back to the contrasting colour rather than disappearing. (Set on the
   hero block, not in the Customizer.)
+
+### Header
+
+Three headers, chosen under **Header & footer → Header-stijl**. The setting is
+opt-in in the strict sense: `header.php` matches the stored value against its
+own allowlist and falls back to **Ruim** for anything else, so neither of the
+other two can load without an explicit choice.
+
+| Value | What it is |
+| --- | --- |
+| **Ruim** (default) | Three rows: USP top bar, logo + search + account, primary nav with flyouts. ~180px. |
+| **Compact** | One dark bar — logo, products megamenu, search, account, cart — over a thin light USP strip. ~114px, so a category page keeps its hero and first product row above the fold. |
+| **Portal** | One light bar: logo, flat account navigation, the signed-in company and a log-out link. 68px. |
+
+**Portal has no search and no cart, by design.** It is the chrome for a B2B
+account area, where the questions are "where am I in my account" and "who am I
+signed in as" — not "what do I buy". It is a whole-site header like the other
+two, so a shop that still needs the cart in the header on shop pages wants
+**Ruim** or **Compact**; Portal suits an installation whose front end *is* the
+portal. Two more things follow from that:
+
+* **It shows the billing company, not the person** — `probo_portal_account_name()`
+  reads `billing_company` and only falls back to the display name. The avatar
+  beside it is that name's initials, and is decorative: the name is spelled out
+  next to it (and stays spelled out from 640px up). A signed-out visitor gets
+  the plain log-in link instead of the chip and the log-out link.
+* **Its nav is `Hoofdnavigatie`, flattened to one level.** The design draws four
+  flat links with the current one in accent, so the portal header renders the
+  same menu the other variants use at `depth => 1` and drops the flyouts. Assign
+  the portal's own items (orders, invoices, addresses) to `Hoofdnavigatie`.
+
+The portal bar is a 1120px measure, not the 1280px `.pp-container` gives the
+rest of the theme — the design's own narrower column, on the grounds that four
+nav items and an account chip do not need the full width. Below 1024px the nav
+collapses behind the burger and opens as a panel under the bar, through the
+same `data-pp-nav` hook Variant A uses.
 
 ### Logo
 
