@@ -267,6 +267,24 @@ plugin.
 | `probo_callout_max_slots` | filter | Callout slots per category (default 3). |
 | `probo_callout_legacy_template_map` | filter | Old `band` / `tile` values → template paths. |
 
+### Products per customer
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract or an ERP lookup goes. `bool $allowed, int $product_id, int $user_id` |
+| `probo_product_access_manage_cap` | filter | The capability that bypasses every restriction (default `edit_products`). |
+| `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
+| `probo_product_access_denied_message` | filter | The wording that refusal gets. |
+| `probo_product_access_role_choices` | filter | The roles the product's Customer access tab offers. |
+| `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
+
+Read the rules rather than the meta: `probo_customer_can_access_product()`,
+`probo_product_is_restricted()`, `probo_product_access_users()` and
+`probo_hidden_product_ids()` all take a product id, post or `WC_Product`, and a
+variation resolves to its parent. Writing goes through
+`probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
+which keep the cached list of restricted products honest.
+
 ### Checkout
 
 | Hook | Type | Use |

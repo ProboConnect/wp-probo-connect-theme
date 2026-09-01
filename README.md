@@ -197,6 +197,47 @@ working.
 The cart line has no upload button of the theme's own: Probo Connect prints the
 real one on `woocommerce_after_cart_item_name`.
 
+## Products per customer
+
+Some products are not for the whole shop. A product's edit screen has a
+**Customer access** tab (`inc/product-access.php`): switch **Limit to selected
+customers** on, name the customers, tick the roles that are let in wholesale,
+and the product flips from public to invitation-only.
+
+For everyone who was not named it stops existing rather than merely becoming
+unbuyable. It is dropped from the shop, from category pages, from search, from
+related products and from the XML sitemap; its own URL stops resolving (a
+logged-out visitor is sent to the login form with an explanation, a logged-in
+one gets a 404, because naming a product someone may not have leaks the
+catalogue one URL at a time); it cannot be added to the cart, and a line that
+was already in a cart is dropped again the next time the cart or checkout is
+drawn — access can be withdrawn between filling a cart and paying for it.
+
+Anyone who may edit products sees the whole catalogue as it really is, otherwise
+the products they just restricted would disappear from under them.
+
+The same grants are editable from the other end: a customer's profile screen
+lists every restricted product with a checkbox. Both screens write the same
+place — one `_probo_access_user` meta row per customer on the product — so there
+is no second source of truth to drift. One row each rather than one array is
+what makes "which products may this customer see?" an ordinary indexed lookup.
+
+Variations are never restricted on their own; they inherit their parent
+product's rule.
+
+Four filters if you need something else:
+
+| Filter | Does |
+| --- | --- |
+| `probo_customer_can_access_product` | The final say on one customer and one product — where a plugin, a purchase history or an ERP lookup goes. |
+| `probo_product_access_manage_cap` | The capability that sees everything; `edit_products` by default. |
+| `probo_product_access_denied_action` | `login`, `shop` or a 404 when someone opens a product that is not theirs. |
+| `probo_product_access_denied_message` | The wording they get. |
+
+`probo_product_access_role_choices` narrows the roles the product screen offers,
+and `probo_product_access_profile_limit` how many products the profile screen
+lists before it sends you to the product's own tab instead.
+
 ## Checkout
 
 Two layouts, chosen under **Customizer → Thema-instellingen → Componenten →
