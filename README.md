@@ -1,17 +1,13 @@
 # Probo Connect — Free WordPress theme
 
-This theme is free to use and acts as a kick starter for yout a print-on-demand 
-shop running WooCommerce and the Probo Connect plugin. 
-
-With the power of AI we where able to set up an easy to use starterkit that works wel with our Probo Connect plug-in 
-
+This theme is free to use and acts as a kickstarter for your print-on-demand shop running WooCommerce and the Probo Connect plugin. 
+With the power of AI, we were able to set up an easy-to-use starter kit that works well with our Probo Connect plug-in. 
 
 ## Support and usage
-Please be aware, that Probo supplies the theme "as-is". You are free to customize the theme or change it.
-If you found a bug you can submit a pull request, that would greatly be appricaited. 
+Please be aware that Probo supplies the theme "as-is". You are free to customize the theme or change it.
+If you found a bug, you can submit a pull request; that would be greatly appreciated.
 
-You may not sell the theme as your own. Whiles using it you do not have to mention Probo.
-
+You may not sell the theme as your own. Whilst using it, you do not have to mention Probo.
 
 ## Install
 
@@ -100,7 +96,7 @@ lockup, with everything from the first dot onwards in the accent colour.
 
 ## Homepage
 
-The homepage is composed of blocks, not hardcoded, so sections can be
+The homepage is composed of blocks which are not hardcoded, so sections can be
 reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
@@ -152,7 +148,7 @@ A few of them carry options worth knowing about:
   quote, name, company, score out of five.
 
 They are dynamic blocks previewed with ServerSideRender, so the editor canvas
-shows exactly what the front end renders — and nothing is editable in the canvas
+shows exactly what the front-end renders — and nothing is editable in the canvas
 itself: every setting lives in the block sidebar. The `Probo Connect homepage`
 pattern composes the original five in order, and a fresh install gets it as
 starter content.
@@ -297,7 +293,7 @@ Two places where the built checkout differs from the design prototype, both on
 purpose:
 
 * The carrier is not a fold under one visible row. Since the presets answer the
-  carrier question in the normal case, the list only appears once someone asked
+  carrier question in the normal case, the list only appears once someone is asked
   to choose one — and then folding four of the five away is the wrong answer.
   Pickup keeps its fold (three points, then the rest); it has no preset, so it
   is always the list you are being asked about.
