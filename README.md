@@ -225,6 +225,33 @@ what makes "which products may this customer see?" an ordinary indexed lookup.
 Variations are never restricted on their own; they inherit their parent
 product's rule.
 
+### A page with the customer's own products
+
+The shop already shows a customer only what they may see, their own products
+among everything public. A portal usually wants the other page too — *your*
+products, and nothing else. Put this on any page:
+
+```
+[probo_my_products]
+```
+
+It draws the same tiles the shop does, for whoever is logged in.
+`limit`, `orderby` and `order` narrow it down, and `empty` replaces the line
+shown to a customer who has not been given anything yet:
+
+```
+[probo_my_products limit="6" orderby="date" order="DESC" empty="Nothing set up for you yet."]
+```
+
+Logged out it shows a login prompt instead, which on a closed portal nobody
+ever reaches — the wall gets there first.
+
+Listed are the products that are limited *and* granted to this customer: a
+product that was opened back up to the whole shop is in the catalogue like any
+other, and calling it theirs alone would be a lie. From a template,
+`probo_customer_product_ids()` gives the same list as ids and
+`probo_render_product_grid( $ids )` draws it.
+
 Four filters if you need something else:
 
 | Filter | Does |

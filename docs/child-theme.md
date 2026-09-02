@@ -276,6 +276,7 @@ plugin.
 | `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
 | `probo_product_access_denied_message` | filter | The wording that refusal gets. |
 | `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
+| `probo_customer_product_ids` | filter | The products listed as one customer's own, behind `[probo_my_products]`. `int[] $ids, int $user_id` |
 
 The theme itself grants per customer and nothing else; a role or group rule is
 that first filter's job.
@@ -286,6 +287,10 @@ Read the rules rather than the meta: `probo_customer_can_access_product()`,
 variation resolves to its parent. Writing goes through
 `probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
 which keep the cached list of restricted products honest.
+
+For a page of the customer's own products there is `[probo_my_products]`, or
+`probo_customer_product_ids()` and `probo_render_product_grid( $ids )` to build
+one in a template.
 
 ### Login required
 

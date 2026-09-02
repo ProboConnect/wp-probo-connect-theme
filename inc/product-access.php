@@ -953,3 +953,167 @@ function probo_product_access_save_profile( $user_id ) {
 }
 add_action( 'personal_options_update', 'probo_product_access_save_profile' );
 add_action( 'edit_user_profile_update', 'probo_product_access_save_profile' );
+
+/* ---------------------------------------------------------------------------
+   The customer's own list.
+
+   The shop already shows a customer only what they may see. This is the other
+   page a portal wants: not "everything you may buy" but "the products opened up
+   for you" — the shortcode a shop drops on a page of its own.
+--------------------------------------------------------------------------- */
+
+/**
+ * The restricted products a customer was given.
+ *
+ * This is the lookup the storage was chosen for: one `_probo_access_user` row
+ * per customer makes it an ordinary indexed meta query instead of a scan
+ * through every product's serialised list.
+ *
+ * Only products that are actually limited are listed. A product that was opened
+ * back up to the whole shop is in the catalogue like any other, and listing it
+ * here as well would tell the customer it is theirs alone when it is not.
+ *
+ * @param int|null $user_id Customer, defaults to the current one.
+ * @param array    $args    Optional query overrides: limit, orderby, order.
+ * @return int[] Product ids.
+ */
+function probo_customer_product_ids( $user_id = null, $args = array() ) {
+	$user_id = null === $user_id ? get_current_user_id() : absint( $user_id );
+
+	if ( ! $user_id || ! post_type_exists( 'product' ) ) {
+		return array();
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'limit'   => -1,
+			'orderby' => 'title',
+			'order'   => 'ASC',
+		)
+	);
+
+	$ids = get_posts(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => (int) $args['limit'],
+			'orderby'                => $args['orderby'],
+			'order'                  => $args['order'],
+			'fields'                 => 'ids',
+			'no_found_rows'          => true,
+			'ignore_sticky_posts'    => true,
+			'update_post_term_cache' => false,
+			'meta_key'               => PROBO_ACCESS_USER_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- the indexed lookup this storage exists for.
+			'meta_value'             => (string) $user_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- see above.
+			'probo_access_bypass'    => true,
+		)
+	);
+
+	$ids = array_values( array_filter( array_map( 'absint', (array) $ids ), 'probo_product_is_restricted' ) );
+
+	/**
+	 * Filters the products listed as a customer's own.
+	 *
+	 * @param int[] $ids     Product ids.
+	 * @param int   $user_id Customer id.
+	 */
+	return (array) apply_filters( 'probo_customer_product_ids', $ids, $user_id );
+}
+
+/**
+ * Render a customer's own products as the theme's product tiles.
+ *
+ * The tiles are drawn here rather than through content-product.php on purpose.
+ * That template skips a product whose catalogue visibility is "hidden", which
+ * is exactly what a shop reaches for out of habit on a product it is
+ * restricting — and the page that promises "your products" would then quietly
+ * come up empty. The markup and the two loop hooks are the template's own, so
+ * the tiles are the same tiles.
+ *
+ * @param int[] $product_ids Products to draw.
+ */
+function probo_render_product_grid( $product_ids ) {
+	if ( ! $product_ids ) {
+		return;
+	}
+
+	echo wp_kses_post( probo_product_loop_start() );
+
+	foreach ( $product_ids as $product_id ) {
+		$product = wc_get_product( $product_id );
+
+		if ( ! $product ) {
+			continue;
+		}
+
+		echo '<li class="' . esc_attr( implode( ' ', wc_get_product_class( '', $product ) ) ) . '">';
+
+		/** This hook is documented in woocommerce/content-product.php. */
+		do_action( 'woocommerce_before_shop_loop_item' );
+
+		probo_product_card( $product );
+
+		/** This hook is documented in woocommerce/content-product.php. */
+		do_action( 'woocommerce_after_shop_loop_item' );
+
+		echo '</li>';
+	}
+
+	echo '</ul>';
+}
+
+/**
+ * [probo_my_products] — the logged-in customer's own products, as a grid.
+ *
+ * Drop it on any page ("Mijn producten", a dashboard, the front page of a
+ * portal) and it draws the same tiles the shop does.
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string
+ */
+function probo_my_products_shortcode( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'limit'   => -1,
+			'orderby' => 'title',
+			'order'   => 'ASC',
+			'empty'   => __( 'No products have been set up for your account yet. Get in touch and we will add them.', 'probo-connect-theme' ),
+		),
+		$atts,
+		'probo_my_products'
+	);
+
+	ob_start();
+
+	if ( ! is_user_logged_in() ) {
+		// In a closed portal nobody reaches this page logged out; on an open
+		// shop it is the one thing worth saying here.
+		if ( function_exists( 'probo_login_required_prompt' ) ) {
+			probo_login_required_prompt(
+				__( 'Log in to see the products set up for your account.', 'probo-connect-theme' ),
+				(string) get_permalink()
+			);
+		}
+
+		return (string) ob_get_clean();
+	}
+
+	$products = probo_customer_product_ids(
+		null,
+		array(
+			'limit'   => (int) $atts['limit'],
+			'orderby' => sanitize_key( $atts['orderby'] ),
+			'order'   => 'DESC' === strtoupper( (string) $atts['order'] ) ? 'DESC' : 'ASC',
+		)
+	);
+
+	if ( $products ) {
+		probo_render_product_grid( $products );
+	} elseif ( $atts['empty'] ) {
+		echo '<p class="text-[15px] text-ink-3">' . esc_html( $atts['empty'] ) . '</p>';
+	}
+
+	return (string) ob_get_clean();
+}
+add_shortcode( 'probo_my_products', 'probo_my_products_shortcode' );
