@@ -267,6 +267,47 @@ plugin.
 | `probo_callout_max_slots` | filter | Callout slots per category (default 3). |
 | `probo_callout_legacy_template_map` | filter | Old `band` / `tile` values → template paths. |
 
+### Products per customer
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract, an ERP lookup or a rule of your own (per role, per group) goes. `bool $allowed, int $product_id, int $user_id` |
+| `probo_product_access_manage_cap` | filter | The capability that bypasses every restriction (default `edit_products`). |
+| `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
+| `probo_product_access_denied_message` | filter | The wording that refusal gets. |
+| `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
+| `probo_customer_product_ids` | filter | The products listed as one customer's own, behind `[probo_my_products]`. `int[] $ids, int $user_id` |
+
+The theme itself grants per customer and nothing else; a role or group rule is
+that first filter's job.
+
+Read the rules rather than the meta: `probo_customer_can_access_product()`,
+`probo_product_is_restricted()`, `probo_product_access_users()` and
+`probo_hidden_product_ids()` all take a product id, post or `WC_Product`, and a
+variation resolves to its parent. Writing goes through
+`probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
+which keep the cached list of restricted products honest.
+
+For a page of the customer's own products there is `[probo_my_products]`, or
+`probo_customer_product_ids()` and `probo_render_product_grid( $ids )` to build
+one in a template.
+
+### Login required
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_login_required_scope` | filter | The wall's height regardless of the Customizer: `off`, `checkout`, `cart` or `site`. |
+| `probo_login_required_message` | filter | What a walled visitor is told. `string $message, string $stage` (`cart`, `checkout` or `site`) |
+| `probo_login_required_public_request` | filter | Which requests a closed portal still answers when logged out. The account page and robots.txt already do; this is where a public contact or privacy page is added. |
+| `probo_login_required_is_staff` | filter | Who keeps wp-admin and the toolbar in a closed portal. `bool $staff, int $user_id` — `edit_posts` or `manage_woocommerce` by default. |
+
+`probo_login_required_for( 'cart' | 'checkout' )` answers whether this visitor
+still has to log in, `probo_login_required_site_closed()` whether the whole site
+is shut to them, `probo_login_required_portal()` whether the shop is running as
+a closed portal at all (whoever is asking), and
+`probo_login_required_url( $return_to )` builds the login link that comes back
+to where they were.
+
 ### Checkout
 
 | Hook | Type | Use |

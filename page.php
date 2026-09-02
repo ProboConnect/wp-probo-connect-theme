@@ -25,8 +25,24 @@ while ( have_posts() ) :
 	// container and the heading here, and the two columns from theme.css.
 	$probo_is_account = function_exists( 'is_account_page' ) && is_account_page();
 
+	// Logged out, that same page is only the login form (or the password reset):
+	// a 460px card that would otherwise sit against the left edge of a 1120px
+	// container, with the heading stranded above it. The column is given exactly
+	// the card's own width, so the two line up instead of the card floating
+	// inside a wider box, and the heading rides along.
+	$probo_is_login = $probo_is_account && ! is_user_logged_in();
+
 	if ( $probo_is_shop_page ) :
 		the_content();
+	elseif ( $probo_is_login ) :
+		?>
+		<main class="pp-container py-16">
+			<div class="mx-auto max-w-[460px]">
+				<h1 class="mb-8 text-3xl font-extrabold tracking-[-0.035em] lg:text-4xl"><?php the_title(); ?></h1>
+				<?php the_content(); ?>
+			</div>
+		</main>
+		<?php
 	elseif ( $probo_is_account ) :
 		?>
 		<main class="pp-container py-12">
