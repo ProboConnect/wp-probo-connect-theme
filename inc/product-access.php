@@ -4,8 +4,8 @@
  *
  * A product is on offer to everyone until someone switches "Limit to selected
  * customers" on. From that moment it works the other way round: only the
- * customers and roles listed on the product can see it, open it and order it —
- * for everyone else it is a product that simply does not exist. It drops out of
+ * customers named on the product can see it, open it and order it — for
+ * everyone else it is a product that simply does not exist. It drops out of
  * the shop, out of search, out of related products and out of the sitemap, its
  * own URL stops resolving, and it cannot be added to a cart even by someone who
  * kept the link.
@@ -26,9 +26,6 @@ define( 'PROBO_ACCESS_RESTRICTED_META', '_probo_access_restricted' );
 
 // Meta key: one row per customer id that may access the product.
 define( 'PROBO_ACCESS_USER_META', '_probo_access_user' );
-
-// Meta key: the roles that may access the product, as one array.
-define( 'PROBO_ACCESS_ROLES_META', '_probo_access_roles' );
 
 // Transient holding every restricted product id in the shop.
 define( 'PROBO_ACCESS_TRANSIENT', 'probo_restricted_products' );
@@ -103,24 +100,6 @@ function probo_product_access_users( $product = null ) {
 }
 
 /**
- * The roles listed on a product.
- *
- * @param int|WP_Post|WC_Product|null $product Product, post, or id.
- * @return string[] Role slugs.
- */
-function probo_product_access_roles( $product = null ) {
-	$product_id = probo_product_access_id( $product );
-
-	if ( ! $product_id ) {
-		return array();
-	}
-
-	$roles = get_post_meta( $product_id, PROBO_ACCESS_ROLES_META, true );
-
-	return array_values( array_filter( array_map( 'sanitize_key', (array) $roles ) ) );
-}
-
-/**
  * The capability that sees — and manages — every restricted product.
  *
  * Whoever may edit products has to be able to browse the shop the way it really
@@ -141,8 +120,7 @@ function probo_product_access_manage_cap() {
  * Whether a customer may see and buy a product.
  *
  * An unrestricted product is available to everyone, logged in or not. A
- * restricted one is available to the customers listed on it, to anyone holding
- * one of its listed roles, and to shop staff.
+ * restricted one is available to the customers listed on it and to shop staff.
  *
  * @param int|WP_Post|WC_Product|null $product Product, post, or id.
  * @param int|null                    $user_id User to test, defaults to the current one.
@@ -157,13 +135,7 @@ function probo_customer_can_access_product( $product = null, $user_id = null ) {
 		$allowed = false;
 
 		if ( $user_id ) {
-			$roles = array_intersect(
-				probo_product_access_roles( $product_id ),
-				probo_user_roles( $user_id )
-			);
-
 			$allowed = in_array( $user_id, probo_product_access_users( $product_id ), true )
-				|| ! empty( $roles )
 				|| user_can( $user_id, probo_product_access_manage_cap() );
 		}
 	}
@@ -176,18 +148,6 @@ function probo_customer_can_access_product( $product = null, $user_id = null ) {
 	 * @param int  $user_id    User id, 0 for a logged-out visitor.
 	 */
 	return (bool) apply_filters( 'probo_customer_can_access_product', $allowed, $product_id, $user_id );
-}
-
-/**
- * The roles a user holds.
- *
- * @param int $user_id User id.
- * @return string[]
- */
-function probo_user_roles( $user_id ) {
-	$user = get_userdata( absint( $user_id ) );
-
-	return $user ? array_values( array_filter( array_map( 'sanitize_key', (array) $user->roles ) ) ) : array();
 }
 
 /**
@@ -610,29 +570,8 @@ add_action( 'woocommerce_check_cart_items', 'probo_product_access_check_cart_ite
    Managing it from the product.
 
    The product's own edit screen owns the rule: whether it is restricted at all,
-   which customers are named on it, and which roles are let in wholesale.
+   and which customers are named on it.
 --------------------------------------------------------------------------- */
-
-/**
- * The roles offered on the product screen.
- *
- * Administrators are left out: they already bypass the whole thing, so listing
- * them would only suggest the rule does something it does not.
- *
- * @return array<string, string> Role slug => label.
- */
-function probo_product_access_role_choices() {
-	$roles = wp_roles()->get_names();
-
-	unset( $roles['administrator'] );
-
-	/**
-	 * Filters the roles offered as product access rules.
-	 *
-	 * @param array<string, string> $roles Role slug => label.
-	 */
-	return (array) apply_filters( 'probo_product_access_role_choices', $roles );
-}
 
 /**
  * Add the "Customer access" tab to the product data box.
@@ -664,7 +603,6 @@ function probo_product_access_data_panel() {
 
 	$product_id = isset( $post->ID ) ? (int) $post->ID : 0;
 	$users      = probo_product_access_users( $product_id );
-	$roles      = probo_product_access_roles( $product_id );
 	?>
 	<div id="probo_product_access_data" class="panel woocommerce_options_panel hidden">
 		<input type="hidden" name="probo_access_submitted" value="1" />
@@ -676,7 +614,7 @@ function probo_product_access_data_panel() {
 					'id'          => PROBO_ACCESS_RESTRICTED_META,
 					'value'       => probo_product_is_restricted( $product_id ) ? 'yes' : 'no',
 					'label'       => __( 'Limit to selected customers', 'probo-connect-theme' ),
-					'description' => __( 'Hide this product from the shop, search and the sitemap, and let only the customers and roles below see and order it.', 'probo-connect-theme' ),
+					'description' => __( 'Hide this product from the shop, search and the sitemap, and let only the customers below see and order it.', 'probo-connect-theme' ),
 				)
 			);
 			?>
@@ -712,36 +650,11 @@ function probo_product_access_data_panel() {
 					<?php endforeach; ?>
 				</select>
 				<span class="description">
-					<?php esc_html_e( 'These customers keep access to this product, whatever their role. The same list can be edited from a customer’s own profile screen.', 'probo-connect-theme' ); ?>
+					<?php esc_html_e( 'Only these customers see this product and can order it. Shop staff always can. The same list can be edited from a customer’s own profile screen.', 'probo-connect-theme' ); ?>
 				</span>
 			</p>
 		</div>
 
-		<div class="options_group">
-			<fieldset class="form-field">
-				<legend style="float:left;width:150px;padding:0 12px 0 0;"><?php esc_html_e( 'Roles', 'probo-connect-theme' ); ?></legend>
-				<ul class="wc-radios" style="float:left;margin:0;">
-					<?php foreach ( probo_product_access_role_choices() as $role => $label ) : ?>
-						<li>
-							<label>
-								<input
-									type="checkbox"
-									name="probo_access_roles[]"
-									value="<?php echo esc_attr( $role ); ?>"
-									<?php checked( in_array( $role, $roles, true ) ); ?>
-								/>
-								<?php echo esc_html( translate_user_role( $label ) ); ?>
-							</label>
-						</li>
-					<?php endforeach; ?>
-					<li>
-						<span class="description">
-							<?php esc_html_e( 'Everyone holding one of these roles may order this product, without being listed above. Shop staff always can.', 'probo-connect-theme' ); ?>
-						</span>
-					</li>
-				</ul>
-			</fieldset>
-		</div>
 	</div>
 	<?php
 }
@@ -752,7 +665,7 @@ add_action( 'woocommerce_product_data_panels', 'probo_product_access_data_panel'
  *
  * The `probo_access_submitted` marker is only on the product edit form, so a
  * Quick Edit, a bulk edit or a programmatic save leaves the access rule alone
- * instead of reading its absent fields as "nobody, no roles". WooCommerce has
+ * instead of reading its absent fields as "nobody at all". WooCommerce has
  * already verified its own meta box nonce before this hook fires.
  *
  * @param int $product_id Product being saved.
@@ -765,19 +678,10 @@ function probo_product_access_save( $product_id ) {
 
 	$restricted = ! empty( $_POST[ PROBO_ACCESS_RESTRICTED_META ] );
 	$users      = isset( $_POST['probo_access_users'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['probo_access_users'] ) ) : array();
-	$roles      = isset( $_POST['probo_access_roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['probo_access_roles'] ) ) : array();
 	// phpcs:enable WordPress.Security.NonceVerification.Missing
-
-	$roles = array_values( array_intersect( $roles, array_keys( probo_product_access_role_choices() ) ) );
 
 	probo_product_access_set_restricted( $product_id, $restricted );
 	probo_product_access_set_users( $product_id, $users );
-
-	if ( $roles ) {
-		update_post_meta( $product_id, PROBO_ACCESS_ROLES_META, $roles );
-	} else {
-		delete_post_meta( $product_id, PROBO_ACCESS_ROLES_META );
-	}
 }
 add_action( 'woocommerce_process_product_meta', 'probo_product_access_save' );
 
@@ -865,21 +769,15 @@ function probo_product_access_admin_column_content( $column, $product_id ) {
 	}
 
 	$users = count( probo_product_access_users( $product_id ) );
-	$roles = count( probo_product_access_roles( $product_id ) );
 
-	$parts = array();
+	if ( ! $users ) {
+		echo esc_html__( 'Nobody', 'probo-connect-theme' );
 
-	if ( $users ) {
-		/* translators: %d: number of customers. */
-		$parts[] = sprintf( _n( '%d customer', '%d customers', $users, 'probo-connect-theme' ), $users );
+		return;
 	}
 
-	if ( $roles ) {
-		/* translators: %d: number of roles. */
-		$parts[] = sprintf( _n( '%d role', '%d roles', $roles, 'probo-connect-theme' ), $roles );
-	}
-
-	echo esc_html( $parts ? implode( ', ', $parts ) : __( 'Nobody', 'probo-connect-theme' ) );
+	/* translators: %d: number of customers. */
+	echo esc_html( sprintf( _n( '%d customer', '%d customers', $users, 'probo-connect-theme' ), $users ) );
 }
 add_action( 'manage_product_posts_custom_column', 'probo_product_access_admin_column_content', 20, 2 );
 
@@ -993,7 +891,7 @@ function probo_product_access_profile_fields( $user ) {
 					</fieldset>
 
 					<p class="description">
-						<?php esc_html_e( 'Only products that are limited to selected customers are listed. A role granted on the product itself is not shown here and keeps working on its own.', 'probo-connect-theme' ); ?>
+						<?php esc_html_e( 'Only products that are limited to selected customers are listed.', 'probo-connect-theme' ); ?>
 					</p>
 
 					<?php if ( $total > count( $choices ) ) : ?>

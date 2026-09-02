@@ -201,8 +201,8 @@ real one on `woocommerce_after_cart_item_name`.
 
 Some products are not for the whole shop. A product's edit screen has a
 **Customer access** tab (`inc/product-access.php`): switch **Limit to selected
-customers** on, name the customers, tick the roles that are let in wholesale,
-and the product flips from public to invitation-only.
+customers** on, name the customers, and the product flips from public to
+invitation-only.
 
 For everyone who was not named it stops existing rather than merely becoming
 unbuyable. It is dropped from the shop, from category pages, from search, from
@@ -229,14 +229,19 @@ Four filters if you need something else:
 
 | Filter | Does |
 | --- | --- |
-| `probo_customer_can_access_product` | The final say on one customer and one product — where a plugin, a purchase history or an ERP lookup goes. |
+| `probo_customer_can_access_product` | The final say on one customer and one product — where a plugin, a purchase history, an ERP lookup or a rule of your own (per role, per contract) goes. |
 | `probo_product_access_manage_cap` | The capability that sees everything; `edit_products` by default. |
 | `probo_product_access_denied_action` | `login`, `shop` or a 404 when someone opens a product that is not theirs. |
 | `probo_product_access_denied_message` | The wording they get. |
 
-`probo_product_access_role_choices` narrows the roles the product screen offers,
-and `probo_product_access_profile_limit` how many products the profile screen
+`probo_product_access_profile_limit` sets how many products the profile screen
 lists before it sends you to the product's own tab instead.
+
+Access is per customer and nothing else — no role or group axis. Groups are the
+kind of thing that looks like a shortcut and turns into a second rulebook to
+keep in sync; a shop that genuinely needs one adds it in a few lines on
+`probo_customer_can_access_product` without this screen growing a list of
+WordPress roles that mean nothing to a customer.
 
 ## Login required
 

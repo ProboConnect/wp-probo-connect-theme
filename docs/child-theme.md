@@ -271,12 +271,14 @@ plugin.
 
 | Hook | Type | Use |
 | --- | --- | --- |
-| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract or an ERP lookup goes. `bool $allowed, int $product_id, int $user_id` |
+| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract, an ERP lookup or a rule of your own (per role, per group) goes. `bool $allowed, int $product_id, int $user_id` |
 | `probo_product_access_manage_cap` | filter | The capability that bypasses every restriction (default `edit_products`). |
 | `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
 | `probo_product_access_denied_message` | filter | The wording that refusal gets. |
-| `probo_product_access_role_choices` | filter | The roles the product's Customer access tab offers. |
 | `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
+
+The theme itself grants per customer and nothing else; a role or group rule is
+that first filter's job.
 
 Read the rules rather than the meta: `probo_customer_can_access_product()`,
 `probo_product_is_restricted()`, `probo_product_access_users()` and
