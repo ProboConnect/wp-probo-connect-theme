@@ -138,6 +138,7 @@ function probo_customize_register( $wp_customize ) {
 			'choices' => array(
 				'ruim'    => __( 'Spacious — logo, search and USPs on three rows', 'probo-connect-theme' ),
 				'compact' => __( 'Compact — one dark bar with a products megamenu', 'probo-connect-theme' ),
+				'portal'  => __( 'Portal — one light bar with account navigation, without search or cart', 'probo-connect-theme' ),
 			),
 		),
 		'probo_sanitize_header_variant'
@@ -356,14 +357,14 @@ function probo_sanitize_body_font( $value ) {
 /**
  * Sanitize the header variant.
  *
- * Only the two known variants are allowed; anything else falls back to the
- * spacious default, so the compact markup never loads by accident.
+ * Only the three known variants are allowed; anything else falls back to the
+ * spacious default, so the compact and portal markup never load by accident.
  *
  * @param mixed $value Raw value.
  * @return string
  */
 function probo_sanitize_header_variant( $value ) {
-	return in_array( $value, array( 'ruim', 'compact' ), true ) ? $value : 'ruim';
+	return in_array( $value, array( 'ruim', 'compact', 'portal' ), true ) ? $value : 'ruim';
 }
 
 /**
