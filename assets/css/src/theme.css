@@ -1238,6 +1238,30 @@
     color: inherit;
   }
 
+  /* Variant C (portal header): the account navigation. Flat by design — no
+     flyouts, no uppercase, no tracking — so the one accent link is the section
+     you are in. Below lg it stacks inside the panel the burger opens. */
+  .pp-portal-menu {
+    @apply m-0 flex list-none flex-col gap-3 p-0 lg:flex-row lg:items-center lg:gap-8;
+  }
+
+  .pp-portal-menu > li > a {
+    @apply text-sm font-bold whitespace-nowrap text-ink no-underline hover:text-accent-ink;
+  }
+
+  .pp-portal-menu > li.current-menu-item > a,
+  .pp-portal-menu > li.current-menu-parent > a,
+  .pp-portal-menu > li.current-menu-ancestor > a,
+  .pp-portal-menu > li.current-product-ancestor > a {
+    @apply text-accent-ink;
+  }
+
+  /* depth => 1 keeps children out of the markup, but a menu that arrived from
+     elsewhere (a plugin, a filter) must not drop a flyout into this bar. */
+  .pp-portal-menu .sub-menu {
+    @apply hidden;
+  }
+
   /* Variant B (compact header): the muted service links on the dark bar. */
   .pp-compact-service {
     @apply m-0 flex list-none items-center gap-6 p-0;
