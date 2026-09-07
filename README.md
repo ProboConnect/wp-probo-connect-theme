@@ -61,7 +61,7 @@ Everything the design session iterated on is a Customizer control, under
 | Merk | Accent colour, secondary colour, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
 | Header & footer | Top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
-| Componenten | Card style: Rand / Schaduw / Vlak, and the checkout style — see [Checkout](#checkout) |
+| Componenten | Card style: Rand / Schaduw / Vlak, the checkout style — see [Checkout](#checkout) — and how much of the shop needs a login, see [Login required](#login-required) |
 
 The hero's own band — dark, accent or light, and its title colour — is **not**
 here: a front page has one hero, and what it looks like is a decision about that
@@ -105,8 +105,11 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works`, `probo/contact`, `probo/faq` — all in the **Probo
-Connect** inserter category.
+`probo/my-products`, `probo/orders`, `probo/how-it-works`, `probo/contact`,
+`probo/faq` — all in the **Probo Connect** inserter category.
+(`probo/my-products` and `probo/orders` are portal blocks rather than homepage
+ones — see [Products per customer](#products-per-customer) and
+[Orders](#orders).)
 
 A few of them carry options worth knowing about:
 
@@ -196,6 +199,211 @@ working.
 
 The cart line has no upload button of the theme's own: Probo Connect prints the
 real one on `woocommerce_after_cart_item_name`.
+
+## Products per customer
+
+Some products are not for the whole shop. A product's edit screen has a
+**Customer access** tab (`inc/product-access.php`): switch **Limit to selected
+customers** on, name the customers, and the product flips from public to
+invitation-only.
+
+For everyone who was not named it stops existing rather than merely becoming
+unbuyable. It is dropped from the shop, from category pages, from search, from
+related products and from the XML sitemap; its own URL stops resolving (a
+logged-out visitor is sent to the login form with an explanation, a logged-in
+one gets a 404, because naming a product someone may not have leaks the
+catalogue one URL at a time); it cannot be added to the cart, and a line that
+was already in a cart is dropped again the next time the cart or checkout is
+drawn — access can be withdrawn between filling a cart and paying for it.
+
+Anyone who may edit products sees the whole catalogue as it really is, otherwise
+the products they just restricted would disappear from under them.
+
+The same grants are editable from the other end: a customer's profile screen
+lists every restricted product with a checkbox. Both screens write the same
+place — one `_probo_access_user` meta row per customer on the product — so there
+is no second source of truth to drift. One row each rather than one array is
+what makes "which products may this customer see?" an ordinary indexed lookup.
+
+Variations are never restricted on their own; they inherit their parent
+product's rule.
+
+### A page with the customer's own products
+
+The shop already shows a customer only what they may see, their own products
+among everything public. A portal usually wants the other page too — *your*
+products, and nothing else. Put this on any page:
+
+```
+[probo_my_products]
+```
+
+It draws the same tiles the shop does, for whoever is logged in.
+`limit`, `orderby` and `order` narrow it down, and `empty` replaces the line
+shown to a customer who has not been given anything yet:
+
+```
+[probo_my_products limit="6" orderby="date" order="DESC" empty="Nothing set up for you yet."]
+```
+
+The same thing exists as a block, **Mijn producten** (`probo/my-products`), in
+the Probo Connect inserter category — with a title, an intro, the same options
+in the sidebar, and the theme's own section spacing around it. Use the block
+when the page is built in the editor, the shortcode inside a template or a
+widget.
+
+In the editor the block previews as whoever is editing the page, and a shop
+manager has no products of their own — so instead of an empty state that says
+nothing, the preview carries a note explaining that every customer sees their
+own. That note is editor-only; a customer never sees it.
+
+Logged out both show a login prompt instead, which on a closed portal nobody
+ever reaches — the wall gets there first.
+
+Listed are the products that are limited *and* granted to this customer: a
+product that was opened back up to the whole shop is in the catalogue like any
+other, and calling it theirs alone would be a lie. From a template,
+`probo_customer_product_ids()` gives the same list as ids and
+`probo_render_product_grid( $ids )` draws it.
+
+Four filters if you need something else:
+
+| Filter | Does |
+| --- | --- |
+| `probo_customer_can_access_product` | The final say on one customer and one product — where a plugin, a purchase history, an ERP lookup or a rule of your own (per role, per contract) goes. |
+| `probo_product_access_manage_cap` | The capability that sees everything; `edit_products` by default. |
+| `probo_product_access_denied_action` | `login`, `shop` or a 404 when someone opens a product that is not theirs. |
+| `probo_product_access_denied_message` | The wording they get. |
+
+`probo_product_access_profile_limit` sets how many products the profile screen
+lists before it sends you to the product's own tab instead.
+
+Access is per customer and nothing else — no role or group axis. Groups are the
+kind of thing that looks like a shortcut and turns into a second rulebook to
+keep in sync; a shop that genuinely needs one adds it in a few lines on
+`probo_customer_can_access_product` without this screen growing a list of
+WordPress roles that mean nothing to a customer.
+
+## Login required
+
+Off by default — the shop sells to whoever walks in. Under **Customizer →
+Thema-instellingen → Componenten → Login required** the wall goes up at one of
+three heights (`inc/login-required.php`):
+
+| Setting | What a logged-out visitor can do |
+| --- | --- |
+| `Uit` | Everything. Browse, fill a cart, order. |
+| `Kassa` | Browse and fill a cart, but log in to order it. The cart survives the login. |
+| `Winkelwagen` | Browse, and nothing more — the cart itself needs an account. |
+| `Hele site` | Nothing. Every page sends them to the login form: a closed order portal. |
+
+Under `Hele site` a customer's whole world is the front end: they log in there,
+see the products they were given and the orders they placed, finish a checkout,
+and that is the portal. wp-admin is not part of it — see below.
+
+The first three leave browsing open on purpose. Which customer may see which
+product is a per-product decision and lives in
+[Products per customer](#products-per-customer); this setting is about how much
+of the shop needs an account at all.
+
+### The closed portal
+
+`Hele site` is the setting for a portal that is not a public shop. A logged-out
+visitor is turned away on `template_redirect` at priority 1 — ahead of the
+sitemap and the feeds, which render on that same hook, so a closed portal does
+not hand out its catalogue on the way out. `wp-json` closes with it, through
+`rest_authentication_errors`; leaving it open would serve posts, products and
+users to anyone who asks, which is the whole point being missed. And the site
+goes `noindex`, because a portal nobody may read is not one to list.
+
+Two things stay open, and only two: the **My account page**, which carries the
+login form, the registration form and the password reset — closing it would
+close the portal to its own members — and **robots.txt**, which holds no content
+of its own and is the one file that tells a crawler to stay out. A portal that
+needs a public page of its own (a contact page, or one explaining how to get an
+account) opens it through `probo_login_required_public_request`.
+
+**wp-admin closes too.** A logged-in customer who lands there is sent back to
+the account page, and the toolbar disappears from the front end with it — it is
+a strip of links into an admin they cannot open. Staff keep both: anyone with
+`edit_posts` or `manage_woocommerce`, so an editor, a shop manager and a
+shop-floor role that was never given the post capabilities all still work.
+`probo_login_required_is_staff` decides, and is filterable.
+
+Three doors in wp-admin stay open regardless, because closing them would break
+the front end the portal is made of: `admin-ajax.php`, which is how the shop's
+own front-end requests come back; `admin-post.php`, where the theme's contact
+form posts (`inc/contact.php`); and cron.
+
+### Both walls
+
+The visitor is told where the button is, not where it is not: the cart carries a
+prompt with a **Log in** button while it is being filled, and under the cart wall
+so does the product page, next to the add-to-cart it replaces. Above the login
+form itself, one line says why they are looking at it.
+
+Following any of it comes back to the page they were on. The return trip rides
+in a `probo_redirect` argument that WooCommerce's own login form carries through
+the POST, and both the outbound URL and the way back run past
+`wp_validate_redirect()`, so a spoofed `Host` header cannot turn the login link
+into an off-site one.
+
+No message is parked in a WooCommerce session to say any of this. A closed
+portal turns away every crawler that ever finds it, and a session notice would
+mean a session row and a cookie each, for a message nobody reads.
+
+What actually holds is server-side. The redirects are a courtesy; the refusals
+sit on `woocommerce_checkout_process`, on the add-to-cart validation and on
+`rest_authentication_errors`, where a hand-made request lands too. The
+order-received page and the pay-for-order link stay open under the order walls:
+both belong to an order that already exists, and a customer paying an invoice
+link is not placing a new one.
+
+`probo_login_required_scope` overrides the setting from code (`off`, `checkout`,
+`cart` or `site`), `probo_login_required_message` the wording.
+
+One thing this setting deliberately does not touch: who may create an account.
+Whether a closed portal lets people register themselves or only admits accounts
+the shop makes for them is WooCommerce's own setting, under **WooCommerce →
+Settings → Accounts & Privacy**.
+
+## Orders
+
+The **Bestellingen** block (`probo/orders`) puts the customer's own orders on a
+page: order number, date, total, a status pill and a track & trace link, newest
+first. Straight from the *ThemeHeader Portal* design handoff, and the other half
+of a portal dashboard next to [their products](#products-per-customer).
+
+Title, how many orders (1–25), the "Alle bestellingen →" link and the line for a
+customer with no orders yet are all in the block's sidebar. The link points at
+the Orders tab of My account, which is WooCommerce's own full list with
+pagination — this block is the summary, not a replacement for it. From a
+template, `probo_customer_orders()` and `probo_render_orders_table()` draw the
+same card.
+
+**Track & trace** comes from the Probo Connect plugin, which hangs its status
+data on the order as `_probo_status_data`:
+`$probo_order_meta['status_page_url']`. The key is still read through
+`probo_order_meta_keys` — the plugin owns that name, and a theme that hardcodes
+another project's meta key has to be edited the day that project renames it. It
+takes a list, first one holding data wins, which is what a shop mid-upgrade
+needs; `probo_order_meta` replaces the lookup wholesale. A value stored as JSON
+rather than a serialised array is decoded either way, because WordPress hands
+that back as the string it was written as and has no idea it is anything else.
+
+An order with no status page keeps the column's rhythm: the word "Track", greyed
+out, rather than a gap.
+
+The URL is run through `esc_url_raw()` against `http`/`https` before it is
+printed, so a half-written or hostile meta value renders as that same
+"no track yet" state instead of a link.
+
+**Status colours** are semantic rather than brand — green reads "done" and red
+reads "wrong" whatever the shop's accent is — so they are fixed tokens, not
+Customizer values. WooCommerce's seven statuses are mapped; a print shop's own
+("in productie", "bestandscheck") are registered by the plugin, so add them
+through `probo_order_status_tones` (tones: `ok`, `accent`, `warn`, `neutral`,
+`error`). Anything unmapped draws neutral, which is a colour and never a crash.
 
 ## Checkout
 

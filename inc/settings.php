@@ -28,6 +28,7 @@ function probo_defaults() {
 		'footer_style'       => 'Zwart',
 		'card_style'         => 'Rand',
 		'checkout_style'     => 'Eén pagina',
+		'require_login'      => 'Uit',
 		'logo_light'         => '',
 		'topbar_usp_1'       => 'Voor 23:00 besteld, morgen geleverd',
 		'topbar_usp_2'       => 'Gratis bestandscontrole',

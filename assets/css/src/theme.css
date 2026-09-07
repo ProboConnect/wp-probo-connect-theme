@@ -78,6 +78,16 @@
   --color-ink-4: #8A8A8F;
   --color-ink-5: #9A9A9E;
 
+  /* Order status colours. Semantic rather than brand — green reads "done" and
+     red reads "wrong" whatever the shop's accent is — so unlike everything
+     above these are fixed and not Customizer-driven. */
+  --color-state-ok: #1A7F44;
+  --color-state-ok-soft: #E7F6EC;
+  --color-state-warn: #9A6A00;
+  --color-state-warn-soft: #FFF3D6;
+  --color-state-error: #B42318;
+  --color-state-error-soft: #FDE8E8;
+
   --color-line: #E4E4E7;
   --color-line-strong: #C9C9CE;
   --color-surface: #F7F7F5;
@@ -114,6 +124,23 @@
 }
 
 @layer base {
+  /* The class WordPress themes are expected to provide for text that is read
+     but not seen. WooCommerce happens to ship a rule for it too, but the
+     theme's own markup uses it — the orders table's "opens in a new tab" and
+     "not available yet" hints among it — and that must not depend on a plugin's
+     stylesheet being on the page. Core's own snippet, verbatim. */
+  .screen-reader-text {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* .editor-styles-wrapper is the block editor's canvas body. It carries WP's
      own reset at the same specificity, which beat a bare `body` rule and left
      the canvas in the default serif while the front end was on the chosen body
@@ -1717,5 +1744,100 @@
   .upsells > h2,
   .cross-sells > h2 {
     @apply mb-7 text-3xl font-extrabold tracking-[-0.03em];
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Orders card.
+
+   The portal's order list, from the ThemeHeader Portal design handoff: a
+   bordered card with a table of the customer's last orders. Written as
+   component classes rather than utilities on the markup because the table is
+   rendered from PHP in two places (the block and probo_render_orders_table()),
+   and a <td> is not a place to repeat eight utilities.
+--------------------------------------------------------------------------- */
+@layer components {
+  .pp-orders-card {
+    @apply rounded-pp overflow-hidden border border-line bg-white;
+  }
+
+  .pp-orders-head {
+    @apply flex flex-wrap items-center justify-between gap-4 border-b border-line px-6 py-5;
+  }
+
+  .pp-orders-title {
+    @apply m-0 text-lg font-extrabold tracking-[-0.02em] text-ink;
+  }
+
+  .pp-orders-all {
+    @apply text-[13px] font-bold text-accent-ink no-underline;
+  }
+
+  /* Five columns do not fit a phone. The card keeps its shape and the table
+     scrolls inside it, rather than the page itself scrolling sideways. */
+  .pp-orders-scroll {
+    @apply w-full overflow-x-auto;
+  }
+
+  .pp-orders-table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .pp-orders-table th {
+    @apply font-mono px-6 py-3 text-left text-[11px] leading-none font-medium tracking-[0.06em] text-ink-4 uppercase;
+  }
+
+  .pp-orders-table td {
+    @apply border-t border-line px-6 py-3.5 align-middle whitespace-nowrap;
+  }
+
+  .pp-orders-table .pp-orders-right {
+    @apply text-right;
+  }
+
+  .pp-orders-number a {
+    @apply font-bold text-ink no-underline;
+  }
+
+  .pp-orders-number a:hover {
+    @apply text-accent-ink;
+  }
+
+  .pp-orders-muted {
+    @apply text-ink-3;
+  }
+
+  .pp-orders-track {
+    @apply text-[13px] font-bold text-accent-ink no-underline;
+  }
+
+  /* An order that has no status page yet keeps the column's rhythm — the word
+     stays, greyed out, so the row does not lose its last cell. */
+  .pp-orders-track.is-off {
+    @apply text-line-strong;
+  }
+
+  .pp-order-status {
+    @apply inline-flex rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap;
+  }
+
+  .pp-order-status--ok {
+    @apply bg-state-ok-soft text-state-ok;
+  }
+
+  .pp-order-status--accent {
+    @apply bg-accent-soft text-accent-ink;
+  }
+
+  .pp-order-status--warn {
+    @apply bg-state-warn-soft text-state-warn;
+  }
+
+  .pp-order-status--error {
+    @apply bg-state-error-soft text-state-error;
+  }
+
+  .pp-order-status--neutral {
+    @apply bg-surface-2 text-ink-3;
   }
 }

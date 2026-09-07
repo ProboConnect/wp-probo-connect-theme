@@ -208,9 +208,10 @@ Things to know:
 
 ## Blocks
 
-The eight homepage blocks (`probo/hero`, `probo/usp-bar`, `probo/category-grid`,
+The theme's blocks (`probo/hero`, `probo/usp-bar`, `probo/category-grid`,
 `probo/bento-grid`, `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works`) are registered in `probo_register_blocks()` from
+`probo/my-products`, `probo/orders`, `probo/how-it-works`, `probo/contact`,
+`probo/faq`) are registered in `probo_register_blocks()` from
 `get_template_directory() . '/blocks/' . $name`. **A child theme copy of a
 `render.php` is not picked up** — the path is the parent's, not the stylesheet's.
 
@@ -266,6 +267,61 @@ plugin.
 | `probo_callout_placements` | filter | Placement slug → label, for the picker's groups. |
 | `probo_callout_max_slots` | filter | Callout slots per category (default 3). |
 | `probo_callout_legacy_template_map` | filter | Old `band` / `tile` values → template paths. |
+
+### Products per customer
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract, an ERP lookup or a rule of your own (per role, per group) goes. `bool $allowed, int $product_id, int $user_id` |
+| `probo_product_access_manage_cap` | filter | The capability that bypasses every restriction (default `edit_products`). |
+| `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
+| `probo_product_access_denied_message` | filter | The wording that refusal gets. |
+| `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
+| `probo_customer_product_ids` | filter | The products listed as one customer's own, behind `[probo_my_products]`. `int[] $ids, int $user_id` |
+
+The theme itself grants per customer and nothing else; a role or group rule is
+that first filter's job.
+
+Read the rules rather than the meta: `probo_customer_can_access_product()`,
+`probo_product_is_restricted()`, `probo_product_access_users()` and
+`probo_hidden_product_ids()` all take a product id, post or `WC_Product`, and a
+variation resolves to its parent. Writing goes through
+`probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
+which keep the cached list of restricted products honest.
+
+For a page of the customer's own products there is the **Mijn producten** block
+(`probo/my-products`) and the `[probo_my_products]` shortcode, or
+`probo_customer_product_ids()` and `probo_render_product_grid( $ids )` to build
+one in a template. All three read the same list.
+
+### Login required
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_login_required_scope` | filter | The wall's height regardless of the Customizer: `off`, `checkout`, `cart` or `site`. |
+| `probo_login_required_message` | filter | What a walled visitor is told. `string $message, string $stage` (`cart`, `checkout` or `site`) |
+| `probo_login_required_public_request` | filter | Which requests a closed portal still answers when logged out. The account page and robots.txt already do; this is where a public contact or privacy page is added. |
+| `probo_login_required_is_staff` | filter | Who keeps wp-admin and the toolbar in a closed portal. `bool $staff, int $user_id` — `edit_posts` or `manage_woocommerce` by default. |
+
+`probo_login_required_for( 'cart' | 'checkout' )` answers whether this visitor
+still has to log in, `probo_login_required_site_closed()` whether the whole site
+is shut to them, `probo_login_required_portal()` whether the shop is running as
+a closed portal at all (whoever is asking), and
+`probo_login_required_url( $return_to )` builds the login link that comes back
+to where they were.
+
+### Orders
+
+| Hook | Type | Use |
+| --- | --- | --- |
+| `probo_order_meta_keys` | filter | The order meta keys read for Probo Connect's status data (`_probo_status_data`). A list — first one holding data wins, for a shop mid-rename. |
+| `probo_order_meta` | filter | That data itself — the single point to override if the plugin exposes it some other way. `array $meta, WC_Order $order` |
+| `probo_order_status_page_url` | filter | The track & trace URL for one order. `string $url, WC_Order $order` |
+| `probo_order_status_tones` | filter | Status slug → pill tone (`ok`, `accent`, `warn`, `neutral`, `error`). Where a plugin's own statuses get their colour. |
+| `probo_customer_orders_args` | filter | The `wc_get_orders()` arguments behind the list. `array $args, int $user_id` |
+
+`probo_customer_orders( $user_id, $limit )` and
+`probo_render_orders_table( $orders, $args )` draw the card from a template.
 
 ### Checkout
 
