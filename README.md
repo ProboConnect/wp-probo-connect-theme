@@ -105,10 +105,11 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/my-products`, `probo/how-it-works`, `probo/contact`, `probo/faq` — all in
-the **Probo Connect** inserter category. (`probo/my-products` is a portal block
-rather than a homepage one — see
-[Products per customer](#products-per-customer).)
+`probo/my-products`, `probo/orders`, `probo/how-it-works`, `probo/contact`,
+`probo/faq` — all in the **Probo Connect** inserter category.
+(`probo/my-products` and `probo/orders` are portal blocks rather than homepage
+ones — see [Products per customer](#products-per-customer) and
+[Orders](#orders).)
 
 A few of them carry options worth knowing about:
 
@@ -365,6 +366,42 @@ One thing this setting deliberately does not touch: who may create an account.
 Whether a closed portal lets people register themselves or only admits accounts
 the shop makes for them is WooCommerce's own setting, under **WooCommerce →
 Settings → Accounts & Privacy**.
+
+## Orders
+
+The **Bestellingen** block (`probo/orders`) puts the customer's own orders on a
+page: order number, date, total, a status pill and a track & trace link, newest
+first. Straight from the *ThemeHeader Portal* design handoff, and the other half
+of a portal dashboard next to [their products](#products-per-customer).
+
+Title, how many orders (1–25), the "Alle bestellingen →" link and the line for a
+customer with no orders yet are all in the block's sidebar. The link points at
+the Orders tab of My account, which is WooCommerce's own full list with
+pagination — this block is the summary, not a replacement for it. From a
+template, `probo_customer_orders()` and `probo_render_orders_table()` draw the
+same card.
+
+**Track & trace** comes from the Probo Connect plugin, which hangs its own data
+on the order: `$probo_order_meta['status_page_url']`. The theme does not own
+that key, so `probo_order_meta()` reads a list of candidates (`_probo_order`,
+`probo_order`, `_probo_order_meta`, `probo_order_meta`, `_probo_connect_order`)
+and takes the first array it finds, then falls back to a flat
+`_probo_status_page_url`. Pin it to the one key your plugin build actually
+writes with `probo_order_meta_keys`, or replace the lookup wholesale with
+`probo_order_meta` — the plugin is the authority on where its data lives, not
+this theme. An order with no status page keeps the column's rhythm: the word
+"Track", greyed out, rather than a gap.
+
+The URL is run through `esc_url_raw()` against `http`/`https` before it is
+printed, so a half-written or hostile meta value renders as that same
+"no track yet" state instead of a link.
+
+**Status colours** are semantic rather than brand — green reads "done" and red
+reads "wrong" whatever the shop's accent is — so they are fixed tokens, not
+Customizer values. WooCommerce's seven statuses are mapped; a print shop's own
+("in productie", "bestandscheck") are registered by the plugin, so add them
+through `probo_order_status_tones` (tones: `ok`, `accent`, `warn`, `neutral`,
+`error`). Anything unmapped draws neutral, which is a colour and never a crash.
 
 ## Checkout
 
