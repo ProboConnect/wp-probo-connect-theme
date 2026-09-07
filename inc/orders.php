@@ -7,11 +7,11 @@
  * trace link. WooCommerce's own account page has an orders table of its own;
  * this is the one a portal puts on a dashboard beside the customer's products.
  *
- * Track & trace comes from the Probo Connect plugin, which hangs an array of
- * its own data on the order. The theme does not own that key, so it reads a
- * list of candidates and takes the first array it finds — and every step of it
- * is filterable, because the plugin is the authority on where its data lives,
- * not this file.
+ * Track & trace comes from the Probo Connect plugin, which hangs its status
+ * data on the order as `_probo_status_data` — `status_page_url` among it. The
+ * key is still read through a filter: the plugin owns that name, and a theme
+ * that hardcodes another project's meta key has to be edited the day that
+ * project renames it.
  *
  * @package Probo_Connect
  */
@@ -19,23 +19,21 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The order meta keys the plugin's own data may live under.
+ * The order meta key Probo Connect writes its status data to.
  *
- * @return string[]
+ * @return string[] One key, unless a filter says otherwise.
  */
 function probo_order_meta_keys() {
 	/**
-	 * Filters the order meta keys searched for Probo Connect's order data.
+	 * Filters the order meta keys read for Probo Connect's status data.
 	 *
-	 * Pin this to the one key the installed plugin actually writes and the
-	 * search below stops guessing.
+	 * Several may be listed; the first one holding data wins. That is what a
+	 * shop mid-upgrade needs — the old key behind the new one — rather than a
+	 * choice this theme makes on its own.
 	 *
 	 * @param string[] $keys Meta keys, most likely first.
 	 */
-	return (array) apply_filters(
-		'probo_order_meta_keys',
-		array( '_probo_order', 'probo_order', '_probo_order_meta', 'probo_order_meta', '_probo_connect_order' )
-	);
+	return (array) apply_filters( 'probo_order_meta_keys', array( '_probo_status_data' ) );
 }
 
 /**
@@ -50,6 +48,14 @@ function probo_order_meta( $order ) {
 	if ( $order instanceof WC_Order ) {
 		foreach ( probo_order_meta_keys() as $key ) {
 			$value = $order->get_meta( $key );
+
+			// A serialised array comes back as an array; a payload the plugin
+			// stored as JSON comes back as the string it was written as, and
+			// WordPress has no idea it is anything else.
+			if ( is_string( $value ) && '' !== $value ) {
+				$decoded = json_decode( $value, true );
+				$value   = is_array( $decoded ) ? $decoded : $value;
+			}
 
 			if ( is_array( $value ) && $value ) {
 				$meta = $value;
@@ -73,26 +79,12 @@ function probo_order_meta( $order ) {
 /**
  * The track & trace page for one order.
  *
- * Falls back to a flat meta key when the plugin's array is not where this theme
- * looked: the link is the point of the column, and a shop should not have to
- * write a filter to get it.
- *
  * @param WC_Order $order Order.
  * @return string URL, or '' when the order has none yet.
  */
 function probo_order_status_page_url( $order ) {
 	$probo_order_meta = probo_order_meta( $order );
 	$url              = isset( $probo_order_meta['status_page_url'] ) ? (string) $probo_order_meta['status_page_url'] : '';
-
-	if ( ! $url && $order instanceof WC_Order ) {
-		foreach ( array( '_probo_status_page_url', 'probo_status_page_url' ) as $key ) {
-			$url = (string) $order->get_meta( $key );
-
-			if ( $url ) {
-				break;
-			}
-		}
-	}
 
 	// Only ever a real link: esc_url_raw() drops anything that is not a URL of
 	// a scheme a browser will follow, so a half-written meta value renders as

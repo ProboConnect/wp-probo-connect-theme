@@ -314,7 +314,7 @@ to where they were.
 
 | Hook | Type | Use |
 | --- | --- | --- |
-| `probo_order_meta_keys` | filter | The order meta keys searched for Probo Connect's own data. Pin it to the one your plugin build writes. |
+| `probo_order_meta_keys` | filter | The order meta keys read for Probo Connect's status data (`_probo_status_data`). A list — first one holding data wins, for a shop mid-rename. |
 | `probo_order_meta` | filter | That data itself — the single point to override if the plugin exposes it some other way. `array $meta, WC_Order $order` |
 | `probo_order_status_page_url` | filter | The track & trace URL for one order. `string $url, WC_Order $order` |
 | `probo_order_status_tones` | filter | Status slug → pill tone (`ok`, `accent`, `warn`, `neutral`, `error`). Where a plugin's own statuses get their colour. |

@@ -381,16 +381,18 @@ pagination — this block is the summary, not a replacement for it. From a
 template, `probo_customer_orders()` and `probo_render_orders_table()` draw the
 same card.
 
-**Track & trace** comes from the Probo Connect plugin, which hangs its own data
-on the order: `$probo_order_meta['status_page_url']`. The theme does not own
-that key, so `probo_order_meta()` reads a list of candidates (`_probo_order`,
-`probo_order`, `_probo_order_meta`, `probo_order_meta`, `_probo_connect_order`)
-and takes the first array it finds, then falls back to a flat
-`_probo_status_page_url`. Pin it to the one key your plugin build actually
-writes with `probo_order_meta_keys`, or replace the lookup wholesale with
-`probo_order_meta` — the plugin is the authority on where its data lives, not
-this theme. An order with no status page keeps the column's rhythm: the word
-"Track", greyed out, rather than a gap.
+**Track & trace** comes from the Probo Connect plugin, which hangs its status
+data on the order as `_probo_status_data`:
+`$probo_order_meta['status_page_url']`. The key is still read through
+`probo_order_meta_keys` — the plugin owns that name, and a theme that hardcodes
+another project's meta key has to be edited the day that project renames it. It
+takes a list, first one holding data wins, which is what a shop mid-upgrade
+needs; `probo_order_meta` replaces the lookup wholesale. A value stored as JSON
+rather than a serialised array is decoded either way, because WordPress hands
+that back as the string it was written as and has no idea it is anything else.
+
+An order with no status page keeps the column's rhythm: the word "Track", greyed
+out, rather than a gap.
 
 The URL is run through `esc_url_raw()` against `http`/`https` before it is
 printed, so a half-written or hostile meta value renders as that same
