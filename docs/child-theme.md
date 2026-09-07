@@ -208,9 +208,10 @@ Things to know:
 
 ## Blocks
 
-The eight homepage blocks (`probo/hero`, `probo/usp-bar`, `probo/category-grid`,
+The theme's blocks (`probo/hero`, `probo/usp-bar`, `probo/category-grid`,
 `probo/bento-grid`, `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works`) are registered in `probo_register_blocks()` from
+`probo/my-products`, `probo/how-it-works`, `probo/contact`, `probo/faq`) are
+registered in `probo_register_blocks()` from
 `get_template_directory() . '/blocks/' . $name`. **A child theme copy of a
 `render.php` is not picked up** — the path is the parent's, not the stylesheet's.
 
@@ -288,9 +289,10 @@ variation resolves to its parent. Writing goes through
 `probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
 which keep the cached list of restricted products honest.
 
-For a page of the customer's own products there is `[probo_my_products]`, or
+For a page of the customer's own products there is the **Mijn producten** block
+(`probo/my-products`) and the `[probo_my_products]` shortcode, or
 `probo_customer_product_ids()` and `probo_render_product_grid( $ids )` to build
-one in a template.
+one in a template. All three read the same list.
 
 ### Login required
 

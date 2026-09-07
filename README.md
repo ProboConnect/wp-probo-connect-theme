@@ -105,8 +105,10 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works`, `probo/contact`, `probo/faq` — all in the **Probo
-Connect** inserter category.
+`probo/my-products`, `probo/how-it-works`, `probo/contact`, `probo/faq` — all in
+the **Probo Connect** inserter category. (`probo/my-products` is a portal block
+rather than a homepage one — see
+[Products per customer](#products-per-customer).)
 
 A few of them carry options worth knowing about:
 
@@ -243,7 +245,18 @@ shown to a customer who has not been given anything yet:
 [probo_my_products limit="6" orderby="date" order="DESC" empty="Nothing set up for you yet."]
 ```
 
-Logged out it shows a login prompt instead, which on a closed portal nobody
+The same thing exists as a block, **Mijn producten** (`probo/my-products`), in
+the Probo Connect inserter category — with a title, an intro, the same options
+in the sidebar, and the theme's own section spacing around it. Use the block
+when the page is built in the editor, the shortcode inside a template or a
+widget.
+
+In the editor the block previews as whoever is editing the page, and a shop
+manager has no products of their own — so instead of an empty state that says
+nothing, the preview carries a note explaining that every customer sees their
+own. That note is editor-only; a customer never sees it.
+
+Logged out both show a login prompt instead, which on a closed portal nobody
 ever reaches — the wall gets there first.
 
 Listed are the products that are limited *and* granted to this customer: a

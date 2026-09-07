@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/my-products",
+	"title": "Mijn producten",
+	"category": "probo",
+	"icon": "id-alt",
+	"description": "De producten die voor de ingelogde klant zijn vrijgegeven.",
+	"textdomain": "probo-connect-theme",
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Jouw producten" },
+		"intro": { "type": "string", "default": "" },
+		"count": { "type": "number", "default": 0 },
+		"orderby": { "type": "string", "default": "title" },
+		"empty": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
