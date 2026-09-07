@@ -141,8 +141,11 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/how-it-works`, `probo/contact`, `probo/faq` — all in the **Probo
-Connect** inserter category.
+`probo/my-products`, `probo/orders`, `probo/how-it-works`, `probo/contact`,
+`probo/faq` — all in the **Probo Connect** inserter category.
+(`probo/my-products` and `probo/orders` are portal blocks rather than homepage
+ones — see [Products per customer](#products-per-customer) and
+[Orders](#orders).)
 
 A few of them carry options worth knowing about:
 
@@ -279,7 +282,18 @@ shown to a customer who has not been given anything yet:
 [probo_my_products limit="6" orderby="date" order="DESC" empty="Nothing set up for you yet."]
 ```
 
-Logged out it shows a login prompt instead, which on a closed portal nobody
+The same thing exists as a block, **Mijn producten** (`probo/my-products`), in
+the Probo Connect inserter category — with a title, an intro, the same options
+in the sidebar, and the theme's own section spacing around it. Use the block
+when the page is built in the editor, the shortcode inside a template or a
+widget.
+
+In the editor the block previews as whoever is editing the page, and a shop
+manager has no products of their own — so instead of an empty state that says
+nothing, the preview carries a note explaining that every customer sees their
+own. That note is editor-only; a customer never sees it.
+
+Logged out both show a login prompt instead, which on a closed portal nobody
 ever reaches — the wall gets there first.
 
 Listed are the products that are limited *and* granted to this customer: a
@@ -388,6 +402,44 @@ One thing this setting deliberately does not touch: who may create an account.
 Whether a closed portal lets people register themselves or only admits accounts
 the shop makes for them is WooCommerce's own setting, under **WooCommerce →
 Settings → Accounts & Privacy**.
+
+## Orders
+
+The **Bestellingen** block (`probo/orders`) puts the customer's own orders on a
+page: order number, date, total, a status pill and a track & trace link, newest
+first. Straight from the *ThemeHeader Portal* design handoff, and the other half
+of a portal dashboard next to [their products](#products-per-customer).
+
+Title, how many orders (1–25), the "Alle bestellingen →" link and the line for a
+customer with no orders yet are all in the block's sidebar. The link points at
+the Orders tab of My account, which is WooCommerce's own full list with
+pagination — this block is the summary, not a replacement for it. From a
+template, `probo_customer_orders()` and `probo_render_orders_table()` draw the
+same card.
+
+**Track & trace** comes from the Probo Connect plugin, which hangs its status
+data on the order as `_probo_status_data`:
+`$probo_order_meta['status_page_url']`. The key is still read through
+`probo_order_meta_keys` — the plugin owns that name, and a theme that hardcodes
+another project's meta key has to be edited the day that project renames it. It
+takes a list, first one holding data wins, which is what a shop mid-upgrade
+needs; `probo_order_meta` replaces the lookup wholesale. A value stored as JSON
+rather than a serialised array is decoded either way, because WordPress hands
+that back as the string it was written as and has no idea it is anything else.
+
+An order with no status page keeps the column's rhythm: the word "Track", greyed
+out, rather than a gap.
+
+The URL is run through `esc_url_raw()` against `http`/`https` before it is
+printed, so a half-written or hostile meta value renders as that same
+"no track yet" state instead of a link.
+
+**Status colours** are semantic rather than brand — green reads "done" and red
+reads "wrong" whatever the shop's accent is — so they are fixed tokens, not
+Customizer values. WooCommerce's seven statuses are mapped; a print shop's own
+("in productie", "bestandscheck") are registered by the plugin, so add them
+through `probo_order_status_tones` (tones: `ok`, `accent`, `warn`, `neutral`,
+`error`). Anything unmapped draws neutral, which is a colour and never a crash.
 
 ## Checkout
 
