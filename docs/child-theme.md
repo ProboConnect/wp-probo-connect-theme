@@ -145,7 +145,7 @@ The whole set is discovered from disk:
 Nothing is registered. Dropping a file in makes it appear in the **Template**
 picker on the product-category edit screen. The **child theme is scanned first**,
 so a copy at the same path shadows the parent's file
-(`probo_callout_template_roots()` in `inc/category-callout.php`).
+(`probo_callout_templates()` in `inc/category-callout.php`).
 
 Shipped:
 
@@ -192,12 +192,11 @@ Things to know:
 * The `Callout Template:` file header is the label in the picker. Without one the
   filename is humanised (`wide-banner.php` → "Wide banner").
 * The **directory is the placement**. A directory that is not one of the three
-  known slugs still works — its name is humanised as the group label, or you can
-  label it through the `probo_callout_placements` filter.
-* The template is included with **only `$callout` in scope**
-  (`probo_callout_include_template()`), so it cannot depend on a caller's local
-  variables. Prefix any variable you create, as the shipped templates do
-  (`$probo_image_url`).
+  known slugs still works — its name is humanised as the group label; add it to
+  `probo_callout_placement_label()` for a proper one.
+* The template is included from inside a closure, with **only `$callout` in
+  scope**, so it cannot depend on a caller's local variables. Prefix any variable
+  you create, as the shipped templates do (`$probo_image_url`).
 * `$callout` is normalised: `title`, `text`, `image` (attachment id as string),
   `cta`, `url`, `tone`, `template`, `interval`. A row with an empty `title` is
   never rendered.
@@ -261,33 +260,30 @@ plugin.
 | Hook | Type | Use |
 | --- | --- | --- |
 | `probo_category_callouts` | filter | A category's normalised rows. `array $callouts, WP_Term $term` |
-| `probo_callout_templates` | filter | The discovered set — for removing or relabelling; add files on disk instead of here. |
-| `probo_callout_template_roots` | filter | Extra directories to scan. Earlier entries shadow later ones: prepend to override, append as fallback. A plugin shipping callout templates hooks here. |
-| `probo_callout_template_dir` | filter | The path below each root (`templates/callouts`). |
-| `probo_callout_placements` | filter | Placement slug → label, for the picker's groups. |
-| `probo_callout_max_slots` | filter | Callout slots per category (default 3). |
-| `probo_callout_legacy_template_map` | filter | Old `band` / `tile` values → template paths. |
 
-### Products per customer
+Everything else about callouts is a file on disk or a constant, not a filter:
+templates are discovered from `templates/callouts/`, placement labels live in
+`probo_callout_placement_label()`, and the number of slots per category is
+`PROBO_CALLOUT_SLOTS` (3).
 
-| Hook | Type | Use |
-| --- | --- | --- |
-| `probo_customer_can_access_product` | filter | The final say on one customer and one product — where a purchase history, a contract, an ERP lookup or a rule of your own (per role, per group) goes. `bool $allowed, int $product_id, int $user_id` |
-| `probo_product_access_manage_cap` | filter | The capability that bypasses every restriction (default `edit_products`). |
-| `probo_product_access_denied_action` | filter | `login`, `shop`, or anything else for a 404, when a product is opened by someone it is not for. `string $action, int $product_id` |
-| `probo_product_access_denied_message` | filter | The wording that refusal gets. |
-| `probo_product_access_profile_limit` | filter | How many restricted products a customer's profile screen lists (default 200). |
-| `probo_customer_product_ids` | filter | The products listed as one customer's own, behind `[probo_my_products]`. `int[] $ids, int $user_id` |
+### Who may see which product
 
-The theme itself grants per customer and nothing else; a role or group rule is
-that first filter's job.
+Two rules — per product and per category — are asked as one question, in
+`inc/visibility.php`. There are no filters on it: it is a rule, and a rule with
+a seam in the middle is two rules. Change it by editing that file.
 
-Read the rules rather than the meta: `probo_customer_can_access_product()`,
-`probo_product_is_restricted()`, `probo_product_access_users()` and
-`probo_hidden_product_ids()` all take a product id, post or `WC_Product`, and a
-variation resolves to its parent. Writing goes through
-`probo_product_access_set_restricted()` and `probo_product_access_set_users()`,
-which keep the cached list of restricted products honest.
+| Function | Answers |
+| --- | --- |
+| `probo_can_see_product( $product, $user_id )` | The one question every guard goes through. Takes an id, post or `WC_Product`; a variation resolves to its parent. |
+| `probo_product_is_restricted( $product )` | Whether the per-product rule is switched on for it. |
+| `probo_product_access_users( $product )` | The customers named on it. |
+| `probo_hidden_product_ids( $user_id )` | What the per-product rule hides from this user. |
+| `probo_hidden_category_ids( $user_id )` | What the per-category rule hides from this user, subcategories included. |
+| `probo_visibility_is_staff( $user_id )` | Who sees everything — `edit_products`. |
+| `probo_visibility_flush()` | Forget both cached lists after writing meta yourself. |
+
+The theme grants per customer and nothing else; a role or group rule goes inside
+`probo_can_see_product()`, where both existing rules already are.
 
 For a page of the customer's own products there is the **Mijn producten** block
 (`probo/my-products`) and the `[probo_my_products]` shortcode, or
@@ -298,10 +294,12 @@ one in a template. All three read the same list.
 
 | Hook | Type | Use |
 | --- | --- | --- |
-| `probo_login_required_scope` | filter | The wall's height regardless of the Customizer: `off`, `checkout`, `cart` or `site`. |
 | `probo_login_required_message` | filter | What a walled visitor is told. `string $message, string $stage` (`cart`, `checkout` or `site`) |
 | `probo_login_required_public_request` | filter | Which requests a closed portal still answers when logged out. The account page and robots.txt already do; this is where a public contact or privacy page is added. |
 | `probo_login_required_is_staff` | filter | Who keeps wp-admin and the toolbar in a closed portal. `bool $staff, int $user_id` — `edit_posts` or `manage_woocommerce` by default. |
+
+`probo_login_required_scope()` reads the Customizer setting, stored as one of
+`off`, `checkout`, `cart` or `site`.
 
 `probo_login_required_for( 'cart' | 'checkout' )` answers whether this visitor
 still has to log in, `probo_login_required_site_closed()` whether the whole site
@@ -327,7 +325,6 @@ to where they were.
 
 | Hook | Type | Use |
 | --- | --- | --- |
-| `probo_checkout_is_stepped` | filter | Force the stepped or one-page checkout regardless of the Customizer. |
 | `probo_checkout_pickup_instance_ids` | filter | Shipping instances treated as pick-up. |
 | `probo_checkout_address_summary_extra` | filter | Extra lines in a step's collapsed address summary. |
 | `probo_checkout_shipping_selector` | **action** | Where the plugin's shipping selector is re-rendered inside the checkout layout. |

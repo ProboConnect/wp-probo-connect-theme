@@ -15,13 +15,17 @@ require_once get_template_directory() . '/inc/dynamic-css.php';
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/category-callout.php';
-require_once get_template_directory() . '/inc/portal-visibility.php';
 require_once get_template_directory() . '/inc/blocks.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/woocommerce.php';
-require_once get_template_directory() . '/inc/product-access.php';
+require_once get_template_directory() . '/inc/visibility.php';
 require_once get_template_directory() . '/inc/login-required.php';
 require_once get_template_directory() . '/inc/orders.php';
+
+// The four screens that edit who may see which product; no front-end weight.
+if ( is_admin() ) {
+	require_once get_template_directory() . '/inc/visibility-admin.php';
+}
 
 /**
  * Theme supports, menus and image sizes.
@@ -54,6 +58,13 @@ function probo_setup() {
 	register_nav_menus(
 		array(
 			'primary' => __( 'Primary navigation', 'probo-connect-theme' ),
+			// The portal header asks a different question of its nav than a
+			// shop front does — "where am I in my account", not "what do you
+			// sell" — so it gets a location of its own. It is optional:
+			// probo_portal_menu_location() hands the header back to `primary`
+			// while nothing is assigned here, so switching to the Portal
+			// header does not empty the navigation.
+			'portal'  => __( 'Portal header', 'probo-connect-theme' ),
 			'topbar'  => __( 'Top bar (right)', 'probo-connect-theme' ),
 			'legal'   => __( 'Footer — legal', 'probo-connect-theme' ),
 		)
@@ -220,7 +231,7 @@ function probo_is_configurator_context() {
 function probo_body_class( $classes ) {
 	$classes[] = 'font-body';
 	$classes[] = 'text-ink';
-	$classes[] = 'bg-white';
+	$classes[] = 'bg-page';
 
 	// WooCommerce guards its own button colours — the purple #7f54b3 and its
 	// grey secondary — with :where(body:not(.woocommerce-block-theme-has-button-styles)).

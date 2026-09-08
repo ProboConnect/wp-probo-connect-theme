@@ -152,26 +152,32 @@ while ( have_posts() ) :
 					</div>
 
 					<?php
-					probo_configurator_open();
-
 					/**
-					 * Hook: probo_configurator_band.
-					 *
-					 * Where Probo Connect's configurator is rendered — its callback is
-					 * moved here from woocommerce_single_product_summary by
-					 * probo_move_configurator() in inc/woocommerce.php, so the design's
-					 * full-width band gets it instead of the summary column.
+					 * The pp-configurator wrapper is what assets/css/print-connect.css
+					 * hangs its skin off, and it also carries the design tokens into
+					 * the component — the only styling channel that survives if the
+					 * configurator turns out to use shadow DOM.
 					 */
-					do_action( 'probo_configurator_band' );
-
-					/**
-					 * WooCommerce's own add-to-cart template still runs, so every hook
-					 * the plugin relies on stays intact for product types that use it.
-					 */
-					woocommerce_template_single_add_to_cart();
-
-					probo_configurator_close();
 					?>
+					<div class="pp-configurator">
+						<?php
+						/**
+						 * Hook: probo_configurator_band.
+						 *
+						 * Where Probo Connect's configurator is rendered — its callback is
+						 * moved here from woocommerce_single_product_summary by
+						 * probo_move_configurator() in inc/woocommerce.php, so the design's
+						 * full-width band gets it instead of the summary column.
+						 */
+						do_action( 'probo_configurator_band' );
+
+						/**
+						 * WooCommerce's own add-to-cart template still runs, so every hook
+						 * the plugin relies on stays intact for product types that use it.
+						 */
+						woocommerce_template_single_add_to_cart();
+						?>
+					</div>
 				</div>
 			</div>
 		<?php endif; ?>

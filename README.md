@@ -36,8 +36,9 @@ What a child theme's file copies shadow, same as core template overrides:
 
 * Any template WordPress' template hierarchy covers — `single-product.php`,
   `header.php`, `footer.php`, `woocommerce/*` overrides, and so on.
-* Callout templates, `templates/callouts/{placement}/{name}.php` — looked up
-  child-first by `probo_callout_template_roots()`.
+* Callout templates, `templates/callouts/{placement}/{name}.php` — the child
+  theme's directory is scanned before the parent's, so a copy at the same path
+  wins, and a file of your own beside it appears in the Template picker.
 
 What file copies **cannot** shadow: block registration
 (`inc/blocks.php`) and the `assets/` JS/CSS always load from the parent
@@ -47,10 +48,8 @@ after the parent's) via filters instead — the ones most likely to matter:
 | Filter | Controls |
 | --- | --- |
 | `probo_layered_style_handles` | which plugin stylesheets get moved into the `plugins` cascade layer |
-| `probo_checkout_is_stepped` | one-page vs. stepped checkout |
 | `probo_checkout_pickup_instance_ids` | which shipping methods count as pickup |
-| `probo_callout_template_roots`, `_dir`, `_placements`, `probo_callout_max_slots` | callout template discovery |
-| `probo_portal_user_can_manage`, `probo_portal_user_choice_limit` | who bypasses category visibility, and how many users the picker lists |
+| `probo_category_callouts` | a category's callout rows, after normalisation |
 | `probo_menu_fallback_cache_suffix` | extra cache-key material for the fallback navigation |
 
 ## Customizing without code
@@ -60,7 +59,7 @@ Everything the design session iterated on is a Customizer control, under
 
 | Section | What it does |
 | --- | --- |
-| Merk | Accent colour, secondary colour, corner radius |
+| Merk | Accent colour, secondary colour, page background, corner radius |
 | Typografie | Title font and body font (specs and prices stay IBM Plex Mono by design) |
 | Header & footer | Header style (see [Header](#header)), top-bar style and optional own colour, footer style, light logo, the three USP lines, the checkout phone number, footer texts |
 | Componenten | Card style: Rand / Schaduw / Vlak, the checkout style — see [Checkout](#checkout) — and how much of the shop needs a login, see [Login required](#login-required) |
@@ -75,6 +74,13 @@ Two behaviours are deliberate and worth knowing about:
 * **Secondary drives every dark surface** — hero, top bar, footer, cart button,
   price bars, summary frames. Text and rules flip to whatever contrasts, so a
   pale secondary does not produce white-on-white.
+* **The page background carries the neutral bands with it.** The section
+  stripes, wells and hairlines are derived from it at the distance they sit
+  from white, so a light grey canvas layers the way white does instead of going
+  flat. It is a light-canvas setting: white cards, the white header variants and
+  the near-black ink scale are baked into the components, so a dark colour here
+  paints dark ink on a dark page. A genuinely dark theme is a pass over those
+  components, not this token.
 * **A hero title colour too close to the hero background is ignored.** The title
   falls back to the contrasting colour rather than disappearing. (Set on the
   hero block, not in the Customizer.)
@@ -104,10 +110,15 @@ portal. Two more things follow from that:
   beside it is that name's initials, and is decorative: the name is spelled out
   next to it (and stays spelled out from 640px up). A signed-out visitor gets
   the plain log-in link instead of the chip and the log-out link.
-* **Its nav is `Hoofdnavigatie`, flattened to one level.** The design draws four
-  flat links with the current one in accent, so the portal header renders the
-  same menu the other variants use at `depth => 1` and drops the flyouts. Assign
-  the portal's own items (orders, invoices, addresses) to `Hoofdnavigatie`.
+* **It has its own menu location, flattened to one level.** Assign a menu to
+  **Portal header** (Appearance → Menus) and the portal bar renders that one —
+  the orders, invoices and addresses links a portal wants, rather than the
+  shop's categories. Leave it unassigned and it renders **Primary navigation**
+  instead, so switching header style never empties the nav. Either way the menu
+  is drawn at `depth => 1` with no flyouts, because the design draws four flat
+  links with the current one in accent. The choice lives in
+  `probo_portal_menu_location()`; the other two headers are unaffected and stay
+  on `primary`.
 
 The portal bar is a 1120px measure, not the 1280px `.pp-container` gives the
 rest of the theme — the design's own narrower column, on the grounds that four
@@ -165,16 +176,17 @@ Two things worth setting up once:
   be off for them. The theme's own caching does (see
   `probo_menu_fallback_cache_suffix`), an external cache does not know about it.
 
-Restrictions are ignored for anyone who can edit other people's products, so
-shop managers keep seeing the whole catalogue. The category list table shows a
+Restrictions are ignored for shop staff — anyone who can edit products — so a
+shop manager keeps seeing the whole catalogue. The category list table shows a
 **Visible to** column, so it is visible at a glance which categories are
-limited. Both the term meta (`_probo_portal_users`, an array of user ids) and
-the behaviour live in `inc/portal-visibility.php`.
+limited. The term meta is `_probo_portal_users`, an array of user ids; the rule
+and every guard that enforces it live in `inc/visibility.php`, and the picker
+that edits it in `inc/visibility-admin.php`.
 
 Users are linked to a category one by one; there is no customer-group layer.
 That is the deliberate MVP trade-off — with many shops or many campaigns, swap
-`probo_portal_hidden_category_ids()` over to a group source rather than
-extending the picker.
+`probo_hidden_category_ids()` over to a group source rather than extending the
+picker.
 
 ### Why this lives in the theme, and what it costs
 
@@ -208,11 +220,11 @@ reordered, removed or reused on other pages:
 
 `probo/hero`, `probo/usp-bar`, `probo/category-grid`, `probo/bento-grid`,
 `probo/testimonials`, `probo/logo-reel`, `probo/bestsellers`,
-`probo/my-products`, `probo/orders`, `probo/how-it-works`, `probo/contact`,
-`probo/faq` — all in the **Probo Connect** inserter category.
-(`probo/my-products` and `probo/orders` are portal blocks rather than homepage
-ones — see [Products per customer](#products-per-customer) and
-[Orders](#orders).)
+`probo/portal-hero`, `probo/my-products`, `probo/orders`, `probo/how-it-works`,
+`probo/contact`, `probo/faq` — all in the **Probo Connect** inserter category.
+(`probo/portal-hero`, `probo/my-products` and `probo/orders` are portal blocks
+rather than homepage ones — see [Portal hero](#portal-hero),
+[Products per customer](#products-per-customer) and [Orders](#orders).)
 
 A few of them carry options worth knowing about:
 
@@ -247,7 +259,7 @@ A few of them carry options worth knowing about:
   appears as a band at the top of that category's archive page. On top of that
   the block can carry one callout of its own, for a pitch that belongs to no
   category — placed at the start, at the end, or repeated after every N tiles.
-  Both draw through `probo_callout_tile()` so they cannot drift apart. A
+  Both draw through `probo_callout_render()` so they cannot drift apart. A
   category's callout has its own on/off checkbox, so the text can stay while the
   callout is switched off; a category saved before that checkbox existed falls
   back to "a title means it is on".
@@ -306,9 +318,11 @@ real one on `woocommerce_after_cart_item_name`.
 ## Products per customer
 
 Some products are not for the whole shop. A product's edit screen has a
-**Customer access** tab (`inc/product-access.php`): switch **Limit to selected
-customers** on, name the customers, and the product flips from public to
-invitation-only.
+**Customer access** tab (`inc/visibility-admin.php`): switch **Limit to
+selected customers** on, name the customers, and the product flips from public
+to invitation-only. The rule itself, and every guard that enforces it, live in
+`inc/visibility.php` next to the per-category rule — the two are asked as one
+question, `probo_can_see_product()`.
 
 For everyone who was not named it stops existing rather than merely becoming
 unbuyable. It is dropped from the shop, from category pages, from search, from
@@ -369,23 +383,18 @@ other, and calling it theirs alone would be a lie. From a template,
 `probo_customer_product_ids()` gives the same list as ids and
 `probo_render_product_grid( $ids )` draws it.
 
-Four filters if you need something else:
-
-| Filter | Does |
-| --- | --- |
-| `probo_customer_can_access_product` | The final say on one customer and one product — where a plugin, a purchase history, an ERP lookup or a rule of your own (per role, per contract) goes. |
-| `probo_product_access_manage_cap` | The capability that sees everything; `edit_products` by default. |
-| `probo_product_access_denied_action` | `login`, `shop` or a 404 when someone opens a product that is not theirs. |
-| `probo_product_access_denied_message` | The wording they get. |
-
-`probo_product_access_profile_limit` sets how many products the profile screen
-lists before it sends you to the product's own tab instead.
+From code, `probo_can_see_product( $product, $user_id )` is the one question
+every guard goes through, and the place to hook a rule of your own: a purchase
+history, a contract, an ERP lookup. `probo_visibility_is_staff()` decides who
+sees everything (`edit_products`), and `PROBO_VISIBILITY_PROFILE_LIMIT` in
+`inc/visibility-admin.php` how many products the profile screen lists before it
+sends you to the product's own tab instead.
 
 Access is per customer and nothing else — no role or group axis. Groups are the
 kind of thing that looks like a shortcut and turns into a second rulebook to
-keep in sync; a shop that genuinely needs one adds it in a few lines on
-`probo_customer_can_access_product` without this screen growing a list of
-WordPress roles that mean nothing to a customer.
+keep in sync; a shop that genuinely needs one adds it in a few lines inside
+`probo_can_see_product()` without this screen growing a list of WordPress roles
+that mean nothing to a customer.
 
 ## Login required
 
@@ -431,7 +440,7 @@ the account page, and the toolbar disappears from the front end with it — it i
 a strip of links into an admin they cannot open. Staff keep both: anyone with
 `edit_posts` or `manage_woocommerce`, so an editor, a shop manager and a
 shop-floor role that was never given the post capabilities all still work.
-`probo_login_required_is_staff` decides, and is filterable.
+`probo_login_required_is_staff()` decides.
 
 Three doors in wp-admin stay open regardless, because closing them would break
 the front end the portal is made of: `admin-ajax.php`, which is how the shop's
@@ -462,13 +471,35 @@ order-received page and the pay-for-order link stay open under the order walls:
 both belong to an order that already exists, and a customer paying an invoice
 link is not placing a new one.
 
-`probo_login_required_scope` overrides the setting from code (`off`, `checkout`,
-`cart` or `site`), `probo_login_required_message` the wording.
+The setting is stored as one of `off`, `checkout`, `cart` or `site`;
+`probo_login_required_message` filters the wording.
 
 One thing this setting deliberately does not touch: who may create an account.
 Whether a closed portal lets people register themselves or only admits accounts
 the shop makes for them is WooCommerce's own setting, under **WooCommerce →
 Settings → Accounts & Privacy**.
+
+## Portal hero
+
+The **Portaalbanner** block (`probo/portal-hero`) is the dark welcome band the
+*ThemeHeader Portal* design handoff draws under the [portal header](#header):
+an eyebrow, a title, and the diagonal `.pp-stripe-dark` texture the theme
+already uses for unshot photography, faded into the band from the right.
+
+The title carries a `{name}` placeholder rather than a fixed string — the
+block fills it with `probo_portal_account_name()`, the same billing-company
+(falling back to display name) the portal header's account chip shows, so
+"Welkom terug, {name}" becomes "Welkom terug, Van Wijnen B.V." for whoever is
+signed in. The **Placeholder name** attribute (default `[Bedrijfsnaam]`)
+stands in for `{name}` whenever there isn't a real one to show yet: a
+logged-out visitor, or a shop manager previewing the block in the editor with
+no billing company of their own.
+
+The right-hand panel is a photo — **Choose image** in the block's own Image
+panel, same `MediaUpload` picker the `probo/hero` variants use. Leave it empty
+and `probo_hero_media()` draws the same diagonal placeholder those variants
+fall back to. This is a block setting, not a Customizer one: there is no
+site-wide image control for it, because the design draws it per page.
 
 ## Orders
 
@@ -543,8 +574,7 @@ Everything below describes the **Stappen** layout. Switching back to **Eén
 pagina** restores the previous behaviour everywhere — the template, the header
 and footer, the carrier list, the plugin's own delivery templates and the order
 button's label all follow the same switch, through
-`probo_checkout_is_stepped()` in `inc/woocommerce.php` (filterable as
-`probo_checkout_is_stepped`).
+`probo_checkout_is_stepped()` in `inc/woocommerce.php`.
 
 ### What changes
 

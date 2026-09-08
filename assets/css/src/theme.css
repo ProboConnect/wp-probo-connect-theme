@@ -23,6 +23,18 @@
    PHP exactly the way the design prototype derived them in JS.
 --------------------------------------------------------------------------- */
 :root {
+  /* The page's own canvas, and the neutral bands that layer on top of it.
+     inc/dynamic-css.php derives all six from the Customizer's page colour by
+     the same RGB offsets that separate them from white here, so a light grey
+     canvas keeps exactly the layering white has. */
+  --pp-page: #FFFFFF;
+  --pp-surface: #F7F7F5;
+  --pp-surface-soft: #FCFCFB;
+  --pp-surface-2: #F0F0EE;
+  --pp-canvas: #EDEDEA;
+  --pp-line: #E4E4E7;
+  --pp-line-strong: #C9C9CE;
+
   --pp-accent: #1B4DFF;
   --pp-accent-soft: #EEF1FF;
   --pp-accent-fg: #FFFFFF;
@@ -88,13 +100,14 @@
   --color-state-error: #B42318;
   --color-state-error-soft: #FDE8E8;
 
-  --color-line: #E4E4E7;
-  --color-line-strong: #C9C9CE;
-  --color-surface: #F7F7F5;
+  --color-page: var(--pp-page);
+  --color-line: var(--pp-line);
+  --color-line-strong: var(--pp-line-strong);
+  --color-surface: var(--pp-surface);
   /* The lightest of the light bands — heroes E and I sit on it. */
-  --color-surface-soft: #FCFCFB;
-  --color-surface-2: #F0F0EE;
-  --color-canvas: #EDEDEA;
+  --color-surface-soft: var(--pp-surface-soft);
+  --color-surface-2: var(--pp-surface-2);
+  --color-canvas: var(--pp-canvas);
 
   --color-bar-bg: var(--pp-bar-bg);
   --color-bar-fg: var(--pp-bar-fg);
@@ -149,7 +162,7 @@
   .editor-styles-wrapper {
     font-family: var(--font-body);
     color: var(--color-ink);
-    background: #fff;
+    background: var(--color-page);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -225,6 +238,22 @@
 
   .woocommerce form .form-row textarea {
     @apply h-28 py-3;
+  }
+
+  /* A select left on its native appearance ignores the border, the radius and
+     the type it was just given, so next to a text input it reads as a
+     different control. Dropping the appearance hands all of that back; the
+     arrow the browser drew has to be redrawn here, as a background chevron
+     with room reserved for it. */
+  .pp-field select,
+  select.pp-field,
+  .woocommerce form .form-row select,
+  .woocommerce-page form .form-row select,
+  .woocommerce-ordering select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%236B6B76' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    @apply appearance-none pr-10;
   }
 
   .woocommerce form .form-row label {
@@ -1672,7 +1701,7 @@
 
   /* Catalog ordering select on the archive toolbar. */
   .woocommerce-ordering select {
-    @apply rounded-pp border border-line-strong px-3.5 py-2.5 text-[13px] font-semibold text-ink;
+    @apply rounded-pp border border-line-strong bg-white py-2.5 pr-10 pl-3.5 text-[13px] font-semibold text-ink;
   }
 }
 

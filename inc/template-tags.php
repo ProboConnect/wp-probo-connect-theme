@@ -146,6 +146,24 @@ function probo_portal_account_name() {
 }
 
 /**
+ * Which menu location the portal header renders.
+ *
+ * Its own, once a menu is assigned to it; the shop's primary navigation until
+ * then. Switching the Customizer to the Portal header is a decision about the
+ * chrome, not about the navigation, so it must not blank the nav on a site
+ * that has only ever filled in "Primary navigation" — and a portal that does
+ * want its own four account links gets them by assigning a menu to "Portal
+ * header", with no setting to find first.
+ *
+ * @return string A registered nav menu location.
+ */
+function probo_portal_menu_location() {
+	$locations = get_nav_menu_locations();
+
+	return empty( $locations['portal'] ) ? 'primary' : 'portal';
+}
+
+/**
  * Initials for the portal header's avatar chip.
  *
  * First letters of the first two words, so "Van Wijnen B.V." reads as VW. The

@@ -6,22 +6,22 @@
  * Customizer → Theme settings → Components, it puts a wall in front of the
  * order, at one of two heights:
  *
- *   'Kassa'        a visitor browses and fills a cart as before, but has to log
- *                  in to order it. The cart survives the login, so nobody loses
- *                  what they configured.
- *   'Winkelwagen'  nothing goes into a cart without an account — the wall a
- *                  trade shop with account-only pricing wants.
- *   'Hele site'    a closed order portal: every page, feed, sitemap and REST
- *                  call sends a logged-out visitor to the login form. Only the
- *                  account page itself stays open, because that is where the
- *                  login form and the password reset live. Customers who are
- *                  logged in stay on the front end — wp-admin and its toolbar
- *                  are for staff — where they see their own products, their own
- *                  orders, and a checkout to finish. That is the whole portal.
+ *   'checkout'  a visitor browses and fills a cart as before, but has to log
+ *               in to order it. The cart survives the login, so nobody loses
+ *               what they configured.
+ *   'cart'      nothing goes into a cart without an account — the wall a trade
+ *               shop with account-only pricing wants.
+ *   'site'      a closed order portal: every page, feed, sitemap and REST
+ *               call sends a logged-out visitor to the login form. Only the
+ *               account page itself stays open, because that is where the login
+ *               form and the password reset live. Customers who are logged in
+ *               stay on the front end — wp-admin and its toolbar are for staff —
+ *               where they see their own products, their own orders, and a
+ *               checkout to finish. That is the whole portal.
  *
  * The first two leave browsing open on purpose — who may see which product is
  * inc/product-access.php's job, and that is a different decision from who may
- * buy. 'Hele site' is the one that answers "nobody sees anything without an
+ * buy. 'site' is the one that answers "nobody sees anything without an
  * account", and it answers it for the whole site rather than per product.
  *
  * Every wall is checked again server-side. The redirect is a courtesy — the
@@ -40,30 +40,14 @@ defined( 'ABSPATH' ) || exit;
  * @return string One of 'off', 'checkout', 'cart' or 'site'.
  */
 function probo_login_required_scope() {
-	$scopes = array(
-		'Uit'         => 'off',
-		'Kassa'       => 'checkout',
-		'Winkelwagen' => 'cart',
-		'Hele site'   => 'site',
-	);
-
-	$scope = $scopes[ (string) probo_get( 'require_login' ) ] ?? 'off';
-
-	/**
-	 * Filters how high the login wall stands, whatever the Customizer says.
-	 *
-	 * @param string $scope One of 'off', 'checkout', 'cart' or 'site'.
-	 */
-	$scope = (string) apply_filters( 'probo_login_required_scope', $scope );
-
-	return in_array( $scope, array( 'off', 'checkout', 'cart', 'site' ), true ) ? $scope : 'off';
+	return (string) probo_get( 'require_login' );
 }
 
 /**
  * Whether this visitor has to log in before a given step.
  *
  * Every setting above 'off' walls the checkout; the cart is walled from
- * 'Winkelwagen' up.
+ * 'cart' up.
  *
  * @param string $stage Either 'cart' (adding to the cart) or 'checkout'.
  * @return bool
@@ -232,7 +216,7 @@ add_action( 'woocommerce_before_customer_login_form', 'probo_login_required_logi
 /* ---------------------------------------------------------------------------
    The closed portal.
 
-   'Hele site' is not a stronger version of the order wall — it is a different
+   'site' is not a stronger version of the order wall — it is a different
    shape: nothing is public, so the question stops being "may this visitor buy"
    and becomes "is this request the login itself". Everything that is not gets
    turned away, front end, feeds, sitemaps and REST alike.
@@ -459,7 +443,7 @@ add_action( 'woocommerce_before_add_to_cart_form', 'probo_login_required_product
    A closed portal has one door and one set of rooms: customers log in on the
    front end, see the products they were given and the orders they placed, and
    finish a checkout. wp-admin is not part of that — it is where the shop works,
-   not where the customer does — so under 'Hele site' it is closed to everyone
+   not where the customer does — so under 'site' it is closed to everyone
    who is not staff, and its toolbar goes with it.
 --------------------------------------------------------------------------- */
 

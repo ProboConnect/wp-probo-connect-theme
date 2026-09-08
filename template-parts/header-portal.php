@@ -13,6 +13,10 @@
  * "where am I in my account" and "who am I signed in as". A shop that still
  * needs the cart in the header wants Variant A or B — see the README.
  *
+ * The nav comes from the "Portal header" menu location when one is assigned to
+ * it, and from "Primary navigation" until then — see
+ * probo_portal_menu_location().
+ *
  * The design fixes this band as light: white, an ink wordmark, a hairline
  * underneath. It therefore takes none of the --pp-bar-* tokens Variant B
  * follows, and reads the theme's ordinary surface tokens instead (--pp-line,
@@ -54,7 +58,7 @@ $probo_portal_company = probo_portal_account_name();
 			<?php
 			wp_nav_menu(
 				array(
-					'theme_location' => 'primary',
+					'theme_location' => probo_portal_menu_location(),
 					'container'      => false,
 					'menu_class'     => 'pp-portal-menu',
 					'depth'          => 1,

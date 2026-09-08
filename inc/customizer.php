@@ -68,6 +68,23 @@ function probo_customize_register( $wp_customize ) {
 		}
 	};
 
+	/**
+	 * The sanitize callback for a multiple-choice setting.
+	 *
+	 * Every one of these used to be a named function that spelled its own
+	 * options out a second time, next to the control that already listed them.
+	 * They are all the same rule — "a value from probo_choices(), or the
+	 * default" — so there is one of them now, closing over the key.
+	 *
+	 * @param string $key Setting key without the probo_ prefix.
+	 * @return callable
+	 */
+	$choice = static function ( $key ) {
+		return static function ( $value ) use ( $key ) {
+			return probo_normalize_choice( $key, $value );
+		};
+	};
+
 	// --- Merk -------------------------------------------------------------
 	// Colours stay on 'refresh': every one of them feeds derived tokens
 	// (contrast-aware bar, footer and hero values) that are computed in PHP.
@@ -88,6 +105,17 @@ function probo_customize_register( $wp_customize ) {
 			'type'        => 'color',
 			'label'       => __( 'Secondary', 'probo-connect-theme' ),
 			'description' => __( 'Controls all dark surfaces: hero, top bar, footer, cart button, price bars, and summary boxes.', 'probo-connect-theme' ),
+			'section'     => 'probo_brand',
+		),
+		'sanitize_hex_color'
+	);
+
+	$add(
+		'page_color',
+		array(
+			'type'        => 'color',
+			'label'       => __( 'Page background', 'probo-connect-theme' ),
+			'description' => __( 'The canvas behind every page. The section bands, wells and hairlines follow it. Keep it light — cards, the header and the text colour are built for a light page.', 'probo-connect-theme' ),
 			'section'     => 'probo_brand',
 		),
 		'sanitize_hex_color'
@@ -135,13 +163,9 @@ function probo_customize_register( $wp_customize ) {
 			'type'    => 'radio',
 			'label'   => __( 'Header style', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
-			'choices' => array(
-				'ruim'    => __( 'Spacious — logo, search and USPs on three rows', 'probo-connect-theme' ),
-				'compact' => __( 'Compact — one dark bar with a products megamenu', 'probo-connect-theme' ),
-				'portal'  => __( 'Portal — one light bar with account navigation, without search or cart', 'probo-connect-theme' ),
-			),
+			'choices' => probo_choices( 'header_variant' ),
 		),
-		'probo_sanitize_header_variant'
+		$choice( 'header_variant' )
 	);
 
 	$add(
@@ -150,14 +174,9 @@ function probo_customize_register( $wp_customize ) {
 			'type'    => 'select',
 			'label'   => __( 'Top bar', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
-			'choices' => array(
-				'Zwart'  => __( 'Follow secondary', 'probo-connect-theme' ),
-				'Licht'  => __( 'Light', 'probo-connect-theme' ),
-				'Accent' => __( 'Accent', 'probo-connect-theme' ),
-				'Geen'   => __( 'No color block', 'probo-connect-theme' ),
-			),
+			'choices' => probo_choices( 'bar_style' ),
 		),
-		'probo_sanitize_bar_style'
+		$choice( 'bar_style' )
 	);
 
 	$add(
@@ -177,14 +196,9 @@ function probo_customize_register( $wp_customize ) {
 			'type'    => 'select',
 			'label'   => __( 'Footer', 'probo-connect-theme' ),
 			'section' => 'probo_chrome',
-			'choices' => array(
-				'Zwart'  => __( 'Follow secondary', 'probo-connect-theme' ),
-				'Licht'  => __( 'Light', 'probo-connect-theme' ),
-				'Wit'    => __( 'White', 'probo-connect-theme' ),
-				'Accent' => __( 'Accent', 'probo-connect-theme' ),
-			),
+			'choices' => probo_choices( 'footer_style' ),
 		),
-		'probo_sanitize_footer_style'
+		$choice( 'footer_style' )
 	);
 
 	// WordPress core supports exactly one custom logo and has no light/dark
@@ -249,6 +263,21 @@ function probo_customize_register( $wp_customize ) {
 		'postMessage'
 	);
 
+	foreach ( array( 'footer_col_1_title', 'footer_col_2_title', 'footer_col_3_title' ) as $index => $key ) {
+		$add(
+			$key,
+			array(
+				'type'        => 'text',
+				/* translators: %d: position of the link column in the footer. */
+				'label'       => sprintf( __( 'Footer column %d heading', 'probo-connect-theme' ), $index + 1 ),
+				'description' => 1 === $index + 1 ? __( 'Heading above the link columns. Leave empty to hide the heading.', 'probo-connect-theme' ) : '',
+				'section'     => 'probo_chrome',
+			),
+			'sanitize_text_field',
+			'postMessage'
+		);
+	}
+
 	$add(
 		'footer_legal',
 		array(
@@ -267,13 +296,9 @@ function probo_customize_register( $wp_customize ) {
 			'type'    => 'select',
 			'label'   => __( 'Card style', 'probo-connect-theme' ),
 			'section' => 'probo_components',
-			'choices' => array(
-				'Rand'    => __( 'Border', 'probo-connect-theme' ),
-				'Schaduw' => __( 'Shadow', 'probo-connect-theme' ),
-				'Vlak'    => __( 'Flat', 'probo-connect-theme' ),
-			),
+			'choices' => probo_choices( 'card_style' ),
 		),
-		'probo_sanitize_card_style'
+		$choice( 'card_style' )
 	);
 
 	$add(
@@ -283,12 +308,9 @@ function probo_customize_register( $wp_customize ) {
 			'label'       => __( 'Checkout style', 'probo-connect-theme' ),
 			'description' => __( 'The step version collapses the checkout to one open step, turns the delivery choice into a single decision, and puts the order button in step 3. The classic version is the long page with all sections stacked.', 'probo-connect-theme' ),
 			'section'     => 'probo_components',
-			'choices'     => array(
-				'Eén pagina' => __( 'One page (classic)', 'probo-connect-theme' ),
-				'Stappen'    => __( 'Steps (accordion)', 'probo-connect-theme' ),
-			),
+			'choices'     => probo_choices( 'checkout_style' ),
 		),
-		'probo_sanitize_checkout_style'
+		$choice( 'checkout_style' )
 	);
 
 	$add(
@@ -298,18 +320,13 @@ function probo_customize_register( $wp_customize ) {
 			'label'       => __( 'Login required', 'probo-connect-theme' ),
 			'description' => __( 'How much of the shop needs an account. Off, it sells to anyone who walks in. At the checkout a visitor can still fill a cart but has to log in to order it — the cart survives the login. From the cart nothing goes in without an account. The whole site closes everything: every page sends a logged-out visitor to the login form, which is what a closed order portal is.', 'probo-connect-theme' ),
 			'section'     => 'probo_components',
-			'choices'     => array(
-				'Uit'         => __( 'Off — guests can order', 'probo-connect-theme' ),
-				'Kassa'       => __( 'At the checkout', 'probo-connect-theme' ),
-				'Winkelwagen' => __( 'From the cart', 'probo-connect-theme' ),
-				'Hele site'   => __( 'The whole site — a closed portal', 'probo-connect-theme' ),
-			),
+			'choices'     => probo_choices( 'require_login' ),
 		),
-		'probo_sanitize_require_login'
+		$choice( 'require_login' )
 	);
 
 	// Live-edit the text bits that carry no derived styling.
-	foreach ( array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3', 'checkout_phone', 'footer_description', 'footer_legal' ) as $key ) {
+	foreach ( array( 'topbar_usp_1', 'topbar_usp_2', 'topbar_usp_3', 'checkout_phone', 'footer_description', 'footer_col_1_title', 'footer_col_2_title', 'footer_col_3_title', 'footer_legal' ) as $key ) {
 		$setting = $wp_customize->get_setting( 'probo_' . $key );
 
 		if ( $setting ) {
@@ -371,68 +388,8 @@ function probo_sanitize_body_font( $value ) {
 	return isset( probo_font_choices( 'body' )[ $value ] ) ? $value : 'Archivo';
 }
 
-/**
- * Sanitize the header variant.
- *
- * Only the three known variants are allowed; anything else falls back to the
- * spacious default, so the compact and portal markup never load by accident.
- *
- * @param mixed $value Raw value.
- * @return string
- */
-function probo_sanitize_header_variant( $value ) {
-	return in_array( $value, array( 'ruim', 'compact', 'portal' ), true ) ? $value : 'ruim';
-}
 
-/**
- * Sanitize the top-bar style.
- *
- * @param mixed $value Raw value.
- * @return string
- */
-function probo_sanitize_bar_style( $value ) {
-	return in_array( $value, array( 'Zwart', 'Licht', 'Accent', 'Geen' ), true ) ? $value : 'Zwart';
-}
 
-/**
- * Sanitize the footer style.
- *
- * @param mixed $value Raw value.
- * @return string
- */
-function probo_sanitize_footer_style( $value ) {
-	return in_array( $value, array( 'Zwart', 'Licht', 'Wit', 'Accent' ), true ) ? $value : 'Zwart';
-}
 
-/**
- * Sanitize the card style.
- *
- * @param mixed $value Raw value.
- * @return string
- */
-function probo_sanitize_card_style( $value ) {
-	return in_array( $value, array( 'Rand', 'Schaduw', 'Vlak' ), true ) ? $value : 'Rand';
-}
 
-/**
- * Sanitize the checkout style.
- *
- * @param string $value Raw value.
- * @return string
- */
-function probo_sanitize_checkout_style( $value ) {
-	return in_array( $value, array( 'Eén pagina', 'Stappen' ), true ) ? $value : 'Eén pagina';
-}
 
-/**
- * Sanitize the login-before-ordering setting.
- *
- * Anything unrecognised falls back to 'Uit': a setting that cannot be read is
- * not a reason to lock customers out of a shop that was selling fine.
- *
- * @param string $value Raw value.
- * @return string
- */
-function probo_sanitize_require_login( $value ) {
-	return in_array( $value, array( 'Uit', 'Kassa', 'Winkelwagen', 'Hele site' ), true ) ? $value : 'Uit';
-}

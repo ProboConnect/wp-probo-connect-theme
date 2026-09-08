@@ -72,6 +72,44 @@ function probo_tint( $hex ) {
 }
 
 /**
+ * A colour shifted by a fixed RGB offset, clamped to the 0..255 range.
+ *
+ * Used to derive the neutral bands from the page colour: the theme's greys are
+ * defined as distances from white (#F7F7F5 is white minus 8/8/10), and keeping
+ * those same distances is what makes a light grey canvas layer the way white
+ * does instead of flattening into one tone. Clamping means a canvas that is
+ * already near-black simply stops getting darker rather than wrapping around.
+ *
+ * The offsets are per channel rather than one number for all three, because
+ * the theme's greys are very slightly warm (#F7F7F5, not #F7F7F7) and that
+ * warmth is part of the design.
+ *
+ * @param string $hex     Hex colour.
+ * @param int[]  $offsets Amount to add to red, green and blue; negative darkens.
+ * @return string A `#rrggbb` hex colour.
+ */
+function probo_shift( $hex, $offsets ) {
+	$hex = ltrim( (string) $hex, '#' );
+
+	if ( 3 === strlen( $hex ) ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+
+	if ( ! preg_match( '/^[0-9a-f]{6}$/i', $hex ) ) {
+		return '#FFFFFF';
+	}
+
+	$value    = hexdec( $hex );
+	$channels = array( ( $value >> 16 ) & 255, ( $value >> 8 ) & 255, $value & 255 );
+
+	foreach ( $channels as $index => $channel ) {
+		$channels[ $index ] = max( 0, min( 255, $channel + (int) ( $offsets[ $index ] ?? 0 ) ) );
+	}
+
+	return sprintf( '#%02X%02X%02X', $channels[0], $channels[1], $channels[2] );
+}
+
+/**
  * Whether a colour is dark enough to need light text on top of it.
  *
  * @param string $hex Hex colour.

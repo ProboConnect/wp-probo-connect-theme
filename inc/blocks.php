@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string[]
  */
 function probo_block_names() {
-	return array( 'hero', 'usp-bar', 'category-grid', 'bento-grid', 'testimonials', 'logo-reel', 'bestsellers', 'my-products', 'orders', 'how-it-works', 'contact', 'faq' );
+	return array( 'hero', 'usp-bar', 'category-grid', 'bento-grid', 'testimonials', 'logo-reel', 'bestsellers', 'portal-hero', 'my-products', 'orders', 'how-it-works', 'contact', 'faq' );
 }
 
 /**

@@ -360,24 +360,6 @@ function probo_move_shipping_selector() {
 add_action( 'template_redirect', 'probo_move_shipping_selector' );
 
 /**
- * Wrap whatever Probo Connect renders in the add-to-cart area.
- *
- * The wrapper is what assets/css/print-connect.css hangs its skin off, and it
- * also carries the design tokens into the component — the only styling channel
- * that survives if the configurator turns out to use shadow DOM.
- */
-function probo_configurator_open() {
-	echo '<div class="pp-configurator">';
-}
-
-/**
- * Close the configurator wrapper.
- */
-function probo_configurator_close() {
-	echo '</div>';
-}
-
-/**
  * Product loops are a Tailwind grid rather than WooCommerce's float columns.
  *
  * @return string
@@ -749,12 +731,7 @@ function probo_checkout_mode_tabs( $group, $pickup_count = null, $pickup_active 
  * @return bool
  */
 function probo_checkout_is_stepped() {
-	/**
-	 * Filters whether the stepped checkout is used.
-	 *
-	 * @param bool $stepped Whether the accordion checkout is on.
-	 */
-	return (bool) apply_filters( 'probo_checkout_is_stepped', 'Stappen' === probo_get( 'checkout_style' ) );
+	return 'steps' === probo_get( 'checkout_style' );
 }
 
 /**
