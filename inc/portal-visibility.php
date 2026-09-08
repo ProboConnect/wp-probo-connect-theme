@@ -503,33 +503,22 @@ function probo_portal_capability() {
 /**
  * Users offered in the category's picker.
  *
- * The picker is a plain multi-select, which stops being usable somewhere in
- * the hundreds; past that limit the field falls back to typed e-mail
- * addresses, so a big shop is not left without an editor.
+ * Capped, because a multi-select stops being usable somewhere in the hundreds
+ * and rendering every account of a large site would be worse than saying so.
+ * The picker warns when it is truncated; raise the cap with the filter, or
+ * replace the picker if a shop really outgrows it.
  *
- * @return array<int, string>|null User id => label, or null when there are too
- *                                 many users to list.
+ * @return array<int, string> User id => label, ordered by display name.
  */
 function probo_portal_user_choices() {
-	/**
-	 * Filters how many users the category picker will list.
-	 *
-	 * @param int $limit Maximum number of users.
-	 */
-	$limit = (int) apply_filters( 'probo_portal_user_choice_limit', 500 );
-
 	$users = get_users(
 		array(
-			'number'  => $limit + 1,
+			'number'  => probo_portal_user_choice_limit(),
 			'orderby' => 'display_name',
 			'order'   => 'ASC',
 			'fields'  => array( 'ID', 'display_name', 'user_email' ),
 		)
 	);
-
-	if ( count( $users ) > $limit ) {
-		return null;
-	}
 
 	$choices = array();
 
@@ -541,43 +530,53 @@ function probo_portal_user_choices() {
 }
 
 /**
+ * How many users the category picker lists.
+ *
+ * @return int
+ */
+function probo_portal_user_choice_limit() {
+	/**
+	 * Filters how many users the category picker will list.
+	 *
+	 * @param int $limit Maximum number of users.
+	 */
+	return max( 1, (int) apply_filters( 'probo_portal_user_choice_limit', 500 ) );
+}
+
+/**
  * Render the picker's inner controls, shared by the add and edit forms.
  *
  * @param int[] $selected User ids currently stored on the category.
  */
 function probo_portal_field_control( $selected ) {
 	$choices = probo_portal_user_choices();
+	$limit   = probo_portal_user_choice_limit();
 	?>
 	<?php wp_nonce_field( 'probo_portal_save', 'probo_portal_nonce' ); ?>
 
-	<?php if ( null === $choices ) : ?>
-		<?php
-		$emails = array();
+	<select name="probo_portal_users[]" multiple size="10" style="min-width:320px;max-width:100%;">
+		<?php foreach ( $choices as $user_id => $label ) : ?>
+			<option value="<?php echo esc_attr( $user_id ); ?>" <?php selected( in_array( $user_id, $selected, true ) ); ?>>
+				<?php echo esc_html( $label ); ?>
+			</option>
+		<?php endforeach; ?>
+	</select>
+	<input type="hidden" name="probo_portal_users_submitted" value="1" />
+	<p class="description">
+		<?php esc_html_e( 'Hold ctrl (⌘ on Mac) to select several. Select nobody to show this category to every logged-in customer — that is the standard assortment. Select users to make it a campaign only they see, together with its subcategories and the products in it.', 'probo-connect-theme' ); ?>
+	</p>
 
-		foreach ( $selected as $user_id ) {
-			$user = get_user_by( 'id', $user_id );
-
-			if ( $user ) {
-				$emails[] = $user->user_email;
-			}
-		}
-		?>
-		<input type="text" name="probo_portal_users_text" class="large-text"
-			value="<?php echo esc_attr( implode( ', ', $emails ) ); ?>" />
+	<?php if ( count( $choices ) >= $limit ) : ?>
 		<p class="description">
-			<?php esc_html_e( 'E-mail addresses or usernames, separated by commas. Leave empty to show this category to every logged-in customer.', 'probo-connect-theme' ); ?>
-		</p>
-	<?php else : ?>
-		<select name="probo_portal_users[]" multiple size="10" style="min-width:320px;max-width:100%;">
-			<?php foreach ( $choices as $user_id => $label ) : ?>
-				<option value="<?php echo esc_attr( $user_id ); ?>" <?php selected( in_array( $user_id, $selected, true ) ); ?>>
-					<?php echo esc_html( $label ); ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-		<input type="hidden" name="probo_portal_users_submitted" value="1" />
-		<p class="description">
-			<?php esc_html_e( 'Hold ctrl (⌘ on Mac) to select several. Select nobody to show this category to every logged-in customer — that is the standard assortment. Select users to make it a campaign only they see, together with its subcategories and the products in it.', 'probo-connect-theme' ); ?>
+			<strong>
+				<?php
+				printf(
+					/* translators: %d: number of users listed. */
+					esc_html__( 'Only the first %d users are listed here.', 'probo-connect-theme' ),
+					(int) $limit
+				);
+				?>
+			</strong>
 		</p>
 	<?php endif; ?>
 	<?php
@@ -622,30 +621,6 @@ function probo_portal_edit_field( $term ) {
 add_action( 'product_cat_edit_form_fields', 'probo_portal_edit_field', 15 );
 
 /**
- * Resolve one typed identifier — id, username or e-mail — to a user id.
- *
- * @param string $value Raw identifier.
- * @return int User id, or 0 when nothing matched.
- */
-function probo_portal_resolve_user( $value ) {
-	$value = trim( $value );
-
-	if ( '' === $value ) {
-		return 0;
-	}
-
-	if ( is_numeric( $value ) ) {
-		$user = get_user_by( 'id', (int) $value );
-	} elseif ( is_email( $value ) ) {
-		$user = get_user_by( 'email', sanitize_email( $value ) );
-	} else {
-		$user = get_user_by( 'login', sanitize_user( $value ) );
-	}
-
-	return $user ? (int) $user->ID : 0;
-}
-
-/**
  * Save the category's user list.
  *
  * Neither field is present on a Quick Edit or a programmatic term update, so
@@ -654,10 +629,7 @@ function probo_portal_resolve_user( $value ) {
  * @param int $term_id Product category id being saved.
  */
 function probo_portal_save_term( $term_id ) {
-	$has_select = isset( $_POST['probo_portal_users_submitted'] );
-	$has_text   = isset( $_POST['probo_portal_users_text'] );
-
-	if ( ! $has_select && ! $has_text ) {
+	if ( ! isset( $_POST['probo_portal_users_submitted'] ) ) {
 		return;
 	}
 
@@ -667,21 +639,9 @@ function probo_portal_save_term( $term_id ) {
 
 	check_admin_referer( 'probo_portal_save', 'probo_portal_nonce' );
 
-	$users = array();
-
-	if ( $has_select && isset( $_POST['probo_portal_users'] ) ) {
-		$users = wp_parse_id_list( wp_unslash( $_POST['probo_portal_users'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list() casts to ints.
-	} elseif ( $has_text ) {
-		$raw = sanitize_text_field( wp_unslash( $_POST['probo_portal_users_text'] ) );
-
-		foreach ( preg_split( '/[,\r\n]+/', $raw ) as $identifier ) {
-			$user_id = probo_portal_resolve_user( $identifier );
-
-			if ( $user_id ) {
-				$users[] = $user_id;
-			}
-		}
-	}
+	$users = isset( $_POST['probo_portal_users'] )
+		? wp_parse_id_list( wp_unslash( $_POST['probo_portal_users'] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list() casts to ints.
+		: array();
 
 	// Only users that still exist, so a deleted account cannot leave a
 	// category restricted to nobody.
