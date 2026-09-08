@@ -15,6 +15,7 @@ require_once get_template_directory() . '/inc/dynamic-css.php';
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/category-callout.php';
+require_once get_template_directory() . '/inc/portal-visibility.php';
 require_once get_template_directory() . '/inc/blocks.php';
 require_once get_template_directory() . '/inc/contact.php';
 require_once get_template_directory() . '/inc/woocommerce.php';

@@ -561,8 +561,19 @@ function probo_primary_menu_fallback( $args = array() ) {
 	// The assembled data does not depend on the current request, so it is
 	// cached; which item is "current" does, so that stays out of the cache
 	// and is decided fresh below, on every render.
-	$key   = 'probo_menu_fallback_' . wp_cache_get_last_changed( 'terms' ) . '_' . wp_cache_get_last_changed( 'posts' );
-	$items = get_transient( $key );
+	//
+	// What the visitor is allowed to see is part of the data, not of the
+	// rendering, so it has to be part of the key: with category visibility per
+	// customer (inc/portal-visibility.php) one cached menu would otherwise be
+	// served to every account.
+	/**
+	 * Filters a suffix added to the fallback menu's cache key.
+	 *
+	 * @param string $suffix Extra key material. Empty by default.
+	 */
+	$suffix = (string) apply_filters( 'probo_menu_fallback_cache_suffix', '' );
+	$key    = 'probo_menu_fallback_' . md5( wp_cache_get_last_changed( 'terms' ) . '_' . wp_cache_get_last_changed( 'posts' ) . $suffix );
+	$items  = get_transient( $key );
 
 	if ( false === $items ) {
 		$items = probo_build_menu_fallback_items();
