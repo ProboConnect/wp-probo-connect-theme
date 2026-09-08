@@ -204,13 +204,18 @@ function probo_portal_product_is_visible( $product_id ) {
 		return true;
 	}
 
-	$terms = wp_get_object_terms( (int) $product_id, 'product_cat', array( 'fields' => 'ids' ) );
+	// get_the_terms() rather than wp_get_object_terms(): WP_Query primes the
+	// term cache for a whole listing in one query, and only this one reads it.
+	// The direct call would be a query per product on every shop page.
+	$terms = get_the_terms( (int) $product_id, 'product_cat' );
 
-	if ( is_wp_error( $terms ) ) {
+	if ( ! is_array( $terms ) ) {
 		return true;
 	}
 
-	return ! array_intersect( array_map( 'intval', $terms ), probo_portal_hidden_category_ids() );
+	$term_ids = wp_list_pluck( $terms, 'term_id' );
+
+	return ! array_intersect( array_map( 'intval', $term_ids ), probo_portal_hidden_category_ids() );
 }
 
 /**
@@ -226,6 +231,14 @@ function probo_portal_product_is_visible( $product_id ) {
  */
 function probo_portal_filter_terms_args( $args, $taxonomies ) {
 	if ( ! in_array( 'product_cat', (array) $taxonomies, true ) || ! probo_portal_filters_apply() ) {
+		return $args;
+	}
+
+	// "Which categories does this product have?" is a question about the data,
+	// not a listing to filter — and it is the question this module's own
+	// visibility check asks. Filtering it would answer "none that are hidden"
+	// and quietly make every product visible.
+	if ( ! empty( $args['object_ids'] ) ) {
 		return $args;
 	}
 
@@ -252,9 +265,14 @@ add_filter( 'get_terms_args', 'probo_portal_filter_terms_args', 10, 2 );
  * @return array|int|string
  */
 function probo_portal_filter_terms( $terms, $taxonomies, $args ) {
-	unset( $args );
-
 	if ( ! is_array( $terms ) || ! in_array( 'product_cat', (array) $taxonomies, true ) || ! probo_portal_filters_apply() ) {
+		return $terms;
+	}
+
+	// Object-term queries are excluded here for the same reason as in
+	// probo_portal_filter_terms_args(): they are the input to the visibility
+	// check, not a listing.
+	if ( ! empty( $args['object_ids'] ) ) {
 		return $terms;
 	}
 
@@ -385,6 +403,27 @@ function probo_portal_is_purchasable( $purchasable, $product ) {
 	return probo_portal_product_is_visible( $product_id );
 }
 add_filter( 'woocommerce_is_purchasable', 'probo_portal_is_purchasable', 10, 2 );
+
+/**
+ * Hide the product from WooCommerce's own catalogue-visibility checks.
+ *
+ * Related products, up-sells and cross-sells are not WP_Query listings — they
+ * come out of their own lookups and are then filtered on is_visible(), so this
+ * is the hook that covers them. Everything that does run through WP_Query is
+ * already handled by probo_portal_filter_product_query().
+ *
+ * @param bool $visible    Whether WooCommerce considers it visible.
+ * @param int  $product_id Product being checked.
+ * @return bool
+ */
+function probo_portal_product_is_visible_filter( $visible, $product_id ) {
+	if ( ! $visible ) {
+		return $visible;
+	}
+
+	return probo_portal_product_is_visible( $product_id );
+}
+add_filter( 'woocommerce_product_is_visible', 'probo_portal_product_is_visible_filter', 10, 2 );
 
 /**
  * Refuse an add-to-cart for a product this user may not see.
