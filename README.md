@@ -140,6 +140,31 @@ That is the deliberate MVP trade-off — with many shops or many campaigns, swap
 `probo_portal_hidden_category_ids()` over to a group source rather than
 extending the picker.
 
+### Why this lives in the theme, and what it costs
+
+Visibility rules are usually plugin territory: a plugin cannot be switched off
+by changing the theme. This shop ships as one package, so the rule lives here
+instead — deliberately, and with one consequence worth knowing about.
+
+The rules only apply while this theme is loaded. WordPress stops loading it in
+three cases: someone switches theme, the theme directory goes missing after a
+bad deploy, or a PHP fatal error anywhere in the theme puts it into recovery
+mode. In all three WordPress falls back to a default theme and the shop keeps
+serving — with every campaign category visible to every logged-in customer, and
+no error on the page to show it. It fails open, and it fails quietly. The
+exposure stays inside the login, so this is customers seeing each other's
+campaigns, not a public leak.
+
+**Keep no default theme installed** (`twentytwentyfour` and friends). With
+nothing to fall back to, WordPress shows an error instead of serving the shop
+without its rules — a site that is down beats a catalogue that is open. Some
+hosts reinstall the default themes during a core update, so check after one.
+
+Two things to keep true alongside it: the login wall belongs at server or
+plugin level, never in the theme, so a broken theme can never expose anything
+publicly; and WordPress' fatal-error e-mail has to reach someone who acts on
+it, because that mail is the only signal this has happened.
+
 ## Homepage
 
 The homepage is composed of blocks, not hardcoded, so sections can be
