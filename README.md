@@ -50,6 +50,8 @@ after the parent's) via filters instead — the ones most likely to matter:
 | `probo_checkout_is_stepped` | one-page vs. stepped checkout |
 | `probo_checkout_pickup_instance_ids` | which shipping methods count as pickup |
 | `probo_callout_template_roots`, `_dir`, `_placements`, `probo_callout_max_slots` | callout template discovery |
+| `probo_portal_user_can_manage`, `probo_portal_user_choice_limit` | who bypasses category visibility, and how many users the picker lists |
+| `probo_menu_fallback_cache_suffix` | extra cache-key material for the fallback navigation |
 
 ## Customizing without code
 
@@ -97,6 +99,46 @@ lockup, with everything from the first dot onwards in the accent colour.
 * Widget areas: three footer columns, plus `Shop filters` (the category page's
   filter column — drop WooCommerce's attribute and price filter widgets here)
   and `Shop tipblok` (the "twijfel je over de maat?" card).
+
+## Categories per customer
+
+For shops that run behind a login and hand different customers different
+assortments — a campaign for week 52 next to the standard range everyone can
+order. A product category can name the users allowed to see it, on the
+category's own edit screen under **Visible to**:
+
+* **Nobody selected** — the standard assortment. Every logged-in customer sees
+  the category and its products, exactly as without this feature.
+* **Users selected** — a campaign. Only those users see the category, its
+  subcategories and the products in it; for everyone else it is gone from the
+  navigation, the shop, search, the blocks and the API, and both the category
+  and the products 404 on their own URL.
+
+Product visibility is derived from the categories, so there is one list to
+maintain. That gives one rule to work by: **a product is hidden as soon as one
+of its categories is hidden**, so campaign products belong in their campaign
+category only. Drop a standard product into a campaign category and it
+disappears for everyone outside that campaign — to feature it in a campaign,
+link it from a callout on the campaign's category page instead.
+
+Two things worth setting up once:
+
+* Keep campaign categories under one parent (`Campagnes`) and leave that parent
+  out of the navigation, so last year's campaigns do not fill the category tree.
+* If a page cache is in front of the site, it has to vary per logged-in user or
+  be off for them. The theme's own caching does (see
+  `probo_menu_fallback_cache_suffix`), an external cache does not know about it.
+
+Restrictions are ignored for anyone who can edit other people's products, so
+shop managers keep seeing the whole catalogue. The category list table shows a
+**Visible to** column, so it is visible at a glance which categories are
+limited. Both the term meta (`_probo_portal_users`, an array of user ids) and
+the behaviour live in `inc/portal-visibility.php`.
+
+Users are linked to a category one by one; there is no customer-group layer.
+That is the deliberate MVP trade-off — with many shops or many campaigns, swap
+`probo_portal_hidden_category_ids()` over to a group source rather than
+extending the picker.
 
 ## Homepage
 
