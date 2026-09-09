@@ -282,6 +282,24 @@ function probo_configure_cta() {
 }
 
 /**
+ * Wording for the configurator: the button in the product summary and the
+ * heading above the configurator band, which say the same thing.
+ *
+ * Left empty in the Customizer the theme's own translation is used, so a
+ * Dutch or German shop reads in its own language without anyone typing
+ * anything. A shop that words this differently — "Stel je banner samen" —
+ * fills the setting in, and that wording is then used as typed, in whatever
+ * language it was typed.
+ *
+ * @return string
+ */
+function probo_configurator_label() {
+	$label = trim( (string) probo_get( 'configurator_label' ) );
+
+	return '' !== $label ? $label : __( 'Configure your product', 'probo-connect-theme' );
+}
+
+/**
  * One-line spec summary under a product title, in mono.
  *
  * Prefers the product's short description, then its attribute summary.

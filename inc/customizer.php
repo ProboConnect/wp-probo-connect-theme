@@ -314,6 +314,18 @@ function probo_customize_register( $wp_customize ) {
 	);
 
 	$add(
+		'configurator_label',
+		array(
+			'type'        => 'text',
+			'label'       => __( 'Configurator wording', 'probo-connect-theme' ),
+			'description' => __( 'The button on the product page and the heading above the configurator. Leave empty for the theme\'s own wording, which follows the site language.', 'probo-connect-theme' ),
+			'section'     => 'probo_components',
+			'input_attrs' => array( 'placeholder' => __( 'Configure your product', 'probo-connect-theme' ) ),
+		),
+		'sanitize_text_field'
+	);
+
+	$add(
 		'require_login',
 		array(
 			'type'        => 'select',

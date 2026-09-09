@@ -427,17 +427,40 @@ function probo_visibility_term_cap() {
  * in the hundreds and rendering every account of a large site would be worse
  * than saying so. The picker warns when it is truncated.
  *
+ * Whoever is already on the category is fetched on top of that cap. The save
+ * below replaces the stored list with what the form posted, so a selected user
+ * who fell outside the first page would be dropped by a save that never meant
+ * to touch them — and the merchant would have no way to see it happen.
+ *
  * @param int[] $selected User ids currently stored on the category.
  */
 function probo_visibility_term_control( $selected ) {
-	$users = get_users(
+	$fields = array( 'ID', 'display_name', 'user_email' );
+	$users  = get_users(
 		array(
 			'number'  => PROBO_VISIBILITY_USER_LIMIT,
 			'orderby' => 'display_name',
 			'order'   => 'ASC',
-			'fields'  => array( 'ID', 'display_name', 'user_email' ),
+			'fields'  => $fields,
 		)
 	);
+
+	$truncated = count( $users ) >= PROBO_VISIBILITY_USER_LIMIT;
+	$missing   = array_diff( $selected, wp_list_pluck( $users, 'ID' ) );
+
+	if ( $missing ) {
+		$users = array_merge(
+			get_users(
+				array(
+					'include' => $missing,
+					'orderby' => 'display_name',
+					'order'   => 'ASC',
+					'fields'  => $fields,
+				)
+			),
+			$users
+		);
+	}
 	?>
 	<?php wp_nonce_field( 'probo_portal_save', 'probo_portal_nonce' ); ?>
 
@@ -453,13 +476,13 @@ function probo_visibility_term_control( $selected ) {
 		<?php esc_html_e( 'Hold ctrl (⌘ on Mac) to select several. Select nobody to show this category to every logged-in customer — that is the standard assortment. Select users to make it a campaign only they see, together with its subcategories and the products in it.', 'probo-connect-theme' ); ?>
 	</p>
 
-	<?php if ( count( $users ) >= PROBO_VISIBILITY_USER_LIMIT ) : ?>
+	<?php if ( $truncated ) : ?>
 		<p class="description">
 			<strong>
 				<?php
 				printf(
 					/* translators: %d: number of users listed. */
-					esc_html__( 'Only the first %d users are listed here.', 'probo-connect-theme' ),
+					esc_html__( 'Only the first %d users are listed here, plus everyone already selected.', 'probo-connect-theme' ),
 					(int) PROBO_VISIBILITY_USER_LIMIT
 				);
 				?>
@@ -495,7 +518,7 @@ function probo_visibility_term_edit_field( $term ) {
 		return;
 	}
 
-	$selected = wp_parse_id_list( (array) get_term_meta( $term->term_id, PROBO_CATEGORY_USER_META, true ) );
+	$selected = probo_category_access_users( $term->term_id );
 	?>
 	<tr class="form-field">
 		<th scope="row" valign="top">
@@ -580,9 +603,27 @@ function probo_visibility_term_column( $content, $column, $term_id ) {
 		return $content;
 	}
 
-	$users = wp_parse_id_list( (array) get_term_meta( $term_id, PROBO_CATEGORY_USER_META, true ) );
+	$users = probo_category_access_users( $term_id );
 
 	if ( ! $users ) {
+		// A subcategory of a campaign is restricted too, and reading "Everyone"
+		// next to it is how a merchant ends up filing a bug against the shop.
+		foreach ( get_ancestors( $term_id, 'product_cat', 'taxonomy' ) as $ancestor_id ) {
+			if ( ! probo_category_access_users( $ancestor_id ) ) {
+				continue;
+			}
+
+			$ancestor = get_term( $ancestor_id, 'product_cat' );
+
+			return esc_html(
+				sprintf(
+					/* translators: %s: name of the parent category the restriction comes from. */
+					__( 'Via %s', 'probo-connect-theme' ),
+					$ancestor instanceof WP_Term ? $ancestor->name : ''
+				)
+			);
+		}
+
 		return esc_html__( 'Everyone', 'probo-connect-theme' );
 	}
 

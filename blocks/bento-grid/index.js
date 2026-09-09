@@ -20,6 +20,16 @@
 		{ label: __( 'Large (2 × 2)', 'probo-connect-theme' ), value: 'Groot' },
 	];
 
+	// What fills a tile. 'image' is the default so every tile saved before this
+	// existed keeps its photo. The two brand values are drawn from the theme's
+	// runtime tokens in render.php, so they follow the Customizer.
+	var FILLS = [
+		{ label: __( 'Image', 'probo-connect-theme' ), value: 'image' },
+		{ label: __( 'Accent color', 'probo-connect-theme' ), value: 'accent' },
+		{ label: __( 'Secondary color', 'probo-connect-theme' ), value: 'secondary' },
+		{ label: __( 'Custom color', 'probo-connect-theme' ), value: 'custom' },
+	];
+
 	wp.blocks.registerBlockType( 'probo/bento-grid', {
 		edit: function ( props ) {
 			var a = props.attributes;
@@ -46,6 +56,8 @@
 			}
 
 			var rows = tiles.map( function ( tile, index ) {
+				var fill = tile.fill || 'image';
+
 				return el(
 					'div',
 					{
@@ -92,26 +104,64 @@
 							},
 						} )
 					),
-					el(
-						blockEditor.MediaUploadCheck,
-						null,
-						el( blockEditor.MediaUpload, {
-							allowedTypes: [ 'image' ],
-							value: tile.id,
-							onSelect: function ( media ) {
-								patch( index, { id: media.id } );
-							},
-							render: function ( opener ) {
-								return el(
-									components.Button,
-									{ variant: 'secondary', onClick: opener.open },
-									tile.id
-										? __( 'Replace image', 'probo-connect-theme' )
-										: __( 'Choose image', 'probo-connect-theme' )
-								);
-							},
-						} )
-					),
+					el( components.SelectControl, {
+						label: __( 'Fill', 'probo-connect-theme' ),
+						value: fill,
+						options: FILLS,
+						onChange: function ( value ) {
+							patch( index, { fill: value } );
+						},
+					} ),
+					// The image and the colour picker are mutually exclusive, but
+					// what the other one holds is kept: switching back and forth
+					// does not make you pick the photo again.
+					'image' === fill
+						? el(
+								blockEditor.MediaUploadCheck,
+								null,
+								el( blockEditor.MediaUpload, {
+									allowedTypes: [ 'image' ],
+									value: tile.id,
+									onSelect: function ( media ) {
+										patch( index, { id: media.id } );
+									},
+									render: function ( opener ) {
+										return el(
+											components.Button,
+											{ variant: 'secondary', onClick: opener.open },
+											tile.id
+												? __( 'Replace image', 'probo-connect-theme' )
+												: __( 'Choose image', 'probo-connect-theme' )
+										);
+									},
+								} )
+						  )
+						: null,
+					'custom' === fill
+						? el(
+								'div',
+								{ style: { marginBottom: '8px' } },
+								el(
+									'p',
+									{ style: { marginBottom: '4px' } },
+									__( 'Tile color', 'probo-connect-theme' )
+								),
+								el( components.ColorPalette, {
+									value: tile.color || '',
+									onChange: function ( value ) {
+										patch( index, { color: value || '' } );
+									},
+								} ),
+								el(
+									'p',
+									{ style: { fontSize: '12px', color: '#6B6B70' } },
+									__(
+										'The caption switches to black or white, whichever reads on this color. No color yet = the accent color.',
+										'probo-connect-theme'
+									)
+								)
+						  )
+						: null,
 					el( components.SelectControl, {
 						label: __( 'Size', 'probo-connect-theme' ),
 						value: tile.span || 'Normaal',
@@ -172,7 +222,11 @@
 							{
 								variant: 'secondary',
 								onClick: function () {
-									commit( tiles.concat( [ { id: 0, span: 'Normaal', caption: '', url: '' } ] ) );
+									commit(
+										tiles.concat( [
+											{ id: 0, span: 'Normaal', fill: 'image', color: '', caption: '', url: '' },
+										] )
+									);
 								},
 							},
 							__( 'Add tile', 'probo-connect-theme' )

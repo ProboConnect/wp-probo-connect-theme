@@ -597,6 +597,14 @@ msgstr "Schatten"
 msgid "Flat"
 msgstr "Flach"
 
+#: inc/customizer.php:320
+msgid "Configurator wording"
+msgstr "Konfigurator-Text"
+
+#: inc/customizer.php:321
+msgid "The button on the product page and the heading above the configurator. Leave empty for the theme's own wording, which follows the site language."
+msgstr "Die Schaltfläche auf der Produktseite und die Überschrift über dem Konfigurator. Leer lassen für den Standardtext des Themes, der der Sprache der Website folgt."
+
 #: inc/customizer.php:282
 msgid "Checkout style"
 msgstr "Kassen-Stil"
@@ -959,8 +967,8 @@ msgstr "Zu zahlen"
 msgid "%1$s / 5 · %2$s reviews"
 msgstr "%1$s / 5 · %2$s Bewertungen"
 
-#: woocommerce/single-product.php:108
-#: woocommerce/single-product.php:150
+#: inc/customizer.php:323
+#: inc/template-tags.php:299
 msgid "Configure your product"
 msgstr "Konfigurieren Sie Ihr Produkt"
 

@@ -597,6 +597,14 @@ msgstr "Schaduw"
 msgid "Flat"
 msgstr "Vlak"
 
+#: inc/customizer.php:320
+msgid "Configurator wording"
+msgstr "Tekst configurator"
+
+#: inc/customizer.php:321
+msgid "The button on the product page and the heading above the configurator. Leave empty for the theme's own wording, which follows the site language."
+msgstr "De knop op de productpagina en de kop boven de configurator. Laat leeg voor de eigen tekst van het thema, die de sitetaal volgt."
+
 #: inc/customizer.php:282
 msgid "Checkout style"
 msgstr "Afrekenstijl"
@@ -959,8 +967,8 @@ msgstr "Te betalen"
 msgid "%1$s / 5 · %2$s reviews"
 msgstr "%1$s / 5 · %2$s reviews"
 
-#: woocommerce/single-product.php:108
-#: woocommerce/single-product.php:150
+#: inc/customizer.php:323
+#: inc/template-tags.php:299
 msgid "Configure your product"
 msgstr "Configureer je product"
 

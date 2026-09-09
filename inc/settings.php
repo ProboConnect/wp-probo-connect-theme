@@ -36,6 +36,9 @@ function probo_defaults() {
 		'topbar_usp_2'       => 'Gratis bestandscontrole',
 		'topbar_usp_3'       => '9,1 / 10 · 12.480 reviews',
 		'search_placeholder' => 'Zoek op product, formaat of materiaal…',
+		// Empty means "use the theme's own translated wording"; see
+		// probo_configurator_label().
+		'configurator_label' => '',
 		'checkout_phone'     => '0519 24 12 00',
 		'footer_description' => 'Grootformaat drukwerk uit eigen productie. Bestel vandaag, morgen op locatie.',
 		'footer_col_1_title' => 'Products',

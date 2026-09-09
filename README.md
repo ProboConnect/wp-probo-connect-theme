@@ -179,9 +179,13 @@ Two things worth setting up once:
 Restrictions are ignored for shop staff — anyone who can edit products — so a
 shop manager keeps seeing the whole catalogue. The category list table shows a
 **Visible to** column, so it is visible at a glance which categories are
-limited. The term meta is `_probo_portal_users`, an array of user ids; the rule
-and every guard that enforces it live in `inc/visibility.php`, and the picker
-that edits it in `inc/visibility-admin.php`.
+limited; a subcategory that is restricted because its parent is reads
+**Via _parent_** rather than "Everyone". Categories disappear from the
+navigation whether it is the theme's automatic one or a menu assembled under
+**Weergave → Menu's**, and a hidden parent takes its submenu with it. The term
+meta is `_probo_portal_users`, an array of user ids; the rule and every guard
+that enforces it live in `inc/visibility.php`, and the picker that edits it in
+`inc/visibility-admin.php`.
 
 Users are linked to a category one by one; there is no customer-group layer.
 That is the deliberate MVP trade-off — with many shops or many campaigns, swap
@@ -265,7 +269,11 @@ A few of them carry options worth knowing about:
   back to "a title means it is on".
 * **Bento-grid** and **Logobalk** store their images as attachment ids, so they
   are picked from the media library rather than typed. Bento tiles choose their
-  own size (normal, wide, tall, large) within a four-column grid.
+  own size (normal, wide, tall, large) within a four-column grid, and each tile
+  is either a photo or a flat colour — *Accent* and *Secundair* follow the
+  Customizer's brand colours, *Eigen kleur* is picked per tile. A colour tile
+  drops the photo scrim and puts its caption straight on the colour, in black or
+  white depending on which one reads.
 * **Klantquotes** uses the same line format as the USP bar, four fields:
   quote, name, company, score out of five.
 

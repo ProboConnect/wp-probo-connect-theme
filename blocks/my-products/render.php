@@ -4,8 +4,8 @@
  *
  * The products opened up for whoever is logged in — the portal's own page, next
  * to the shop's "everything you may buy". The list and the tiles come from
- * inc/product-access.php, the same two functions [probo_my_products] uses, so
- * the block is the placement and nothing else.
+ * inc/visibility.php, the same two functions [probo_my_products] uses, so the
+ * block is the placement and nothing else.
  *
  * @package Probo_Connect
  *

@@ -83,10 +83,18 @@ function probo_visibility_memo( $key = null, $value = null ) {
 
 /**
  * Forget everything cached about the rules.
+ *
+ * The category hierarchy goes with it. WordPress caches "which term is whose
+ * child" in the `product_cat_children` option, rebuilt from a get_terms() call
+ * that used to run through the filters below — so an install that ran an older
+ * version of this file can be carrying a hierarchy built from a customer's
+ * filtered view of the taxonomy. Dropping it here makes the next request
+ * rebuild it from the real taxonomy, and costs one delete on a rule change.
  */
 function probo_visibility_flush() {
 	delete_transient( PROBO_RESTRICTED_PRODUCTS_TRANSIENT );
 	delete_transient( PROBO_RESTRICTED_CATEGORIES_TRANSIENT );
+	delete_option( 'product_cat_children' );
 	probo_visibility_memo();
 }
 
@@ -94,20 +102,26 @@ function probo_visibility_flush() {
  * Guard against this module's own queries running back through its filters.
  *
  * probo_restricted_category_map() asks get_terms() which categories are
- * restricted; without this flag that call would be filtered by the very list it
- * is building.
+ * restricted, and probo_hidden_category_ids() then asks get_term_children()
+ * which categories hang under them; without this flag those calls would be
+ * filtered by the very list they are building — and because the second sits
+ * inside the first, a plain boolean would be switched off halfway. Hence a
+ * depth counter: it is only really off once the outermost caller says so.
  *
- * @param bool|null $set New state, or null to read the current one.
- * @return bool
+ * @param bool|null $set True to enter the guarded section, false to leave it,
+ *                       null to read the current state.
+ * @return bool Whether a guarded section is running.
  */
 function probo_visibility_building( $set = null ) {
-	static $building = false;
+	static $depth = 0;
 
-	if ( null !== $set ) {
-		$building = (bool) $set;
+	if ( true === $set ) {
+		++$depth;
+	} elseif ( false === $set ) {
+		$depth = max( 0, $depth - 1 );
 	}
 
-	return $building;
+	return $depth > 0;
 }
 
 /**
@@ -186,6 +200,23 @@ function probo_product_access_users( $product = null ) {
 	$ids = get_post_meta( $product_id, PROBO_PRODUCT_USER_META, false );
 
 	return array_values( array_unique( array_filter( array_map( 'absint', (array) $ids ) ) ) );
+}
+
+/**
+ * The customers a product category is limited to.
+ *
+ * Empty for the standard assortment — the category everyone sees. Note the
+ * array_filter: an unset term meta reads back as '', which wp_parse_id_list()
+ * turns into a list holding a single 0, and a caller that only asks "is this
+ * empty?" would read that as one customer.
+ *
+ * @param int $term_id Product category id.
+ * @return int[] User ids.
+ */
+function probo_category_access_users( $term_id ) {
+	$stored = get_term_meta( absint( $term_id ), PROBO_CATEGORY_USER_META, true );
+
+	return array_values( array_filter( wp_parse_id_list( (array) $stored ) ) );
 }
 
 /**
@@ -272,7 +303,7 @@ function probo_restricted_category_map() {
 		probo_visibility_building( false );
 
 		foreach ( is_wp_error( $terms ) ? array() : (array) $terms as $term_id ) {
-			$users = array_values( array_filter( wp_parse_id_list( (array) get_term_meta( (int) $term_id, PROBO_CATEGORY_USER_META, true ) ) ) );
+			$users = probo_category_access_users( (int) $term_id );
 
 			// An empty list would hide the category from everyone, which is never
 			// what the merchant meant — that is what deleting the meta is for.
@@ -343,6 +374,12 @@ function probo_hidden_category_ids( $user_id = null ) {
 	$hidden = array();
 
 	if ( ! probo_visibility_is_staff( $user_id ) ) {
+		// get_term_children() may have to rebuild the taxonomy's hierarchy, which
+		// is another get_terms() call — and that one has to see the taxonomy as it
+		// really is, or the children of a hidden parent are the very thing it
+		// cannot find.
+		probo_visibility_building( true );
+
 		foreach ( probo_restricted_category_map() as $term_id => $allowed ) {
 			if ( $user_id && in_array( $user_id, $allowed, true ) ) {
 				continue;
@@ -354,6 +391,8 @@ function probo_hidden_category_ids( $user_id = null ) {
 				$hidden[] = (int) $child_id;
 			}
 		}
+
+		probo_visibility_building( false );
 
 		$hidden = array_values( array_unique( $hidden ) );
 	}
@@ -602,6 +641,30 @@ function probo_visibility_filter_query( $query ) {
 add_action( 'pre_get_posts', 'probo_visibility_filter_query', 20 );
 
 /**
+ * Whether a term query asks about the shape of the taxonomy rather than for a
+ * listing to show someone.
+ *
+ * Two of those, and filtering either one is worse than useless:
+ *
+ *   object_ids  "which categories does this product have?" — the question
+ *               probo_can_see_product() asks. Filtering it would answer "none
+ *               that are hidden" and quietly make every product visible.
+ *
+ *   id=>parent  the query _get_term_hierarchy() rebuilds `product_cat_children`
+ *               from. Its answer is cached in an option every visitor shares,
+ *               so one customer's filtered view would become everybody's idea of
+ *               which category is whose child — and it is also what
+ *               probo_hidden_category_ids() needs in order to hide a campaign's
+ *               subcategories at all.
+ *
+ * @param array $args Term query arguments.
+ * @return bool
+ */
+function probo_visibility_structural_term_query( $args ) {
+	return ! empty( $args['object_ids'] ) || 'id=>parent' === ( $args['fields'] ?? '' );
+}
+
+/**
  * Keep hidden categories out of every get_terms() call.
  *
  * This one filter covers the navigation (probo_build_menu_fallback_items()), the
@@ -617,11 +680,7 @@ function probo_visibility_filter_terms_args( $args, $taxonomies ) {
 		return $args;
 	}
 
-	// "Which categories does this product have?" is a question about the data,
-	// not a listing to filter — and it is the question probo_can_see_product()
-	// asks. Filtering it would answer "none that are hidden" and quietly make
-	// every product visible.
-	if ( ! empty( $args['object_ids'] ) ) {
+	if ( probo_visibility_structural_term_query( $args ) ) {
 		return $args;
 	}
 
@@ -655,17 +714,23 @@ function probo_visibility_filter_terms( $terms, $taxonomies, $args ) {
 		return $terms;
 	}
 
-	// Object-term queries are excluded here for the same reason as above: they
+	// Structural queries are left alone here for the same reason as above: they
 	// are the input to the visibility check, not a listing.
-	if ( ! empty( $args['object_ids'] ) ) {
+	if ( probo_visibility_structural_term_query( $args ) ) {
 		return $terms;
 	}
 
+	// 'id=>name' and 'id=>slug' hand back a map keyed by term id, and the id is
+	// the whole point of asking that way — reindexing it would silently turn
+	// every term id into its position in the list.
+	$keyed  = is_string( $args['fields'] ?? '' ) && str_starts_with( (string) ( $args['fields'] ?? '' ), 'id=>' );
 	$hidden = probo_hidden_category_ids();
 
 	foreach ( $terms as $index => $term ) {
 		if ( $term instanceof WP_Term ) {
 			$term_id = $term->term_id;
+		} elseif ( $keyed ) {
+			$term_id = (int) $index;
 		} elseif ( is_numeric( $term ) ) {
 			$term_id = (int) $term;
 		} else {
@@ -679,7 +744,7 @@ function probo_visibility_filter_terms( $terms, $taxonomies, $args ) {
 		}
 	}
 
-	return array_values( $terms );
+	return $keyed ? $terms : array_values( $terms );
 }
 add_filter( 'get_terms', 'probo_visibility_filter_terms', 10, 3 );
 
@@ -871,6 +936,53 @@ function probo_visibility_menu_cache_suffix( $suffix ) {
 	return $suffix . ( $hidden ? '_' . md5( implode( ',', $hidden ) ) : '' );
 }
 add_filter( 'probo_menu_fallback_cache_suffix', 'probo_visibility_menu_cache_suffix' );
+
+/**
+ * Take hidden categories and products out of a hand-built navigation menu.
+ *
+ * The fallback navigation is covered by the get_terms() filter above, but a menu
+ * the merchant assembled in Weergave → Menu's is a set of posts, not a term
+ * query — so a campaign category linked there would stay in every customer's
+ * menu and hand them a 404 for their trouble.
+ *
+ * A dropped item takes its submenu with it: leaving orphans behind would put a
+ * campaign's subcategories straight into the top level.
+ *
+ * @param array $items Sorted menu items, parents before their children.
+ * @return array
+ */
+function probo_visibility_filter_nav_menu_objects( $items ) {
+	if ( ! is_array( $items ) || ! probo_visibility_applies() ) {
+		return $items;
+	}
+
+	$hidden_categories = probo_hidden_category_ids();
+	$dropped           = array();
+
+	foreach ( $items as $index => $item ) {
+		$parent = (int) ( $item->menu_item_parent ?? 0 );
+		$type   = (string) ( $item->type ?? '' );
+		$object = (string) ( $item->object ?? '' );
+
+		if ( $parent && isset( $dropped[ $parent ] ) ) {
+			$drop = true;
+		} elseif ( 'taxonomy' === $type && 'product_cat' === $object ) {
+			$drop = in_array( (int) $item->object_id, $hidden_categories, true );
+		} elseif ( 'post_type' === $type && 'product' === $object ) {
+			$drop = ! probo_can_see_product( (int) $item->object_id );
+		} else {
+			$drop = false;
+		}
+
+		if ( $drop ) {
+			$dropped[ (int) $item->ID ] = true;
+			unset( $items[ $index ] );
+		}
+	}
+
+	return array_values( $items );
+}
+add_filter( 'wp_nav_menu_objects', 'probo_visibility_filter_nav_menu_objects' );
 
 /* ---------------------------------------------------------------------------
    The customer's own list.
