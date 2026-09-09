@@ -12,7 +12,9 @@
 		"heading": { "type": "string", "default": "Gedrukt voor" },
 		"logos": { "type": "array", "default": [] },
 		"grayscale": { "type": "boolean", "default": true },
-		"height": { "type": "number", "default": 32 }
+		"height": { "type": "number", "default": 32 },
+		"gap": { "type": "number", "default": 44 },
+		"align_logos": { "type": "string", "default": "left" }
 	},
 	"editorScript": "file:./index.js",
 	"render": "file:./render.php"

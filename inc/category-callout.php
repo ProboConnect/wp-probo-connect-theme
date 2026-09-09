@@ -24,17 +24,13 @@ defined( 'ABSPATH' ) || exit;
  * A fixed number of edit-screen slots rather than a JS add/remove repeater —
  * simpler to build, and plenty for what is meant to be a handful of pitches
  * per category, not a feed.
- *
- * @return int
  */
-function probo_callout_max_slots() {
-	/**
-	 * Filters how many callout slots a category's edit screen offers.
-	 *
-	 * @param int $slots Number of slots.
-	 */
-	return max( 1, (int) apply_filters( 'probo_callout_max_slots', 3 ) );
-}
+const PROBO_CALLOUT_SLOTS = 3;
+
+/**
+ * The path, below the theme root, that holds the callout templates.
+ */
+const PROBO_CALLOUT_TEMPLATE_DIR = 'templates/callouts';
 
 /* ---------------------------------------------------------------------------
    Templates.
@@ -54,122 +50,46 @@ function probo_callout_max_slots() {
 --------------------------------------------------------------------------- */
 
 /**
- * The directories scanned for callout templates, most specific first.
- *
- * The child theme comes first so its copy of a path wins over the parent's.
- *
- * @return string[] Absolute directory paths, without a trailing slash.
- */
-function probo_callout_template_roots() {
-	$roots = array( get_stylesheet_directory() );
-
-	if ( get_template_directory() !== get_stylesheet_directory() ) {
-		$roots[] = get_template_directory();
-	}
-
-	/**
-	 * Filters the roots searched for callout templates.
-	 *
-	 * A plugin that ships callout templates adds its own directory here; earlier
-	 * entries shadow later ones, so anything added after the theme's roots is a
-	 * fallback and anything added before is an override.
-	 *
-	 * @param string[] $roots Absolute directory paths.
-	 */
-	$roots = (array) apply_filters( 'probo_callout_template_roots', $roots );
-
-	return array_values( array_unique( array_filter( array_map( 'untrailingslashit', $roots ) ) ) );
-}
-
-/**
- * The path, below a root, that holds the callout templates.
- *
- * @return string
- */
-function probo_callout_template_dir() {
-	/**
-	 * Filters the directory callout templates are discovered in.
-	 *
-	 * @param string $dir Path relative to each root, no slashes at either end.
-	 */
-	return trim( (string) apply_filters( 'probo_callout_template_dir', 'templates/callouts' ), '/' );
-}
-
-/**
  * Human labels for the placements the theme ships.
  *
  * A placement discovered on disk that is not listed here still works — its
  * directory name is humanised instead — so a custom placement needs no
  * registration either.
  *
- * @return array<string, string>
- */
-function probo_callout_placements() {
-	/**
-	 * Filters the placement labels.
-	 *
-	 * @param array<string, string> $placements Label per placement slug.
-	 */
-	return (array) apply_filters(
-		'probo_callout_placements',
-		array(
-			'category_top'    => __( 'Category page — above the products', 'probo-connect-theme' ),
-			'grid'            => __( 'Between the products / in a tile grid', 'probo-connect-theme' ),
-			'category_bottom' => __( 'Category page — below the products', 'probo-connect-theme' ),
-		)
-	);
-}
-
-/**
- * The label for one placement.
- *
  * @param string $placement Placement slug (the directory name).
  * @return string
  */
 function probo_callout_placement_label( $placement ) {
-	$placements = probo_callout_placements();
+	$placements = array(
+		'category_top'    => __( 'Category page — above the products', 'probo-connect-theme' ),
+		'grid'            => __( 'Between the products / in a tile grid', 'probo-connect-theme' ),
+		'category_bottom' => __( 'Category page — below the products', 'probo-connect-theme' ),
+	);
 
-	if ( isset( $placements[ $placement ] ) ) {
-		return $placements[ $placement ];
-	}
-
-	return ucfirst( str_replace( array( '-', '_' ), ' ', $placement ) );
-}
-
-/**
- * Turn one template file into its label.
- *
- * @param string $file Absolute path to the template.
- * @param string $name Filename without the extension.
- * @return string
- */
-function probo_callout_template_label( $file, $name ) {
-	$headers = get_file_data( $file, array( 'label' => 'Callout Template' ) );
-
-	if ( ! empty( $headers['label'] ) ) {
-		return $headers['label'];
-	}
-
-	return ucfirst( str_replace( array( '-', '_' ), ' ', $name ) );
+	return $placements[ $placement ] ?? ucfirst( str_replace( array( '-', '_' ), ' ', $placement ) );
 }
 
 /**
  * Every callout template on disk, keyed by "{placement}/{name}".
  *
+ * The child theme is scanned first, so its copy of a path wins over the
+ * parent's. Discovery is a handful of globs and runs on every category archive
+ * and tile grid, so the result is held for the request.
+ *
  * @return array<string, array{label: string, placement: string, file: string}>
  */
-function probo_callout_discover_templates() {
-	$dir       = probo_callout_template_dir();
+function probo_callout_templates() {
+	static $templates = null;
+
+	if ( null !== $templates ) {
+		return $templates;
+	}
+
 	$templates = array();
+	$roots     = array_unique( array( get_stylesheet_directory(), get_template_directory() ) );
 
-	foreach ( probo_callout_template_roots() as $root ) {
-		$base = $root . '/' . $dir;
-
-		if ( ! is_dir( $base ) ) {
-			continue;
-		}
-
-		foreach ( (array) glob( $base . '/*', GLOB_ONLYDIR ) as $placement_dir ) {
+	foreach ( $roots as $root ) {
+		foreach ( (array) glob( $root . '/' . PROBO_CALLOUT_TEMPLATE_DIR . '/*', GLOB_ONLYDIR ) as $placement_dir ) {
 			$placement = basename( $placement_dir );
 
 			foreach ( (array) glob( $placement_dir . '/*.php' ) as $file ) {
@@ -182,8 +102,10 @@ function probo_callout_discover_templates() {
 					continue;
 				}
 
+				$header = get_file_data( $file, array( 'label' => 'Callout Template' ) );
+
 				$templates[ $key ] = array(
-					'label'     => probo_callout_template_label( $file, $name ),
+					'label'     => $header['label'] ?: ucfirst( str_replace( array( '-', '_' ), ' ', $name ) ),
 					'placement' => $placement,
 					'file'      => $file,
 				);
@@ -202,33 +124,6 @@ function probo_callout_discover_templates() {
 }
 
 /**
- * The templates a callout can render as.
- *
- * Discovery is done once per request — a handful of globs, but they run on
- * every category archive and every tile grid, so the result is held.
- *
- * @return array<string, array{label: string, placement: string, file: string}>
- */
-function probo_callout_templates() {
-	static $discovered = null;
-
-	if ( null === $discovered ) {
-		$discovered = probo_callout_discover_templates();
-	}
-
-	/**
-	 * Filters the callout templates a category can choose from.
-	 *
-	 * Discovery already covers a theme, a child theme and — through
-	 * probo_callout_template_roots — a plugin's own directory, so this is the
-	 * seam for removing or relabelling one rather than for adding files.
-	 *
-	 * @param array $templates Templates, keyed by "{placement}/{name}".
-	 */
-	return (array) apply_filters( 'probo_callout_templates', $discovered );
-}
-
-/**
  * The template picker's options, grouped by placement.
  *
  * @return array<string, array<string, string>> Labels keyed by template, per placement label.
@@ -244,47 +139,26 @@ function probo_callout_template_options() {
 }
 
 /**
- * Old template values, and what they are called now.
- *
- * Categories saved before templates were files carry 'band' or 'tile'. They are
- * translated on read rather than migrated, so downgrading the theme does not
- * strip a shop of its callouts.
- *
- * @return array<string, string>
- */
-function probo_callout_legacy_template_map() {
-	/**
-	 * Filters the mapping from pre-discovery template slugs to template paths.
-	 *
-	 * @param array<string, string> $map Old slug => "{placement}/{name}".
-	 */
-	return (array) apply_filters(
-		'probo_callout_legacy_template_map',
-		array(
-			'band' => 'category_top/top',
-			'tile' => 'grid/callout',
-		)
-	);
-}
-
-/**
  * Translate a row's stored template value to a template that exists today.
  *
- * Used on the way in on both paths — the front end's normalisation and the edit
- * screen — because the picker only offers real template paths. A legacy 'tile'
- * left untranslated matches no option there, so the browser would quietly select
- * the first entry in the list and the next save would write that instead.
+ * Categories saved before templates were files carry 'band' or 'tile'; they are
+ * translated on read rather than migrated, so downgrading the theme does not
+ * strip a shop of its callouts. Used on both paths — the front end's
+ * normalisation and the edit screen — because the picker only offers real
+ * template paths. A legacy 'tile' left untranslated matches no option there, so
+ * the browser would quietly select the first entry in the list and the next
+ * save would write that instead.
  *
  * @param string $template Stored template value.
  * @return string Template key, or '' when nothing matches.
  */
 function probo_callout_resolve_template_key( $template ) {
+	$legacy   = array(
+		'band' => 'category_top/top',
+		'tile' => 'grid/callout',
+	);
 	$template = (string) $template;
-	$legacy   = probo_callout_legacy_template_map();
-
-	if ( isset( $legacy[ $template ] ) ) {
-		$template = $legacy[ $template ];
-	}
+	$template = $legacy[ $template ] ?? $template;
 
 	$templates = probo_callout_templates();
 
@@ -292,9 +166,7 @@ function probo_callout_resolve_template_key( $template ) {
 		return $template;
 	}
 
-	$keys = array_keys( $templates );
-
-	return isset( $keys[0] ) ? $keys[0] : '';
+	return (string) array_key_first( $templates );
 }
 
 /**
@@ -313,7 +185,7 @@ function probo_callout_locate_template( $callout, $placement = '' ) {
 	}
 
 	$key      = isset( $callout['template'] ) ? (string) $callout['template'] : '';
-	$template = isset( $templates[ $key ] ) ? $templates[ $key ] : null;
+	$template = $templates[ $key ] ?? null;
 
 	if ( ! $placement ) {
 		return $template ? $template : reset( $templates );
@@ -347,25 +219,12 @@ function probo_callout_placement( $callout ) {
 }
 
 /**
- * Include a template with only $callout in scope.
- *
- * A plain include would hand the template every local of the function that
- * called it, which is how a template quietly comes to depend on a caller's
- * variable and breaks the moment it is used somewhere else.
- *
- * @param string $file    Absolute path to the template.
- * @param array  $callout Normalised callout row.
- */
-function probo_callout_include_template( $file, $callout ) {
-	$include = static function ( $probo_callout_template, $callout ) {
-		include $probo_callout_template;
-	};
-
-	$include( $file, $callout );
-}
-
-/**
  * Render one callout through its template.
+ *
+ * The template is included from inside a closure so it gets only $callout in
+ * scope: a plain include here would hand it every local of this function, which
+ * is how a template quietly comes to depend on a caller's variable and breaks
+ * the moment it is used somewhere else.
  *
  * @param array  $callout   Normalised callout row.
  * @param string $placement Force a placement; see probo_callout_locate_template().
@@ -381,7 +240,9 @@ function probo_callout_render( $callout, $placement = '' ) {
 		return;
 	}
 
-	probo_callout_include_template( $template['file'], $callout );
+	( static function ( $callout ) use ( $template ) {
+		include $template['file'];
+	} )( $callout );
 }
 
 /**
@@ -754,7 +615,7 @@ function probo_callout_edit_fields( $term, $taxonomy = 'product_cat' ) {
 	}
 
 	$rows  = probo_callout_raw_rows( $term );
-	$slots = probo_callout_max_slots();
+	$slots = PROBO_CALLOUT_SLOTS;
 
 	// A row whose 'enabled' was never explicitly set is live on the front end
 	// under the old "a title means it's on" rule — probo_callout_normalize_row()

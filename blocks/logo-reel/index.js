@@ -181,6 +181,27 @@
 							onChange: function ( value ) {
 								props.setAttributes( { height: value === undefined ? 32 : value } );
 							},
+						} ),
+						el( components.RangeControl, {
+							label: __( 'Gap between logos', 'probo-connect-theme' ),
+							value: a.gap,
+							min: 8,
+							max: 120,
+							step: 2,
+							onChange: function ( value ) {
+								props.setAttributes( { gap: value === undefined ? 44 : value } );
+							},
+						} ),
+						el( components.SelectControl, {
+							label: __( 'Alignment', 'probo-connect-theme' ),
+							value: a.align_logos,
+							options: [
+								{ label: __( 'Left', 'probo-connect-theme' ), value: 'left' },
+								{ label: __( 'Centered', 'probo-connect-theme' ), value: 'center' },
+							],
+							onChange: function ( value ) {
+								props.setAttributes( { align_logos: value } );
+							},
 						} )
 					)
 				),

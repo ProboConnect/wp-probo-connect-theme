@@ -23,6 +23,18 @@
    PHP exactly the way the design prototype derived them in JS.
 --------------------------------------------------------------------------- */
 :root {
+  /* The page's own canvas, and the neutral bands that layer on top of it.
+     inc/dynamic-css.php derives all six from the Customizer's page colour by
+     the same RGB offsets that separate them from white here, so a light grey
+     canvas keeps exactly the layering white has. */
+  --pp-page: #FFFFFF;
+  --pp-surface: #F7F7F5;
+  --pp-surface-soft: #FCFCFB;
+  --pp-surface-2: #F0F0EE;
+  --pp-canvas: #EDEDEA;
+  --pp-line: #E4E4E7;
+  --pp-line-strong: #C9C9CE;
+
   --pp-accent: #1B4DFF;
   --pp-accent-soft: #EEF1FF;
   --pp-accent-fg: #FFFFFF;
@@ -78,13 +90,24 @@
   --color-ink-4: #8A8A8F;
   --color-ink-5: #9A9A9E;
 
-  --color-line: #E4E4E7;
-  --color-line-strong: #C9C9CE;
-  --color-surface: #F7F7F5;
+  /* Order status colours. Semantic rather than brand — green reads "done" and
+     red reads "wrong" whatever the shop's accent is — so unlike everything
+     above these are fixed and not Customizer-driven. */
+  --color-state-ok: #1A7F44;
+  --color-state-ok-soft: #E7F6EC;
+  --color-state-warn: #9A6A00;
+  --color-state-warn-soft: #FFF3D6;
+  --color-state-error: #B42318;
+  --color-state-error-soft: #FDE8E8;
+
+  --color-page: var(--pp-page);
+  --color-line: var(--pp-line);
+  --color-line-strong: var(--pp-line-strong);
+  --color-surface: var(--pp-surface);
   /* The lightest of the light bands — heroes E and I sit on it. */
-  --color-surface-soft: #FCFCFB;
-  --color-surface-2: #F0F0EE;
-  --color-canvas: #EDEDEA;
+  --color-surface-soft: var(--pp-surface-soft);
+  --color-surface-2: var(--pp-surface-2);
+  --color-canvas: var(--pp-canvas);
 
   --color-bar-bg: var(--pp-bar-bg);
   --color-bar-fg: var(--pp-bar-fg);
@@ -114,6 +137,23 @@
 }
 
 @layer base {
+  /* The class WordPress themes are expected to provide for text that is read
+     but not seen. WooCommerce happens to ship a rule for it too, but the
+     theme's own markup uses it — the orders table's "opens in a new tab" and
+     "not available yet" hints among it — and that must not depend on a plugin's
+     stylesheet being on the page. Core's own snippet, verbatim. */
+  .screen-reader-text {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* .editor-styles-wrapper is the block editor's canvas body. It carries WP's
      own reset at the same specificity, which beat a bare `body` rule and left
      the canvas in the default serif while the front end was on the chosen body
@@ -122,7 +162,7 @@
   .editor-styles-wrapper {
     font-family: var(--font-body);
     color: var(--color-ink);
-    background: #fff;
+    background: var(--color-page);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -198,6 +238,22 @@
 
   .woocommerce form .form-row textarea {
     @apply h-28 py-3;
+  }
+
+  /* A select left on its native appearance ignores the border, the radius and
+     the type it was just given, so next to a text input it reads as a
+     different control. Dropping the appearance hands all of that back; the
+     arrow the browser drew has to be redrawn here, as a background chevron
+     with room reserved for it. */
+  .pp-field select,
+  select.pp-field,
+  .woocommerce form .form-row select,
+  .woocommerce-page form .form-row select,
+  .woocommerce-ordering select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%236B6B76' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    @apply appearance-none pr-10;
   }
 
   .woocommerce form .form-row label {
@@ -1238,6 +1294,30 @@
     color: inherit;
   }
 
+  /* Variant C (portal header): the account navigation. Flat by design — no
+     flyouts, no uppercase, no tracking — so the one accent link is the section
+     you are in. Below lg it stacks inside the panel the burger opens. */
+  .pp-portal-menu {
+    @apply m-0 flex list-none flex-col gap-3 p-0 lg:flex-row lg:items-center lg:gap-8;
+  }
+
+  .pp-portal-menu > li > a {
+    @apply text-sm font-bold whitespace-nowrap text-ink no-underline hover:text-accent-ink;
+  }
+
+  .pp-portal-menu > li.current-menu-item > a,
+  .pp-portal-menu > li.current-menu-parent > a,
+  .pp-portal-menu > li.current-menu-ancestor > a,
+  .pp-portal-menu > li.current-product-ancestor > a {
+    @apply text-accent-ink;
+  }
+
+  /* depth => 1 keeps children out of the markup, but a menu that arrived from
+     elsewhere (a plugin, a filter) must not drop a flyout into this bar. */
+  .pp-portal-menu .sub-menu {
+    @apply hidden;
+  }
+
   /* Variant B (compact header): the muted service links on the dark bar. */
   .pp-compact-service {
     @apply m-0 flex list-none items-center gap-6 p-0;
@@ -1621,7 +1701,7 @@
 
   /* Catalog ordering select on the archive toolbar. */
   .woocommerce-ordering select {
-    @apply rounded-pp border border-line-strong px-3.5 py-2.5 text-[13px] font-semibold text-ink;
+    @apply rounded-pp border border-line-strong bg-white py-2.5 pr-10 pl-3.5 text-[13px] font-semibold text-ink;
   }
 }
 
@@ -1717,5 +1797,100 @@
   .upsells > h2,
   .cross-sells > h2 {
     @apply mb-7 text-3xl font-extrabold tracking-[-0.03em];
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Orders card.
+
+   The portal's order list, from the ThemeHeader Portal design handoff: a
+   bordered card with a table of the customer's last orders. Written as
+   component classes rather than utilities on the markup because the table is
+   rendered from PHP in two places (the block and probo_render_orders_table()),
+   and a <td> is not a place to repeat eight utilities.
+--------------------------------------------------------------------------- */
+@layer components {
+  .pp-orders-card {
+    @apply rounded-pp overflow-hidden border border-line bg-white;
+  }
+
+  .pp-orders-head {
+    @apply flex flex-wrap items-center justify-between gap-4 border-b border-line px-6 py-5;
+  }
+
+  .pp-orders-title {
+    @apply m-0 text-lg font-extrabold tracking-[-0.02em] text-ink;
+  }
+
+  .pp-orders-all {
+    @apply text-[13px] font-bold text-accent-ink no-underline;
+  }
+
+  /* Five columns do not fit a phone. The card keeps its shape and the table
+     scrolls inside it, rather than the page itself scrolling sideways. */
+  .pp-orders-scroll {
+    @apply w-full overflow-x-auto;
+  }
+
+  .pp-orders-table {
+    @apply w-full border-collapse text-sm;
+  }
+
+  .pp-orders-table th {
+    @apply font-mono px-6 py-3 text-left text-[11px] leading-none font-medium tracking-[0.06em] text-ink-4 uppercase;
+  }
+
+  .pp-orders-table td {
+    @apply border-t border-line px-6 py-3.5 align-middle whitespace-nowrap;
+  }
+
+  .pp-orders-table .pp-orders-right {
+    @apply text-right;
+  }
+
+  .pp-orders-number a {
+    @apply font-bold text-ink no-underline;
+  }
+
+  .pp-orders-number a:hover {
+    @apply text-accent-ink;
+  }
+
+  .pp-orders-muted {
+    @apply text-ink-3;
+  }
+
+  .pp-orders-track {
+    @apply text-[13px] font-bold text-accent-ink no-underline;
+  }
+
+  /* An order that has no status page yet keeps the column's rhythm — the word
+     stays, greyed out, so the row does not lose its last cell. */
+  .pp-orders-track.is-off {
+    @apply text-line-strong;
+  }
+
+  .pp-order-status {
+    @apply inline-flex rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap;
+  }
+
+  .pp-order-status--ok {
+    @apply bg-state-ok-soft text-state-ok;
+  }
+
+  .pp-order-status--accent {
+    @apply bg-accent-soft text-accent-ink;
+  }
+
+  .pp-order-status--warn {
+    @apply bg-state-warn-soft text-state-warn;
+  }
+
+  .pp-order-status--error {
+    @apply bg-state-error-soft text-state-error;
+  }
+
+  .pp-order-status--neutral {
+    @apply bg-surface-2 text-ink-3;
   }
 }

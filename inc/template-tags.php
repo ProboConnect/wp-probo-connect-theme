@@ -125,6 +125,71 @@ function probo_account_link_text() {
 }
 
 /**
+ * Who the portal header says you are signed in as.
+ *
+ * The design draws a company, not a person: the portal is a B2B account, so the
+ * billing company is the name that matters and the display name is only the
+ * fallback for a customer who never filled one in.
+ *
+ * @return string Empty for a signed-out visitor.
+ */
+function probo_portal_account_name() {
+	$user = wp_get_current_user();
+
+	if ( ! $user || ! $user->exists() ) {
+		return '';
+	}
+
+	$company = trim( (string) get_user_meta( $user->ID, 'billing_company', true ) );
+
+	return $company ? $company : $user->display_name;
+}
+
+/**
+ * Which menu location the portal header renders.
+ *
+ * Its own, once a menu is assigned to it; the shop's primary navigation until
+ * then. Switching the Customizer to the Portal header is a decision about the
+ * chrome, not about the navigation, so it must not blank the nav on a site
+ * that has only ever filled in "Primary navigation" — and a portal that does
+ * want its own four account links gets them by assigning a menu to "Portal
+ * header", with no setting to find first.
+ *
+ * @return string A registered nav menu location.
+ */
+function probo_portal_menu_location() {
+	$locations = get_nav_menu_locations();
+
+	return empty( $locations['portal'] ) ? 'primary' : 'portal';
+}
+
+/**
+ * Initials for the portal header's avatar chip.
+ *
+ * First letters of the first two words, so "Van Wijnen B.V." reads as VW. The
+ * chip is decorative — the name it abbreviates is spelled out next to it — so a
+ * name this cannot abbreviate simply yields fewer letters rather than a
+ * placeholder.
+ *
+ * @param string $name Name to abbreviate.
+ * @return string Up to two uppercase letters.
+ */
+function probo_portal_initials( $name ) {
+	$words    = preg_split( '/\s+/', trim( (string) $name ), -1, PREG_SPLIT_NO_EMPTY );
+	$initials = '';
+
+	foreach ( array_slice( (array) $words, 0, 2 ) as $word ) {
+		// mb_substr is polyfilled by WordPress core; mb_strtoupper is not, so
+		// it is only used where the extension actually exists. Falling through
+		// to strtoupper() leaves an accented letter as it was, which is a
+		// lowercase initial rather than a fatal error.
+		$initials .= mb_substr( $word, 0, 1 );
+	}
+
+	return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $initials ) : strtoupper( $initials );
+}
+
+/**
  * The theme's search field: flush input with an accent submit button.
  *
  * @param string $size 'header', 'hero', or 'compact' (the borderless 44px field
@@ -214,6 +279,24 @@ function probo_breadcrumb() {
  */
 function probo_configure_cta() {
 	echo '<div class="mt-3.5 text-sm font-bold text-accent-ink">' . esc_html__( 'Configure now →', 'probo-connect-theme' ) . '</div>';
+}
+
+/**
+ * Wording for the configurator: the button in the product summary and the
+ * heading above the configurator band, which say the same thing.
+ *
+ * Left empty in the Customizer the theme's own translation is used, so a
+ * Dutch or German shop reads in its own language without anyone typing
+ * anything. A shop that words this differently — "Stel je banner samen" —
+ * fills the setting in, and that wording is then used as typed, in whatever
+ * language it was typed.
+ *
+ * @return string
+ */
+function probo_configurator_label() {
+	$label = trim( (string) probo_get( 'configurator_label' ) );
+
+	return '' !== $label ? $label : __( 'Configure your product', 'probo-connect-theme' );
 }
 
 /**
@@ -496,13 +579,37 @@ function probo_build_menu_fallback_items() {
 
 /**
  * Primary-menu fallback: product categories, so a fresh install still has a nav.
+ *
+ * wp_nav_menu() hands the fallback its own arguments, so the two that change
+ * the shape of the list are honoured here rather than ignored: `menu_class`,
+ * and `depth` — 1 means top level only, which is what the portal header's flat
+ * bar asks for. Without that a shop with no menu assigned would get Variant A's
+ * flyout markup inside a header that has nowhere to put it. Both keep their old
+ * values when the caller says nothing, so the existing callers are unchanged.
+ *
+ * @param array $args Arguments wp_nav_menu() was called with.
  */
-function probo_primary_menu_fallback() {
+function probo_primary_menu_fallback( $args = array() ) {
+	$args       = (array) $args;
+	$menu_class = isset( $args['menu_class'] ) && $args['menu_class'] ? (string) $args['menu_class'] : 'pp-nav-menu';
+	$flat       = isset( $args['depth'] ) && 1 === (int) $args['depth'];
+
 	// The assembled data does not depend on the current request, so it is
 	// cached; which item is "current" does, so that stays out of the cache
 	// and is decided fresh below, on every render.
-	$key   = 'probo_menu_fallback_' . wp_cache_get_last_changed( 'terms' ) . '_' . wp_cache_get_last_changed( 'posts' );
-	$items = get_transient( $key );
+	//
+	// What the visitor is allowed to see is part of the data, not of the
+	// rendering, so it has to be part of the key: with category visibility per
+	// customer (inc/portal-visibility.php) one cached menu would otherwise be
+	// served to every account.
+	/**
+	 * Filters a suffix added to the fallback menu's cache key.
+	 *
+	 * @param string $suffix Extra key material. Empty by default.
+	 */
+	$suffix = (string) apply_filters( 'probo_menu_fallback_cache_suffix', '' );
+	$key    = 'probo_menu_fallback_' . md5( wp_cache_get_last_changed( 'terms' ) . '_' . wp_cache_get_last_changed( 'posts' ) . $suffix );
+	$items  = get_transient( $key );
 
 	if ( false === $items ) {
 		$items = probo_build_menu_fallback_items();
@@ -522,10 +629,10 @@ function probo_primary_menu_fallback() {
 
 	$current_term = is_tax( 'product_cat' ) ? get_queried_object_id() : 0;
 
-	echo '<ul class="pp-nav-menu">';
+	printf( '<ul class="%s">', esc_attr( $menu_class ) );
 
 	foreach ( $items as $item ) {
-		$children = $item['children'];
+		$children = $flat ? array() : $item['children'];
 		$classes  = array();
 
 		if ( $current_term && isset( $item['term_id'] ) && $current_term === $item['term_id'] ) {

@@ -595,6 +595,14 @@ msgstr ""
 msgid "Flat"
 msgstr ""
 
+#: inc/customizer.php:320
+msgid "Configurator wording"
+msgstr ""
+
+#: inc/customizer.php:321
+msgid "The button on the product page and the heading above the configurator. Leave empty for the theme's own wording, which follows the site language."
+msgstr ""
+
 #: inc/customizer.php:282
 msgid "Checkout style"
 msgstr ""
@@ -957,8 +965,8 @@ msgstr ""
 msgid "%1$s / 5 · %2$s reviews"
 msgstr ""
 
-#: woocommerce/single-product.php:108
-#: woocommerce/single-product.php:150
+#: inc/customizer.php:323
+#: inc/template-tags.php:299
 msgid "Configure your product"
 msgstr ""
 

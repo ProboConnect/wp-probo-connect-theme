@@ -219,6 +219,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  border:0;
 }
 
 .connect-delivery-moment {
@@ -230,13 +231,9 @@
   border: 1px solid #E4E4E7;
   border-radius: var(--pp-radius);
   background: #fff;
-  cursor: pointer;
   transition: border-color 0.15s ease;
 }
 
-.connect-delivery-moment:hover {
-  border-color: var(--pp-secondary-line);
-}
 
 .connect-delivery-date {
   font-size: 15px;

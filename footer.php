@@ -7,10 +7,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Sidebar id => the Customizer key holding that column's heading.
 $probo_columns = array(
-	'footer-1' => __( 'Products', 'probo-connect-theme' ),
-	'footer-2' => __( 'Service', 'probo-connect-theme' ),
-	'footer-3' => __( 'Business', 'probo-connect-theme' ),
+	'footer-1' => 'footer_col_1_title',
+	'footer-2' => 'footer_col_2_title',
+	'footer-3' => 'footer_col_3_title',
 );
 ?>
 </div><!-- #pp-content -->
@@ -38,11 +39,15 @@ $probo_bare = function_exists( 'probo_is_checkout_flow' ) && probo_is_checkout_f
 			<?php endif; ?>
 		</div>
 
-		<?php foreach ( $probo_columns as $probo_id => $probo_title ) : ?>
+		<?php
+		foreach ( $probo_columns as $probo_id => $probo_key ) :
+			$probo_title = probo_get( $probo_key );
+			?>
 			<div class="pp-footer-widgets">
 				<?php // The heading is printed here, not by the widget, so it stays put
-				// regardless of what gets dropped into the sidebar below it. ?>
-				<div class="pp-eyebrow mb-4.5 text-footer-fg"><?php echo esc_html( $probo_title ); ?></div>
+				// regardless of what gets dropped into the sidebar below it. An empty
+				// heading keeps its element for selective refresh, minus the spacing. ?>
+				<div class="pp-eyebrow <?php echo '' === $probo_title ? '' : 'mb-4.5 '; ?>text-footer-fg" data-pp-partial="<?php echo esc_attr( $probo_key ); ?>"><?php echo esc_html( $probo_title ); ?></div>
 
 				<?php if ( is_active_sidebar( $probo_id ) ) : ?>
 					<?php dynamic_sidebar( $probo_id ); ?>

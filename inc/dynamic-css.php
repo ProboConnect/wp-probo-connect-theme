@@ -26,7 +26,7 @@ function probo_tokens() {
 	$sec    = probo_get_color( 'secondary_color' );
 	$lum    = probo_lum( $sec );
 
-	$tokens = array(
+	$tokens = probo_page_tokens( probo_get_color( 'page_color' ) ) + array(
 		'--pp-accent'         => $accent,
 		'--pp-accent-soft'    => probo_tint( $accent ),
 		// Text and icons drawn on top of a filled accent surface. Hardcoded
@@ -46,11 +46,12 @@ function probo_tokens() {
 		'--pp-font-body'      => '"' . probo_get( 'body_font' ) . '"',
 	);
 
-	// Kaartstijl: Rand keeps the hairline, Schaduw swaps it for a soft stack,
-	// Vlak drops both but keeps a transparent border so layout does not shift.
+	// Card style: 'border' keeps the hairline, 'shadow' swaps it for a soft
+	// stack, 'flat' drops both but keeps a transparent border so layout does
+	// not shift.
 	$card                        = probo_get( 'card_style' );
-	$tokens['--pp-card-border']  = 'Rand' === $card ? '1px solid #E4E4E7' : '1px solid transparent';
-	$tokens['--pp-card-shadow']  = 'Schaduw' === $card
+	$tokens['--pp-card-border']  = 'border' === $card ? '1px solid #E4E4E7' : '1px solid transparent';
+	$tokens['--pp-card-shadow']  = 'shadow' === $card
 		? '0 2px 4px rgba(11,11,12,.06), 0 12px 28px rgba(11,11,12,.07)'
 		: 'none';
 
@@ -76,10 +77,41 @@ function probo_tokens() {
 }
 
 /**
+ * Page canvas tokens.
+ *
+ * The theme is built on white and five neutral bands sitting just under it —
+ * the section stripes, the card wells, the hairlines. Those bands are what
+ * separate one block from the next, so moving the canvas without moving them
+ * would collapse the page into one flat tone the moment the canvas is no
+ * longer white. They are re-derived here at the same distance from the chosen
+ * colour that they sit from white, which leaves a white canvas byte-identical
+ * to the design and makes a light grey one layer the same way.
+ *
+ * This is a *light* canvas setting. White cards, the white header variants and
+ * the near-black ink scale are all baked into the components, so a dark colour
+ * here paints dark ink on a dark page. Making the theme genuinely dark is a
+ * separate pass over those components, not a token swap.
+ *
+ * @param string $page Page background colour.
+ * @return array<string, string>
+ */
+function probo_page_tokens( $page ) {
+	return array(
+		'--pp-page'         => $page,
+		'--pp-surface'      => probo_shift( $page, array( -8, -8, -10 ) ),
+		'--pp-surface-soft' => probo_shift( $page, array( -3, -3, -4 ) ),
+		'--pp-surface-2'    => probo_shift( $page, array( -15, -15, -17 ) ),
+		'--pp-canvas'       => probo_shift( $page, array( -18, -18, -21 ) ),
+		'--pp-line'         => probo_shift( $page, array( -27, -27, -24 ) ),
+		'--pp-line-strong'  => probo_shift( $page, array( -54, -54, -49 ) ),
+	);
+}
+
+/**
  * Top-bar tokens.
  *
- * A custom bar colour wins over the style dropdown; otherwise "Zwart" means
- * "follow the secondary colour", with text and rule flipped to whatever
+ * A custom bar colour wins over the style dropdown; otherwise 'secondary'
+ * means follow the secondary colour, with text and rule flipped to whatever
  * contrasts. That two-step is what keeps the bar readable when someone picks a
  * pale secondary.
  *
@@ -102,7 +134,7 @@ function probo_bar_tokens( $style, $custom, $accent, $sec ) {
 		);
 	}
 
-	if ( 'Licht' === $style ) {
+	if ( 'light' === $style ) {
 		return array(
 			'--pp-bar-bg'     => '#F7F7F5',
 			'--pp-bar-fg'     => '#0B0B0C',
@@ -112,7 +144,7 @@ function probo_bar_tokens( $style, $custom, $accent, $sec ) {
 		);
 	}
 
-	if ( 'Accent' === $style ) {
+	if ( 'accent' === $style ) {
 		// Dark text (and so the darker muted tone) is chosen precisely when
 		// the accent itself is *not* dark — mirrors probo_contrast_fg()'s own
 		// rule instead of string-comparing the hex it just returned.
@@ -128,7 +160,7 @@ function probo_bar_tokens( $style, $custom, $accent, $sec ) {
 		);
 	}
 
-	if ( 'Geen' === $style ) {
+	if ( 'none' === $style ) {
 		return array(
 			'--pp-bar-bg'     => '#FFFFFF',
 			'--pp-bar-fg'     => '#0B0B0C',
@@ -159,8 +191,8 @@ function probo_bar_tokens( $style, $custom, $accent, $sec ) {
  * @return array<string, string>
  */
 function probo_footer_tokens( $style, $accent, $sec ) {
-	if ( 'Licht' === $style || 'Wit' === $style ) {
-		$bg = 'Wit' === $style ? '#FFFFFF' : '#F7F7F5';
+	if ( 'light' === $style || 'white' === $style ) {
+		$bg = 'white' === $style ? '#FFFFFF' : '#F7F7F5';
 
 		return array(
 			'--pp-footer-bg'     => $bg,
@@ -172,7 +204,7 @@ function probo_footer_tokens( $style, $accent, $sec ) {
 		);
 	}
 
-	if ( 'Accent' === $style ) {
+	if ( 'accent' === $style ) {
 		// White was hardcoded here, which is fine on a dark brand colour and
 		// unreadable on a light one — a yellow accent gave a white-on-yellow
 		// footer. Everything is derived from the accent's own contrast colour
@@ -196,7 +228,7 @@ function probo_footer_tokens( $style, $accent, $sec ) {
 		);
 	}
 
-	// "Zwart" means "follow secondary". The prototype hardcoded white text here,
+	// 'secondary' means "follow the secondary colour". The prototype hardcoded white text here,
 	// which turns the whole footer invisible as soon as someone picks a pale
 	// secondary — the same trap that was fixed for the top bar and the hero, so
 	// the footer gets the same luminance guard.
@@ -227,14 +259,18 @@ function probo_footer_tokens( $style, $accent, $sec ) {
  * @return array<string, string>
  */
 function probo_hero_tokens( $style, $title_color, $accent, $sec ) {
-	if ( 'Accent' === $style ) {
+	// The hero block passes its own stored attribute here, which on an older
+	// page is still one of the Dutch labels these settings used to be saved as.
+	$style = probo_normalize_choice( 'hero_style', $style );
+
+	if ( 'accent' === $style ) {
 		// Dark text is chosen precisely when the accent itself is not dark —
 		// mirrors probo_contrast_fg()'s own rule instead of string-comparing
 		// the hex it just returned.
 		$bg    = $accent;
 		$fg    = probo_contrast_fg( $accent );
 		$muted = ! probo_is_dark( $accent ) ? 'rgba(11,11,12,.7)' : 'rgba(255,255,255,.78)';
-	} elseif ( 'Licht' === $style ) {
+	} elseif ( 'light' === $style ) {
 		$bg    = '#F7F7F5';
 		$fg    = '#0B0B0C';
 		$muted = '#6B6B70';
