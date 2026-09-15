@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/orders",
+	"title": "Bestellingen",
+	"category": "probo",
+	"icon": "list-view",
+	"description": "De laatste bestellingen van de ingelogde klant, met status en track & trace.",
+	"textdomain": "probo-connect-theme",
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "Laatste bestellingen" },
+		"count": { "type": "number", "default": 10 },
+		"showAll": { "type": "boolean", "default": true },
+		"allText": { "type": "string", "default": "Alle bestellingen" },
+		"empty": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
