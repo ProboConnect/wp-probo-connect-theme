@@ -19,16 +19,6 @@ while ( have_posts() ) :
 	// totals column collapsed. Those two get the bare content instead.
 	$probo_is_shop_page = function_exists( 'is_cart' ) && ( is_cart() || is_checkout() );
 
-	// The order-received page is the checkout page too, but the thank-you
-	// template is bare markup — an overview list, the order table and the
-	// addresses — with no layout of its own. Without a container it ran flush
-	// against the left edge of the viewport, so it is laid out like an account
-	// page instead.
-	$probo_is_order_received = $probo_is_shop_page && is_order_received_page();
-	if ( $probo_is_order_received ) {
-		$probo_is_shop_page = false;
-	}
-
 	// My account brings markup but no layout of its own: WooCommerce lays its
 	// navigation and content out in woocommerce-layout.css, which this theme
 	// drops wholesale (see probo_dropped_style_handles()). So it gets the
@@ -44,15 +34,6 @@ while ( have_posts() ) :
 
 	if ( $probo_is_shop_page ) :
 		the_content();
-	elseif ( $probo_is_order_received ) :
-		?>
-		<main class="pp-container pp-order-received py-12">
-			<div class="mx-auto max-w-[880px]">
-				<h1 class="mb-8 text-3xl font-extrabold tracking-[-0.035em] lg:text-4xl"><?php the_title(); ?></h1>
-				<?php the_content(); ?>
-			</div>
-		</main>
-		<?php
 	elseif ( $probo_is_login ) :
 		?>
 		<main class="pp-container py-16">
