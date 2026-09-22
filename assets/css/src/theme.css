@@ -1654,6 +1654,161 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Order details: the thank-you page after checkout, and the same order table
+   and addresses on My account → Orders → View. WooCommerce lays these out in
+   woocommerce-layout.css, which the theme drops, so without the rules below
+   the overview ran together on one line ("1327september 22, 2026friso@…") and
+   every item meta label and value got a line of its own.
+--------------------------------------------------------------------------- */
+@layer components {
+  .woocommerce-order {
+    @apply flex flex-col gap-8;
+  }
+
+  /* "Thank you. Your order has been received." */
+  .woocommerce-thankyou-order-received {
+    @apply rounded-pp m-0 border border-line border-l-4 border-l-state-ok bg-state-ok-soft px-5 py-4 text-base font-semibold text-ink;
+  }
+
+  .woocommerce-thankyou-order-failed {
+    @apply rounded-pp m-0 border border-line border-l-4 border-l-state-error bg-state-error-soft px-5 py-4 text-base font-semibold text-ink;
+  }
+
+  .woocommerce-thankyou-order-failed-actions {
+    @apply mt-4 flex flex-wrap gap-3;
+  }
+
+  /* Order number, date, e-mail, total, payment method: a row of stat cells. */
+  ul.woocommerce-order-overview {
+    @apply rounded-pp m-0 flex list-none flex-wrap gap-px overflow-hidden border border-line bg-line p-0;
+  }
+
+  /* Cells grow to fill each row, so a short last row never leaves a hole. */
+  ul.woocommerce-order-overview li {
+    @apply m-0 flex grow basis-[150px] flex-col gap-1.5 bg-page px-4 py-3.5 text-[11px] font-semibold tracking-[0.06em] text-ink-4 uppercase;
+  }
+
+  ul.woocommerce-order-overview li strong {
+    @apply text-sm font-bold tracking-normal break-words text-ink normal-case;
+  }
+
+  ul.woocommerce-order-overview li.woocommerce-order-overview__total strong {
+    @apply font-mono;
+  }
+
+  /* Payment instructions (bank transfer details, cheque address, ...). */
+  .woocommerce-order > p:not([class]) {
+    @apply text-[15px] leading-relaxed text-ink-2;
+  }
+
+  .woocommerce-bacs-bank-details {
+    @apply rounded-pp border border-line bg-surface p-5;
+  }
+
+  .woocommerce-bacs-bank-details h2,
+  .woocommerce-bacs-bank-details h3 {
+    @apply mt-0 mb-3 text-base font-bold text-ink;
+  }
+
+  ul.wc-bacs-bank-details {
+    @apply m-0 grid list-none gap-x-6 gap-y-2 p-0 text-[13px] text-ink-3 sm:grid-cols-2;
+  }
+
+  ul.wc-bacs-bank-details li strong {
+    @apply block font-mono text-sm text-ink;
+  }
+
+  .woocommerce-order-details__title,
+  .woocommerce-customer-details h2,
+  .woocommerce-column__title {
+    @apply mt-0 mb-4 text-xl font-bold tracking-[-0.02em] text-ink;
+  }
+
+  .woocommerce-table--order-details thead th:last-child,
+  .woocommerce-table--order-details td:last-child,
+  .woocommerce-table--order-details tfoot td {
+    @apply text-right;
+  }
+
+  .woocommerce-table--order-details td.woocommerce-table__product-total,
+  .woocommerce-table--order-details tfoot .woocommerce-Price-amount {
+    @apply font-mono whitespace-nowrap text-ink;
+  }
+
+  .woocommerce-table--order-details tfoot td {
+    @apply font-semibold text-ink;
+  }
+
+  .woocommerce-table--order-details td.woocommerce-table__product-name a {
+    @apply font-semibold text-ink no-underline hover:text-accent-ink;
+  }
+
+  .woocommerce-table--order-details .product-quantity {
+    @apply font-mono text-ink-3;
+  }
+
+  .woocommerce-table--order-details tfoot th {
+    @apply py-3 font-semibold text-ink-2;
+  }
+
+  .woocommerce-table--order-details tfoot td .shipped_via,
+  .woocommerce-table--order-details tfoot td small {
+    @apply text-xs font-normal text-ink-3;
+  }
+
+  /* The configured options under each line: "Label: value" running on one
+     line on a phone, two aligned columns from sm up. */
+  ul.wc-item-meta {
+    @apply mt-2 mb-0 flex list-none flex-col gap-1 p-0 text-[13px] sm:grid sm:grid-cols-[max-content_1fr] sm:gap-x-4;
+  }
+
+  ul.wc-item-meta li {
+    @apply m-0 sm:contents;
+  }
+
+  ul.wc-item-meta .wc-item-meta-label {
+    @apply font-normal text-ink-4;
+  }
+
+  ul.wc-item-meta p {
+    @apply m-0 inline text-ink-2 sm:block;
+  }
+
+  .woocommerce-table--order-details .order-actions-button {
+    @apply mt-2;
+  }
+
+  /* Billing and shipping address side by side. */
+  .woocommerce-columns--addresses {
+    @apply grid gap-6 sm:grid-cols-2;
+  }
+
+  .woocommerce-columns--addresses .woocommerce-column {
+    @apply rounded-pp float-none w-auto max-w-none border border-line p-5;
+  }
+
+  .woocommerce-customer-details address {
+    @apply text-sm leading-relaxed text-ink-2 not-italic;
+  }
+
+  .woocommerce-customer-details address p {
+    @apply mt-2 mb-0;
+  }
+
+  .woocommerce-customer-details--phone,
+  .woocommerce-customer-details--email {
+    @apply text-ink-2;
+  }
+
+  .woocommerce-columns--addresses::before,
+  .woocommerce-columns--addresses::after,
+  .woocommerce-order .col2-set::before,
+  .woocommerce-order .col2-set::after {
+    content: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Shop filter widgets. WooCommerce renders these lists, so they are styled by
    selector to match the checkbox column in the design.
 --------------------------------------------------------------------------- */
