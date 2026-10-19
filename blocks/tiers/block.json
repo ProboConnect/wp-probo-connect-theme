@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "probo/tiers",
+	"title": "Staffelprijzen",
+	"category": "probo",
+	"icon": "money-alt",
+	"description": "De staffelprijzen van Probo Connect: een prijslijst met alle materialen, of één rij voor het goedkoopste materiaal.",
+	"textdomain": "probo-connect-theme",
+	"supports": { "className": false, "html": false, "align": ["full"], "anchor": true },
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"view": { "type": "string", "default": "table" },
+		"productId": { "type": "number", "default": 0 },
+		"apiCode": { "type": "string", "default": "" },
+		"group": { "type": "string", "default": "" },
+		"showDiscount": { "type": "boolean", "default": true }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

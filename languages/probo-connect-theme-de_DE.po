@@ -1646,3 +1646,7 @@ msgstr "Staffelpreise auf der Produktseite"
 #: inc/customizer.php
 msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
 msgstr "Zeigt die Probo Connect-Staffelpreise des günstigsten Materials als Zeile unter dem Preis an. Erfordert aktivierte Staffelpreise im Plugin; ein Produkt ohne Staffeln zeigt nichts an."
+
+#: blocks/tiers/render.php
+msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
+msgstr "Keine Staffelpreise anzuzeigen: Das Probo Connect-Plugin muss aktiv sein und das Produkt benötigt Staffelpreise."

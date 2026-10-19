@@ -1644,3 +1644,7 @@ msgstr ""
 #: inc/customizer.php
 msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
 msgstr ""
+
+#: blocks/tiers/render.php
+msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
+msgstr ""
