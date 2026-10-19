@@ -1630,3 +1630,19 @@ msgstr "USP-Leiste"
 msgctxt "block description"
 msgid "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
 msgstr "Reihe mit Vertrauenssignalen — als Leiste unter dem Hero oder als vier Karten."
+
+#: inc/settings.php:104
+msgid "Off"
+msgstr "Aus"
+
+#: inc/settings.php:105
+msgid "Show under the price"
+msgstr "Unter dem Preis anzeigen"
+
+#: inc/customizer.php
+msgid "Tier prices on the product page"
+msgstr "Staffelpreise auf der Produktseite"
+
+#: inc/customizer.php
+msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
+msgstr "Zeigt die Probo Connect-Staffelpreise des günstigsten Materials als Zeile unter dem Preis an. Erfordert aktivierte Staffelpreise im Plugin; ein Produkt ohne Staffeln zeigt nichts an."

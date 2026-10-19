@@ -2,9 +2,9 @@
 /**
  * Product tile inside a loop.
  *
- * Overrides woocommerce/templates/content-product.php. The design's tile has no
- * price: listings end in "Configureer nu →" because a print product has no
- * meaningful price until it has been configured.
+ * Overrides woocommerce/templates/content-product.php. The tile shows the price
+ * WooCommerce returns, if any — for a configurable product that is the plugin's
+ * "from" price — and ends in "Configureer nu →".
  *
  * @package Probo_Connect
  * @version 9.4.0

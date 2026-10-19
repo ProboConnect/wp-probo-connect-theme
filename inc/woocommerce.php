@@ -3,9 +3,10 @@
  * WooCommerce integration.
  *
  * The theme styles WooCommerce and the Probo Connect plugin; it does not
- * reimplement either. Prices deliberately appear only where they really come
- * out of the plugin — configurator, cart and checkout — while listings end in
- * a "Configureer nu →" call to action.
+ * reimplement either. Prices are whatever WooCommerce and the plugin return
+ * from get_price_html(): a "from" price on a tile and in the product summary
+ * when the shop owner enabled it, nothing when not. Listings end in a
+ * "Configureer nu →" call to action.
  *
  * @package Probo_Connect
  */
@@ -50,9 +51,8 @@ add_filter( 'loop_shop_columns', 'probo_loop_columns' );
  * Strip the pieces of WooCommerce's default loop the design does not use.
  *
  * The tiles are rendered by probo_product_card() from content-product.php, so
- * the stock title/price/add-to-cart hooks would only duplicate them. Related
- * products and other loops that still run the stock hooks lose their price for
- * the same reason: an unconfigured price is meaningless here.
+ * the stock title/price/add-to-cart hooks would only duplicate them. The price
+ * is printed by the card itself, through probo_product_price().
  */
 function probo_trim_woocommerce_loop() {
 	// Every loop in the shop renders through the theme's content-product.php,
@@ -67,9 +67,9 @@ function probo_trim_woocommerce_loop() {
 	remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
 	remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10 );
 
-	// The single product summary is laid out by the template, not by hooks: the
-	// price belongs to the configurator, and the add-to-cart form is moved into
-	// the configurator band further down the page.
+	// The single product summary is laid out by the template, not by hooks: it
+	// prints the price under the title itself, and the add-to-cart form is moved
+	// into the configurator band further down the page.
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );

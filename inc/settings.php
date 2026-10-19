@@ -31,6 +31,7 @@ function probo_defaults() {
 		'card_style'         => 'border',
 		'checkout_style'     => 'onepage',
 		'require_login'      => 'off',
+		'tiers_summary'      => 'off',
 		'logo_light'         => '',
 		'topbar_usp_1'       => 'Voor 23:00 besteld, morgen geleverd',
 		'topbar_usp_2'       => 'Gratis bestandscontrole',
@@ -98,6 +99,10 @@ function probo_choices( $key ) {
 		'checkout_style' => array(
 			'onepage' => __( 'One page (classic)', 'probo-connect-theme' ),
 			'steps'   => __( 'Steps (accordion)', 'probo-connect-theme' ),
+		),
+		'tiers_summary'  => array(
+			'off' => __( 'Off', 'probo-connect-theme' ),
+			'on'  => __( 'Show under the price', 'probo-connect-theme' ),
 		),
 		'require_login'  => array(
 			'off'      => __( 'Off — guests can order', 'probo-connect-theme' ),

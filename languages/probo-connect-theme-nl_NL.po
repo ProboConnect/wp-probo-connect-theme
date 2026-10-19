@@ -1630,3 +1630,19 @@ msgstr "USP-balk"
 msgctxt "block description"
 msgid "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
 msgstr "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
+
+#: inc/settings.php:104
+msgid "Off"
+msgstr "Uit"
+
+#: inc/settings.php:105
+msgid "Show under the price"
+msgstr "Tonen onder de prijs"
+
+#: inc/customizer.php
+msgid "Tier prices on the product page"
+msgstr "Staffelprijzen op de productpagina"
+
+#: inc/customizer.php
+msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
+msgstr "Toont de Probo Connect-staffelprijzen van het goedkoopste materiaal als rij onder de prijs. Vereist dat staffelprijzen in de plugin zijn ingeschakeld; een product zonder staffels toont niets."

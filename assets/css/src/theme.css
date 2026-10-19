@@ -2049,3 +2049,157 @@
     @apply bg-surface-2 text-ink-3;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Prices from the plugin: the "from" price on a tile and in the product
+   summary, and the tier tables behind [connect_tiers] and
+   [connect_tiers_summary].
+
+   Everything reads the same tokens as the rest of the theme, so light and dark
+   follow the Customizer. The markup and its wording belong to the plugin; only
+   the look is set here.
+--------------------------------------------------------------------------- */
+@layer components {
+  /* The card: a quiet line between the specs and the call to action. */
+  .pp-product-price {
+    color: var(--color-ink);
+    font-size: 15px;
+    line-height: 1.3;
+  }
+
+  .pp-product-price .woocommerce-Price-amount {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .pp-product-price del {
+    color: var(--color-ink-4);
+    font-weight: 500;
+  }
+
+  .pp-product-price ins {
+    background: none;
+    text-decoration: none;
+  }
+
+  /* "vanaf … per m²": the words are muted, the amount carries the weight. */
+  .probo-from-price {
+    color: var(--color-ink-3);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .probo-from-price .woocommerce-Price-amount {
+    color: var(--color-ink);
+    font-size: 16px;
+  }
+
+  /* The product page gets the summary's own large price. */
+  .summary .pp-product-price {
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  .summary .probo-from-price {
+    font-size: 15px;
+  }
+
+  .summary .probo-from-price .woocommerce-Price-amount {
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Tier tables. The wrappers scroll sideways on a narrow screen instead of
+     squeezing the columns or pushing the page wider than the viewport. */
+  .connect-tiers,
+  .connect-tiers-summary {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  .connect-tiers table,
+  .connect-tiers-summary table {
+    border: var(--pp-card-border);
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--pp-radius);
+    color: var(--color-ink);
+    font-size: 14px;
+    margin: 0;
+    width: 100%;
+  }
+
+  .connect-tiers th,
+  .connect-tiers td,
+  .connect-tiers-summary th,
+  .connect-tiers-summary td {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--color-line);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  .connect-tiers thead th {
+    background: var(--color-surface);
+    color: var(--color-ink-3);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .connect-tiers tbody tr:last-child > *,
+  .connect-tiers-summary tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .connect-tiers th[scope="row"],
+  .connect-tiers-summary th[scope="row"] {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+
+  .connect-tiers small,
+  .connect-tiers-summary small {
+    color: var(--color-ink-4);
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .connect-tiers .woocommerce-Price-amount,
+  .connect-tiers-summary .woocommerce-Price-amount {
+    font-weight: 700;
+  }
+
+  /* A price borrowed from the next-lower tier, which the customer does not
+     get as such. */
+  .connect-tiers__price--filled {
+    color: var(--color-ink-4);
+  }
+
+  .connect-tiers-summary__quantity {
+    color: var(--color-ink-3);
+    display: block;
+    font-size: 12px;
+  }
+
+  /* The saving next to a price: small and red, as customers know it from the
+     price lists on the Probo portal. */
+  .connect-tiers__discount,
+  .connect-tiers-summary__discount {
+    color: var(--color-state-error);
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .connect-tiers__note {
+    color: var(--color-ink-3);
+    font-size: 12px;
+    margin: 8px 0 0;
+  }
+}
