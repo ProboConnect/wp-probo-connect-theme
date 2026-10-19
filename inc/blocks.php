@@ -45,6 +45,16 @@ function probo_register_blocks() {
 
 		if ( file_exists( $dir . '/block.json' ) ) {
 			register_block_type( $dir );
+
+			// register_block_type() hands the editor script its textdomain, but
+			// looks for the JSON in WP_LANG_DIR; the theme ships its own, so the
+			// folder is named here. The handle is the one core derives from the
+			// block name ("probo/usp-bar" => "probo-usp-bar-editor-script").
+			wp_set_script_translations(
+				generate_block_asset_handle( 'probo/' . $name, 'editorScript' ),
+				'probo-connect-theme',
+				get_template_directory() . '/languages'
+			);
 		}
 	}
 }
