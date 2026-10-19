@@ -1648,3 +1648,47 @@ msgstr ""
 #: blocks/tiers/render.php
 msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
 msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Tier prices"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Layout"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Price list — every material"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "One row — cheapest material"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Product ID"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "0 uses the product of the page."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Material (API code)"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Leave empty for the cheapest material."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Material group"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Optional, for example MA."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Show discount percentages"
+msgstr ""

@@ -1650,3 +1650,47 @@ msgstr "Zeigt die Probo Connect-Staffelpreise des günstigsten Materials als Zei
 #: blocks/tiers/render.php
 msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
 msgstr "Keine Staffelpreise anzuzeigen: Das Probo Connect-Plugin muss aktiv sein und das Produkt benötigt Staffelpreise."
+
+#: blocks/tiers/index.js
+msgid "Tier prices"
+msgstr "Staffelpreise"
+
+#: blocks/tiers/index.js
+msgid "Layout"
+msgstr "Darstellung"
+
+#: blocks/tiers/index.js
+msgid "Price list — every material"
+msgstr "Preisliste — alle Materialien"
+
+#: blocks/tiers/index.js
+msgid "One row — cheapest material"
+msgstr "Eine Zeile — günstigstes Material"
+
+#: blocks/tiers/index.js
+msgid "Product ID"
+msgstr "Produkt-ID"
+
+#: blocks/tiers/index.js
+msgid "0 uses the product of the page."
+msgstr "0 verwendet das Produkt der Seite."
+
+#: blocks/tiers/index.js
+msgid "Material (API code)"
+msgstr "Material (API-Code)"
+
+#: blocks/tiers/index.js
+msgid "Leave empty for the cheapest material."
+msgstr "Leer lassen für das günstigste Material."
+
+#: blocks/tiers/index.js
+msgid "Material group"
+msgstr "Materialgruppe"
+
+#: blocks/tiers/index.js
+msgid "Optional, for example MA."
+msgstr "Optional, zum Beispiel MA."
+
+#: blocks/tiers/index.js
+msgid "Show discount percentages"
+msgstr "Rabattprozente anzeigen"
