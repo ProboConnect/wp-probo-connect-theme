@@ -274,11 +274,48 @@ function probo_breadcrumb() {
 /**
  * The "Configureer nu →" call to action that replaced prices on tiles.
  *
- * Prices are shown only where they really come out of the plugin: the
- * configurator, the cart and the checkout.
+ * The price above it comes from probo_product_price(), and is absent when the
+ * product has none to show.
  */
 function probo_configure_cta() {
 	echo '<div class="mt-3.5 text-sm font-bold text-accent-ink">' . esc_html__( 'Configure now →', 'probo-connect-theme' ) . '</div>';
+}
+
+/**
+ * A product's price, exactly as WooCommerce and the plugin deliver it.
+ *
+ * Nothing is computed here. A Probo Connect configurable answers
+ * get_price_html() with its "from" price, or with an empty string when the
+ * shop owner switched that off; every other product type returns its own
+ * markup. Whitespace-only output counts as empty, so no wrapper is left behind.
+ *
+ * @param WC_Product|null $product Product object.
+ * @return string Price HTML, or '' when there is nothing to show.
+ */
+function probo_get_product_price_html( $product = null ) {
+	if ( ! $product instanceof WC_Product ) {
+		return '';
+	}
+
+	$html = $product->get_price_html();
+
+	return '' === trim( wp_strip_all_tags( $html ) ) ? '' : $html;
+}
+
+/**
+ * Print a product's price in the theme's wrapper, or nothing at all.
+ *
+ * @param WC_Product|null $product Product object.
+ * @param string          $class   Classes for the wrapper.
+ */
+function probo_product_price( $product = null, $class = 'pp-product-price mt-2' ) {
+	$html = probo_get_product_price_html( $product );
+
+	if ( '' === $html ) {
+		return;
+	}
+
+	echo '<div class="' . esc_attr( $class ) . '">' . wp_kses_post( $html ) . '</div>';
 }
 
 /**
@@ -739,6 +776,8 @@ function probo_product_card( $product = null, $image_height = 'h-[190px]' ) {
 			<?php if ( $specs ) : ?>
 				<div class="font-mono mt-1.5 text-xs leading-relaxed font-medium text-ink-4"><?php echo esc_html( $specs ); ?></div>
 			<?php endif; ?>
+
+			<?php probo_product_price( $product ); ?>
 
 			<?php probo_configure_cta(); ?>
 		</div>

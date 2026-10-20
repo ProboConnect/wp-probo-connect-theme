@@ -326,6 +326,18 @@ function probo_customize_register( $wp_customize ) {
 	);
 
 	$add(
+		'tiers_summary',
+		array(
+			'type'        => 'select',
+			'label'       => __( 'Tier prices on the product page', 'probo-connect-theme' ),
+			'description' => __( 'Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing.', 'probo-connect-theme' ),
+			'section'     => 'probo_components',
+			'choices'     => probo_choices( 'tiers_summary' ),
+		),
+		$choice( 'tiers_summary' )
+	);
+
+	$add(
 		'require_login',
 		array(
 			'type'        => 'select',

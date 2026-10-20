@@ -1628,3 +1628,67 @@ msgstr ""
 msgctxt "block description"
 msgid "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
 msgstr ""
+
+#: inc/settings.php:104
+msgid "Off"
+msgstr ""
+
+#: inc/settings.php:105
+msgid "Show under the price"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Tier prices on the product page"
+msgstr ""
+
+#: inc/customizer.php
+msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
+msgstr ""
+
+#: blocks/tiers/render.php
+msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Tier prices"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Layout"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Price list — every material"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "One row — cheapest material"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Product ID"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "0 uses the product of the page."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Material (API code)"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Leave empty for the cheapest material."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Material group"
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Optional, for example MA."
+msgstr ""
+
+#: blocks/tiers/index.js
+msgid "Show discount percentages"
+msgstr ""

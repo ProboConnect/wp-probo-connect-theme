@@ -55,6 +55,24 @@ while ( have_posts() ) :
 			<div class="summary entry-summary">
 				<h1 class="mb-3 text-3xl leading-[1.02] font-extrabold tracking-[-0.035em] lg:text-[44px]"><?php the_title(); ?></h1>
 
+				<?php
+				// The plugin's "from" price for a configurable product, WooCommerce's own
+				// price for any other type; empty (and therefore absent) when the shop
+				// owner switched the "from" price off. The configurator band below shows
+				// its own live total once the customer has configured.
+				probo_product_price( $product, 'pp-product-price mb-6' );
+
+				if ( probo_is_configurable_product( $product ) && 'on' === probo_get( 'tiers_summary' ) && shortcode_exists( 'connect_tiers_summary' ) ) :
+					$probo_tiers = do_shortcode( '[connect_tiers_summary product_id="' . (int) $product->get_id() . '"]' );
+
+					if ( '' !== trim( $probo_tiers ) ) :
+						?>
+						<div class="pp-tiers mb-6"><?php echo wp_kses_post( $probo_tiers ); ?></div>
+						<?php
+					endif;
+				endif;
+				?>
+
 				<?php if ( wc_review_ratings_enabled() && $product->get_review_count() ) : ?>
 					<?php
 					// Mirrors blocks/testimonials/render.php:46-49 — filled/empty stars from
@@ -117,15 +135,13 @@ while ( have_posts() ) :
 				<?php if ( ! probo_is_configurable_product( $product ) && ( $product->is_purchasable() || $product->get_price_html() ) ) : ?>
 					<?php
 					/**
-					 * A product without a configurator keeps WooCommerce's own price
-					 * and add-to-cart form, right here in the summary column. Both
-					 * callbacks are unhooked in inc/woocommerce.php because they are
-					 * meaningless for a configurable product, so they are called back
-					 * by hand rather than left out.
+					 * A product without a configurator keeps WooCommerce's own
+					 * add-to-cart form, right here in the summary column. Its callback
+					 * is unhooked in inc/woocommerce.php because it is meaningless for
+					 * a configurable product, so it is called back by hand.
 					 */
 					?>
 					<div class="mt-6.5">
-						<?php woocommerce_template_single_price(); ?>
 						<?php woocommerce_template_single_add_to_cart(); ?>
 					</div>
 				<?php endif; ?>

@@ -1630,3 +1630,67 @@ msgstr "USP-balk"
 msgctxt "block description"
 msgid "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
 msgstr "Rij met vertrouwenssignalen — als balk onder de hero of als vier kaarten."
+
+#: inc/settings.php:104
+msgid "Off"
+msgstr "Uit"
+
+#: inc/settings.php:105
+msgid "Show under the price"
+msgstr "Tonen onder de prijs"
+
+#: inc/customizer.php
+msgid "Tier prices on the product page"
+msgstr "Staffelprijzen op de productpagina"
+
+#: inc/customizer.php
+msgid "Shows the Probo Connect tier prices of the cheapest material as a row under the price. Needs tier prices to be enabled in the plugin; a product without any shows nothing."
+msgstr "Toont de Probo Connect-staffelprijzen van het goedkoopste materiaal als rij onder de prijs. Vereist dat staffelprijzen in de plugin zijn ingeschakeld; een product zonder staffels toont niets."
+
+#: blocks/tiers/render.php
+msgid "No tier prices to show: the Probo Connect plugin must be active and the product needs tier prices."
+msgstr "Geen staffelprijzen om te tonen: de Probo Connect-plugin moet actief zijn en het product heeft staffelprijzen nodig."
+
+#: blocks/tiers/index.js
+msgid "Tier prices"
+msgstr "Staffelprijzen"
+
+#: blocks/tiers/index.js
+msgid "Layout"
+msgstr "Weergave"
+
+#: blocks/tiers/index.js
+msgid "Price list — every material"
+msgstr "Prijslijst — alle materialen"
+
+#: blocks/tiers/index.js
+msgid "One row — cheapest material"
+msgstr "Eén rij — goedkoopste materiaal"
+
+#: blocks/tiers/index.js
+msgid "Product ID"
+msgstr "Product-ID"
+
+#: blocks/tiers/index.js
+msgid "0 uses the product of the page."
+msgstr "0 gebruikt het product van de pagina."
+
+#: blocks/tiers/index.js
+msgid "Material (API code)"
+msgstr "Materiaal (API-code)"
+
+#: blocks/tiers/index.js
+msgid "Leave empty for the cheapest material."
+msgstr "Laat leeg voor het goedkoopste materiaal."
+
+#: blocks/tiers/index.js
+msgid "Material group"
+msgstr "Materiaalgroep"
+
+#: blocks/tiers/index.js
+msgid "Optional, for example MA."
+msgstr "Optioneel, bijvoorbeeld MA."
+
+#: blocks/tiers/index.js
+msgid "Show discount percentages"
+msgstr "Kortingspercentages tonen"
